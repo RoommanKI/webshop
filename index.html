@@ -5,107 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Trauerkarten</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
-        header {
-            background-color: #ff4081;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-        .product {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            width: 300px;
-            transition: transform 0.3s ease;
-        }
-        .product img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        .product:hover img {
-            transform: scale(1.1);
-        }
-        .product:hover {
-            transform: scale(1.05);
-        }
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 8px;
-        }
-        .lightbox:target {
-            display: flex;
-        }
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #ff4081;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .product h2 {
-            font-size: 1.2rem;
-            color: #333;
-        }
-        .price {
-            font-size: 1.2rem;
-            color: #ff4081;
-            margin: 10px 0;
-        }
-        .quantity {
-            margin: 10px 0;
-            width: 60px;
-            text-align: center;
-        }
-        .btn {
-            background-color: #ff4081;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
+        header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
+        .product-list { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; justify-content: center; }
+        .product { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; width: 300px; transition: transform 0.3s ease; }
+        .product img { max-width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: pointer; }
+        .product:hover img { transform: scale(1.1); }
+        .product:hover { transform: scale(1.05); }
+        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; }
+        .lightbox:target { display: flex; }
+        .lightbox-close { position: absolute; top: 20px; right: 20px; background: #ff4081; color: white; padding: 10px; border-radius: 5px; text-decoration: none; }
+        .product h2 { font-size: 1.2rem; color: #333; }
+        .price { font-size: 1.2rem; color: #ff4081; margin: 10px 0; }
+        .quantity { margin: 10px 0; width: 60px; text-align: center; }
+        .btn { background-color: #ff4081; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        footer { background-color: #333; color: #fff; text-align: center; padding: 10px; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -197,4 +112,80 @@
             <button class="btn" onclick="addToCart('Winterwald', 'quantity-winterwald', 0.8)">In den Warenkorb</button>
         </div>
         <div class="product">
-            <
+            <a href="#lightbox-weisseblumen">
+                <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte">
+            </a>
+            <h2>Herzliche Anteilnahme - Weiße Blumen</h2>
+            <p class="price">0,80 € netto</p>
+            <input type="number" id="quantity-weisseblumen" class="quantity" min="1" value="1">
+            <button class="btn" onclick="addToCart('Weiße Blumen', 'quantity-weisseblumen', 0.8)">In den Warenkorb</button>
+        </div>
+    </section>
+
+    <!-- Lightbox-Bereiche -->
+    <div id="lightbox-weizenfeld" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte">
+    </div>
+    <div id="lightbox-blatt" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="Blatttrauer.png" alt="Blatt Trauerkarte">
+    </div>
+    <div id="lightbox-blumen" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="Blumentrauer.png" alt="Blumen Trauerkarte">
+    </div>
+    <div id="lightbox-engel" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="Engel.png" alt="Engel Trauerkarte">
+    </div>
+    <div id="lightbox-holzsteg" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="HolzstegTrauer.png" alt="Holzsteg Trauerkarte">
+    </div>
+    <div id="lightbox-lotusblume" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="Lotusblumen Trauer.png" alt="Lotusblume Trauerkarte">
+    </div>
+    <div id="lightbox-nachthimmel" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="Nachthimmel Trauer.png" alt="Nachthimmel Trauerkarte">
+    </div>
+    <div id="lightbox-vogel" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="Trauervogel.png" alt="Trauervogel Trauerkarte">
+    </div>
+    <div id="lightbox-winterwald" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="TrauerWinterWald.png" alt="Winterwald Trauerkarte">
+    </div>
+    <div id="lightbox-weisseblumen" class="lightbox">
+        <a href="#" class="lightbox-close">X</a>
+        <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte">
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dein Name. Alle Rechte vorbehalten.</p>
+        <p>Kontakt: <a href="mailto:Nico.Zimmermann@Primero-Partners.com" style="color: #ff4081;">Nico.Zimmermann@Primero-Partners.com</a></p>
+    </footer>
+
+    <script>
+        const cart = [];
+
+        function addToCart(productName, quantityId, price) {
+            const quantity = parseInt(document.getElementById(quantityId).value);
+            if (quantity > 0) {
+                const item = cart.find(item => item.product === productName);
+                if (item) {
+                    item.quantity += quantity;
+                } else {
+                    cart.push({ product: productName, quantity, price });
+                }
+                alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+            } else {
+                alert("Bitte eine gültige Anzahl eingeben.");
+            }
+        }
+    </script>
+</body>
+</html>
