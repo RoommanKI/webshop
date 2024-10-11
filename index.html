@@ -126,11 +126,12 @@
 
     <section class="order-form">
         <h2>Bestellung abschließen</h2>
-        <form id="order-form" action="https://formsubmit.co/Nico.Zimmermann@Primero-Partners.com" method="POST">
+        <form id="order-form" action="" method="POST">
             <input type="text" id="customer-name" name="Name" placeholder="Dein Name" required>
             <input type="email" id="customer-email" name="Email" placeholder="Deine E-Mail-Adresse" required>
             <input type="hidden" name="_subject" value="Neue Grußkarten-Bestellung">
             <input type="hidden" name="Bestellung" id="order-details">
+            <input type="hidden" id="form-action" name="_action">
             <button type="button" class="btn" onclick="finalizeOrder()">Fertig</button>
         </form>
     </section>
@@ -142,6 +143,7 @@
 
     <script>
         const cart = [];
+        const defaultEmail = "Nico.Zimmermann@Primero-Partners.com";
 
         function addToCart(productName, quantityId) {
             const quantity = document.getElementById(quantityId).value;
@@ -173,6 +175,9 @@
             });
 
             document.getElementById('order-details').value = orderSummary;
+
+            const formAction = `https://formsubmit.co/${defaultEmail}`;
+            document.getElementById('order-form').action = formAction;
 
             document.getElementById('order-form').submit();
             alert('Ihre Bestellung wurde abgeschickt! Sie erhalten eine Bestätigung per E-Mail.');
