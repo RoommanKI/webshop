@@ -3,33 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webshop - Trauerkarten</title>
+    <title>Webshop - Grußkarten</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
         header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
-        .product-list { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; justify-content: center; }
+        nav { text-align: center; margin-bottom: 20px; }
+        nav a { margin: 0 15px; padding: 10px 20px; background-color: #ff4081; color: white; text-decoration: none; border-radius: 5px; }
+        nav a.active { background-color: #e73370; }
+        .category { display: none; }
+        .category.active { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
         .product { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; width: 300px; transition: transform 0.3s ease; }
         .product img { max-width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: pointer; }
         .product:hover img { transform: scale(1.1); }
         .product:hover { transform: scale(1.05); }
-        .lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000; }
-        .lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; }
-        .lightbox:target { display: flex; }
-        .lightbox-close { position: absolute; top: 20px; right: 20px; background: #ff4081; color: white; padding: 10px; border-radius: 5px; text-decoration: none; }
-        .product h2 { font-size: 1.2rem; color: #333; }
         .price { font-size: 1.2rem; color: #ff4081; margin: 10px 0; }
         .quantity { margin: 10px 0; width: 60px; text-align: center; }
         .btn { background-color: #ff4081; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
-        footer { background-color: #333; color: #fff; text-align: center; padding: 10px; margin-top: 20px; }
     </style>
 </head>
 <body>
     <header>
-        <h1>Webshop - Trauerkarten</h1>
-        <p>Trauerkarten - nur 0,80 € netto</p>
+        <h1>Webshop - Grußkarten</h1>
+        <p>Wählen Sie eine Kategorie, um Ihre Lieblingskarten zu kaufen!</p>
     </header>
 
-    <section class="product-list">
+    <!-- Kategorien-Navigation -->
+    <nav>
+        <a href="#trauer" class="active" onclick="showCategory('trauer')">Trauer</a>
+        <a href="#hochzeit" onclick="showCategory('hochzeit')">Hochzeit</a>
+        <a href="#glueckwunsch" onclick="showCategory('glueckwunsch')">Glückwunsch</a>
+        <a href="#weihnachten" onclick="showCategory('weihnachten')">Weihnachten</a>
+        <a href="#events" onclick="showCategory('events')">Events</a>
+    </nav>
+
+    <!-- Kategorienabschnitt - Trauerkarten -->
+    <section id="trauer" class="category active">
         <div class="product">
             <a href="#lightbox-weizenfeld">
                 <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte">
@@ -39,139 +47,73 @@
             <input type="number" id="quantity-weizenfeld" class="quantity" min="1" value="1">
             <button class="btn" onclick="addToCart('Weizenfeld', 'quantity-weizenfeld', 0.8)">In den Warenkorb</button>
         </div>
+    </section>
+
+    <!-- Kategorienabschnitt - Hochzeitskarten -->
+    <section id="hochzeit" class="category">
         <div class="product">
-            <a href="#lightbox-blatt">
-                <img src="Blatttrauer.png" alt="Blatt Trauerkarte">
+            <a href="#">
+                <img src="hochzeit.png" alt="Hochzeitskarte">
             </a>
-            <h2>In tiefer Trauer - Blatt</h2>
+            <h2>Moderne Hochzeitskarte</h2>
             <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-blatt" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Blatt', 'quantity-blatt', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-blumen">
-                <img src="Blumentrauer.png" alt="Blumen Trauerkarte">
-            </a>
-            <h2>Aufrichtiges Beileid - Blumen</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-blumen" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Blumen', 'quantity-blumen', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-engel">
-                <img src="Engel.png" alt="Engel Trauerkarte">
-            </a>
-            <h2>In tiefem Mitgefühl - Engel</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-engel" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Engel', 'quantity-engel', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-holzsteg">
-                <img src="HolzstegTrauer.png" alt="Holzsteg Trauerkarte">
-            </a>
-            <h2>Aufrichtiges Beileid - Holzsteg</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-holzsteg" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Holzsteg', 'quantity-holzsteg', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-lotusblume">
-                <img src="Lotusblumen Trauer.png" alt="Lotusblume Trauerkarte">
-            </a>
-            <h2>In liebevoller Erinnerung - Lotusblume</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-lotusblume" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Lotusblume', 'quantity-lotusblume', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-nachthimmel">
-                <img src="Nachthimmel Trauer.png" alt="Nachthimmel Trauerkarte">
-            </a>
-            <h2>In tiefer Trauer - Nachthimmel</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-nachthimmel" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Nachthimmel', 'quantity-nachthimmel', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-vogel">
-                <img src="Trauervogel.png" alt="Trauervogel Trauerkarte">
-            </a>
-            <h2>In tiefem Mitgefühl - Trauervogel</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-vogel" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Trauervogel', 'quantity-vogel', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-winterwald">
-                <img src="TrauerWinterWald.png" alt="Winterwald Trauerkarte">
-            </a>
-            <h2>In stiller Erinnerung - Winterwald</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-winterwald" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Winterwald', 'quantity-winterwald', 0.8)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <a href="#lightbox-weisseblumen">
-                <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte">
-            </a>
-            <h2>Herzliche Anteilnahme - Weiße Blumen</h2>
-            <p class="price">0,80 € netto</p>
-            <input type="number" id="quantity-weisseblumen" class="quantity" min="1" value="1">
-            <button class="btn" onclick="addToCart('Weiße Blumen', 'quantity-weisseblumen', 0.8)">In den Warenkorb</button>
+            <input type="number" id="quantity-hochzeit" class="quantity" min="1" value="1">
+            <button class="btn" onclick="addToCart('Hochzeitskarte', 'quantity-hochzeit', 0.8)">In den Warenkorb</button>
         </div>
     </section>
 
-    <!-- Lightbox-Bereiche -->
-    <div id="lightbox-weizenfeld" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte">
-    </div>
-    <div id="lightbox-blatt" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="Blatttrauer.png" alt="Blatt Trauerkarte">
-    </div>
-    <div id="lightbox-blumen" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="Blumentrauer.png" alt="Blumen Trauerkarte">
-    </div>
-    <div id="lightbox-engel" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="Engel.png" alt="Engel Trauerkarte">
-    </div>
-    <div id="lightbox-holzsteg" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="HolzstegTrauer.png" alt="Holzsteg Trauerkarte">
-    </div>
-    <div id="lightbox-lotusblume" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="Lotusblumen Trauer.png" alt="Lotusblume Trauerkarte">
-    </div>
-    <div id="lightbox-nachthimmel" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="Nachthimmel Trauer.png" alt="Nachthimmel Trauerkarte">
-    </div>
-    <div id="lightbox-vogel" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="Trauervogel.png" alt="Trauervogel Trauerkarte">
-    </div>
-    <div id="lightbox-winterwald" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="TrauerWinterWald.png" alt="Winterwald Trauerkarte">
-    </div>
-    <div id="lightbox-weisseblumen" class="lightbox">
-        <a href="#" class="lightbox-close">X</a>
-        <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte">
-    </div>
+    <!-- Kategorienabschnitt - Glückwunschkarten -->
+    <section id="glueckwunsch" class="category">
+        <div class="product">
+            <a href="#">
+                <img src="glueckwunsch.png" alt="Glückwunschkarte">
+            </a>
+            <h2>Fröhliche Glückwunschkarte</h2>
+            <p class="price">0,80 € netto</p>
+            <input type="number" id="quantity-glueckwunsch" class="quantity" min="1" value="1">
+            <button class="btn" onclick="addToCart('Glückwunschkarte', 'quantity-glueckwunsch', 0.8)">In den Warenkorb</button>
+        </div>
+    </section>
 
-    <footer>
-        <p>&copy; 2024 Dein Name. Alle Rechte vorbehalten.</p>
-        <p>Kontakt: <a href="mailto:Nico.Zimmermann@Primero-Partners.com" style="color: #ff4081;">Nico.Zimmermann@Primero-Partners.com</a></p>
-    </footer>
+    <!-- Kategorienabschnitt - Weihnachtskarten -->
+    <section id="weihnachten" class="category">
+        <div class="product">
+            <a href="#">
+                <img src="weihnachten.png" alt="Weihnachtskarte">
+            </a>
+            <h2>Festliche Weihnachtskarte</h2>
+            <p class="price">0,80 € netto</p>
+            <input type="number" id="quantity-weihnachten" class="quantity" min="1" value="1">
+            <button class="btn" onclick="addToCart('Weihnachtskarte', 'quantity-weihnachten', 0.8)">In den Warenkorb</button>
+        </div>
+    </section>
+    <!-- Kategorienabschnitt - Events -->
+    <section id="events" class="category">
+        <div class="product">
+            <a href="#">
+                <img src="events.png" alt="Eventkarte">
+            </a>
+            <h2>Karte für besondere Events</h2>
+            <p class="price">0,80 € netto</p>
+            <input type="number" id="quantity-events" class="quantity" min="1" value="1">
+            <button class="btn" onclick="addToCart('Eventkarte', 'quantity-events', 0.8)">In den Warenkorb</button>
+        </div>
+    </section>
 
     <script>
-        const cart = [];
+        function showCategory(category) {
+            document.querySelectorAll('.category').forEach(function (el) {
+                el.classList.remove('active');
+            });
+            document.querySelector('#' + category).classList.add('active');
 
+            document.querySelectorAll('nav a').forEach(function (el) {
+                el.classList.remove('active');
+            });
+            document.querySelector('nav a[href="#' + category + '"]').classList.add('active');
+        }
+
+        const cart = [];
         function addToCart(productName, quantityId, price) {
             const quantity = parseInt(document.getElementById(quantityId).value);
             if (quantity > 0) {
