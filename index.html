@@ -199,50 +199,76 @@
     </script>
 </body>
 </html>
-<!-- Warenkorb anzeigen -->
-<section class="cart">
-    <h2>Dein Warenkorb</h2>
-    <div id="cart-content">
-        <p>Ihr Warenkorb ist leer.</p>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warenkorb Test</title>
+    <style>
+        .cart {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .product {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Produkte</h1>
+    <div class="product">
+        <h2>Produkt 1</h2>
+        <input type="number" id="quantity-1" value="1" min="1">
+        <button onclick="addToCart('Produkt 1', 'quantity-1', 10.00)">In den Warenkorb</button>
     </div>
-</section>
+    <div class="product">
+        <h2>Produkt 2</h2>
+        <input type="number" id="quantity-2" value="1" min="1">
+        <button onclick="addToCart('Produkt 2', 'quantity-2', 15.00)">In den Warenkorb</button>
+    </div>
 
-<script>
-    let cart = [];
+    <!-- Warenkorb anzeigen -->
+    <section class="cart">
+        <h2>Dein Warenkorb</h2>
+        <div id="cart-content">
+            <p>Ihr Warenkorb ist leer.</p>
+        </div>
+    </section>
 
-    // Produkt zum Warenkorb hinzufügen
-    function addToCart(productName, quantityId, price) {
-        const quantity = parseInt(document.getElementById(quantityId).value);
+    <script>
+        let cart = [];
 
-        if (quantity > 0) {
-            const existingItem = cart.find(item => item.product === productName);
-            if (existingItem) {
-                existingItem.quantity += quantity;
+        function addToCart(productName, quantityId, price) {
+            const quantity = parseInt(document.getElementById(quantityId).value);
+            if (quantity > 0) {
+                const existingItem = cart.find(item => item.product === productName);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.push({ product: productName, quantity, price });
+                }
+                updateCart();
             } else {
-                cart.push({ product: productName, quantity, price });
+                alert("Bitte eine gültige Anzahl eingeben.");
+            }
+        }
+
+        function updateCart() {
+            const cartContent = document.getElementById('cart-content');
+            if (cart.length === 0) {
+                cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+                return;
             }
 
-            updateCart(); // Aktualisiert den sichtbaren Warenkorb
-            console.log("Warenkorb aktualisiert:", cart);  // Debugging: Zeigt den Warenkorb in der Konsole an
-            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
-        } else {
-            alert("Bitte eine gültige Anzahl eingeben.");
+            let cartHTML = '<ul>';
+            cart.forEach(item => {
+                cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+            });
+            cartHTML += '</ul>';
+            cartContent.innerHTML = cartHTML;
         }
-    }
-
-    // Warenkorb auf der Seite aktualisieren
-    function updateCart() {
-        const cartContent = document.getElementById('cart-content');
-        if (cart.length === 0) {
-            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-            return;
-        }
-
-        let cartHTML = '<ul>';
-        cart.forEach(item => {
-            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-        });
-        cartHTML += '</ul>';
-        cartContent.innerHTML = cartHTML;
-    }
-</script>
+    </script>
+</body>
+</html>
