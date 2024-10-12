@@ -19,86 +19,96 @@
         <p>Wählen Sie Ihre Trauerkarten und legen Sie sie in den Warenkorb.</p>
     </header>
 
-    <section>
-        <h2>Trauerkarten</h2>
-        <div class="product">
-            <h2 class="product-title">Weizenfeld Trauerkarte</h2>
-            <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-weizenfeld" value="1" min="1">
-            <button class="btn" onclick="addToCart('Weizenfeld Trauerkarte', 'quantity-weizenfeld', 0.80)">In den Warenkorb</button>
-        </div>
+   <!-- Kategorien-Navigation -->
+<nav>
+    <a href="#trauerkarten" class="btn" onclick="showCategory('trauer')">Trauerkarten</a>
+    <a href="#hochzeitskarten" class="btn" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
+    <a href="#glueckwunschkarten" class="btn" onclick="showCategory('glueckwunsch')">Glückwunschkarten</a>
+    <a href="#weihnachtskarten" class="btn" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
+    <a href="#eventkarten" class="btn" onclick="showCategory('events')">Eventkarten</a>
+</nav>
 
-        <div class="product">
-            <h2 class="product-title">Blatt Trauerkarte</h2>
-            <img src="Blatttrauer.png" alt="Blatt Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-blatt" value="1" min="1">
-            <button class="btn" onclick="addToCart('Blatt Trauerkarte', 'quantity-blatt', 0.80)">In den Warenkorb</button>
-        </div>
+<!-- Kategorienabschnitt - Trauerkarten -->
+<section id="trauer" class="category">
+    <h2>Trauerkarten</h2>
+    <div class="product">
+        <h2>Weizenfeld Trauerkarte</h2>
+        <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte" onclick="openLightbox('Weizenfeld.png')">
+        <p>Preis: 0,80 € netto</p>
+        <input type="number" id="quantity-weizenfeld" value="1" min="1">
+        <button class="btn" onclick="addToCart('Weizenfeld Trauerkarte', 'quantity-weizenfeld', 0.80)">In den Warenkorb</button>
+    </div>
+    <div class="product">
+        <h2>Blatt Trauerkarte</h2>
+        <img src="Blatttrauer.png" alt="Blatt Trauerkarte" onclick="openLightbox('Blatttrauer.png')">
+        <p>Preis: 0,80 € netto</p>
+        <input type="number" id="quantity-blatt" value="1" min="1">
+        <button class="btn" onclick="addToCart('Blatt Trauerkarte', 'quantity-blatt', 0.80)">In den Warenkorb</button>
+    </div>
+    <!-- Füge hier die restlichen Trauerkarten ein -->
+</section>
 
-        <div class="product">
-            <h2 class="product-title">Blumen Trauerkarte</h2>
-            <img src="Blumentrauer.png" alt="Blumen Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-blumen" value="1" min="1">
-            <button class="btn" onclick="addToCart('Blumen Trauerkarte', 'quantity-blumen', 0.80)">In den Warenkorb</button>
-        </div>
-        <div class="product">
-            <h2 class="product-title">Engel Trauerkarte</h2>
-            <img src="Engel.png" alt="Engel Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-engel" value="1" min="1">
-            <button class="btn" onclick="addToCart('Engel Trauerkarte', 'quantity-engel', 0.80)">In den Warenkorb</button>
-        </div>
+<!-- Kategorienabschnitt - Hochzeitskarten -->
+<section id="hochzeit" class="category" style="display: none;">
+    <h2>Hochzeitskarten</h2>
+    <div class="product">
+        <h2>Hochzeitskarte Beispiel</h2>
+        <img src="hochzeit.png" alt="Hochzeitskarte Beispiel" onclick="openLightbox('hochzeit.png')">
+        <p>Preis: 1,20 € netto</p>
+        <input type="number" id="quantity-hochzeit" value="1" min="1">
+        <button class="btn" onclick="addToCart('Hochzeitskarte Beispiel', 'quantity-hochzeit', 1.20)">In den Warenkorb</button>
+    </div>
+    <!-- Weitere Hochzeitskarten hinzufügen -->
+</section>
 
-        <div class="product">
-            <h2 class="product-title">Holzsteg Trauerkarte</h2>
-            <img src="HolzstegTrauer.png" alt="Holzsteg Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-holzsteg" value="1" min="1">
-            <button class="btn" onclick="addToCart('Holzsteg Trauerkarte', 'quantity-holzsteg', 0.80)">In den Warenkorb</button>
-        </div>
+<!-- Kategorienabschnitt - Glückwunschkarten -->
+<section id="glueckwunsch" class="category" style="display: none;">
+    <h2>Glückwunschkarten</h2>
+    <div class="product">
+        <h2>Glückwunschkarte Beispiel</h2>
+        <img src="glueckwunsch.png" alt="Glückwunschkarte Beispiel" onclick="openLightbox('glueckwunsch.png')">
+        <p>Preis: 1,00 € netto</p>
+        <input type="number" id="quantity-glueckwunsch" value="1" min="1">
+        <button class="btn" onclick="addToCart('Glückwunschkarte Beispiel', 'quantity-glueckwunsch', 1.00)">In den Warenkorb</button>
+    </div>
+    <!-- Weitere Glückwunschkarten hinzufügen -->
+</section>
 
-        <div class="product">
-            <h2 class="product-title">Lotusblumen Trauerkarte</h2>
-            <img src="Lotusblumen Trauer.png" alt="Lotusblumen Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-lotusblume" value="1" min="1">
-            <button class="btn" onclick="addToCart('Lotusblumen Trauerkarte', 'quantity-lotusblume', 0.80)">In den Warenkorb</button>
-        </div>
+<!-- Kategorienabschnitt - Weihnachtskarten -->
+<section id="weihnachten" class="category" style="display: none;">
+    <h2>Weihnachtskarten</h2>
+    <div class="product">
+        <h2>Weihnachtskarte Beispiel</h2>
+        <img src="weihnachten.png" alt="Weihnachtskarte Beispiel" onclick="openLightbox('weihnachten.png')">
+        <p>Preis: 1,50 € netto</p>
+        <input type="number" id="quantity-weihnachten" value="1" min="1">
+        <button class="btn" onclick="addToCart('Weihnachtskarte Beispiel', 'quantity-weihnachten', 1.50)">In den Warenkorb</button>
+    </div>
+    <!-- Weitere Weihnachtskarten hinzufügen -->
+</section>
 
-        <div class="product">
-            <h2 class="product-title">Nachthimmel Trauerkarte</h2>
-            <img src="Nachthimmel Trauer.png" alt="Nachthimmel Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-nachthimmel" value="1" min="1">
-            <button class="btn" onclick="addToCart('Nachthimmel Trauerkarte', 'quantity-nachthimmel', 0.80)">In den Warenkorb</button>
-        </div>
+<!-- Kategorienabschnitt - Eventkarten -->
+<section id="events" class="category" style="display: none;">
+    <h2>Eventkarten</h2>
+    <div class="product">
+        <h2>Eventkarte Beispiel</h2>
+        <img src="events.png" alt="Eventkarte Beispiel" onclick="openLightbox('events.png')">
+        <p>Preis: 2,00 € netto</p>
+        <input type="number" id="quantity-events" value="1" min="1">
+        <button class="btn" onclick="addToCart('Eventkarte Beispiel', 'quantity-events', 2.00)">In den Warenkorb</button>
+    </div>
+    <!-- Weitere Eventkarten hinzufügen -->
+</section>
 
-        <div class="product">
-            <h2 class="product-title">Trauervogel Karte</h2>
-            <img src="Trauervogel.png" alt="Trauervogel Karte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-trauervogel" value="1" min="1">
-            <button class="btn" onclick="addToCart('Trauervogel Karte', 'quantity-trauervogel', 0.80)">In den Warenkorb</button>
-        </div>
-
-        <div class="product">
-            <h2 class="product-title">Winterwald Trauerkarte</h2>
-            <img src="TrauerWinterWald.png" alt="Winterwald Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-winterwald" value="1" min="1">
-            <button class="btn" onclick="addToCart('Winterwald Trauerkarte', 'quantity-winterwald', 0.80)">In den Warenkorb</button>
-        </div>
-        
-        <div class="product">
-            <h2 class="product-title">Weiße Blumen Trauerkarte</h2>
-            <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte">
-            <p>Preis: 0,80 € netto</p>
-            <input type="number" id="quantity-weisseblumen" value="1" min="1">
-            <button class="btn" onclick="addToCart('Weiße Blumen Trauerkarte', 'quantity-weisseblumen', 0.80)">In den Warenkorb</button>
-        </div>
+<script>
+    // Funktion zum Anzeigen der ausgewählten Kategorie
+    function showCategory(category) {
+        document.querySelectorAll('.category').forEach(function (el) {
+            el.style.display = 'none';
+        });
+        document.getElementById(category).style.display = 'block';
+    }
+</script>
     </section>
 
     <!-- Warenkorb anzeigen -->
@@ -183,44 +193,4 @@
         alert('Ihre Bestellung wurde abgeschickt!');
     }
 </script>
-    <nav>
-    <a href="#trauerkarten" class="btn" onclick="showCategory('trauer')">Trauerkarten</a>
-    <a href="#hochzeit" class="btn" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
-</nav>
-
-<!-- Kategorienabschnitte -->
-<section id="trauer" class="category active">
-    <!-- Hier sind deine Trauerkarten -->
-    <!-- Beispiel für eine Karte -->
-    <div class="product">
-        <h2 class="product-title">Weizenfeld Trauerkarte</h2>
-        <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte">
-        <p>Preis: 0,80 € netto</p>
-        <input type="number" id="quantity-weizenfeld" value="1" min="1">
-        <button class="btn" onclick="addToCart('Weizenfeld Trauerkarte', 'quantity-weizenfeld', 0.80)">In den Warenkorb</button>
-    </div>
-    <!-- Weitere Trauerkarten -->
-</section>
-
-<section id="hochzeit" class="category">
-    <!-- Hier sind Hochzeitskarten -->
-    <div class="product">
-        <h2 class="product-title">Hochzeitskarte Beispiel</h2>
-        <img src="hochzeit.png" alt="Hochzeitskarte Beispiel">
-        <p>Preis: 1,20 € netto</p>
-        <input type="number" id="quantity-hochzeit" value="1" min="1">
-        <button class="btn" onclick="addToCart('Hochzeitskarte Beispiel', 'quantity-hochzeit', 1.20)">In den Warenkorb</button>
-    </div>
-</section>
-
-<script>
-    // Funktion zum Anzeigen der ausgewählten Kategorie
-    function showCategory(category) {
-        document.querySelectorAll('.category').forEach(function (el) {
-            el.style.display = 'none';
-        });
-        document.getElementById(category).style.display = 'block';
-    }
-</script>
-
 </html>
