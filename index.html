@@ -233,6 +233,7 @@
                 cart.push({ product: productName, quantity, price });
             }
             updateCart(); // Aktualisiere den Warenkorb auf der Seite
+            console.log(cart); // Debugging: Zeige den Warenkorb in der Konsole an
             alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
         } else {
             alert("Bitte eine gültige Anzahl eingeben.");
