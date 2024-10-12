@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
@@ -30,14 +31,14 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Webshop - Grußkarten</h1>
-        <div class="cart">
-            <img src="cart-icon.png" alt="Warenkorb" style="width: 40px; cursor: pointer;" onclick="toggleCart()">
-            <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background-color: #ff4081; color: white; padding: 5px 10px; border-radius: 50%;">0</span>
-        </div>
-        <p>Wählen Sie Ihre Karten und legen Sie sie in den Warenkorb</p>
-    </header>
+<header>
+    <h1>Webshop - Grußkarten</h1>
+    <div class="cart">
+        <i class="fas fa-shopping-cart" style="font-size: 24px; cursor: pointer;" onclick="toggleCart()"></i>
+        <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background-color: #ff4081; color: white; padding: 5px 10px; border-radius: 50%;">0</span>
+    </div>
+    <p>Wählen Sie Ihre Karten und legen Sie sie in den Warenkorb</p>
+</header>
 
     <nav>
         <a href="#trauerkarten" onclick="showCategory('trauer')">Trauerkarten</a>
