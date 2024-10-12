@@ -225,24 +225,27 @@
     // Produkt zum Warenkorb hinzufügen
     function addToCart(productName, quantityId, price) {
         const quantity = parseInt(document.getElementById(quantityId).value);
+
         if (quantity > 0) {
-            const item = cart.find(item => item.product === productName);
-            if (item) {
-                item.quantity += quantity;
+            const existingItem = cart.find(item => item.product === productName);
+            if (existingItem) {
+                existingItem.quantity += quantity;
             } else {
                 cart.push({ product: productName, quantity, price });
             }
-            updateCart(); // Aktualisiere den Warenkorb auf der Seite
-            console.log(cart); // Debugging: Zeige den Warenkorb in der Konsole an
+
+            console.log("Warenkorb aktualisiert:", cart);  // Debugging: Zeigt den Warenkorb in der Konsole an
+            updateCart();  // Aktualisiert den sichtbaren Warenkorb
             alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
         } else {
             alert("Bitte eine gültige Anzahl eingeben.");
         }
     }
 
-    // Warenkorb aktualisieren
+    // Warenkorb auf der Seite aktualisieren
     function updateCart() {
         const cartContent = document.getElementById('cart-content');
+
         if (cart.length === 0) {
             cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
             return;
@@ -261,28 +264,22 @@
         const name = document.getElementById('customer-name').value;
         const email = document.getElementById('customer-email').value;
 
-        // Prüfen, ob Name und E-Mail ausgefüllt sind
         if (!name || !email) {
             alert('Bitte geben Sie Ihren Namen und Ihre E-Mail-Adresse ein.');
             return;
         }
 
-        // Prüfen, ob der Warenkorb leer ist
         if (cart.length === 0) {
             alert('Ihr Warenkorb ist leer.');
             return;
         }
 
-        // Bestellung zusammenfassen
         let orderSummary = 'Bestellung:\n';
         cart.forEach(item => {
             orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
         });
 
-        // Bestellung in das versteckte Feld für die E-Mail einfügen
         document.getElementById('order-details').value = orderSummary;
-
-        // Formular absenden
         document.getElementById('order-form').submit();
         alert('Ihre Bestellung wurde abgeschickt! Sie erhalten eine Bestätigung per E-Mail.');
     }
