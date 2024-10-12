@@ -18,6 +18,30 @@
         <h1>Webshop - Trauerkarten</h1>
         <p>Wählen Sie Ihre Trauerkarten und legen Sie sie in den Warenkorb.</p>
     </header>
+<!-- Lightbox-Container -->
+<div id="lightbox" style="display:none;">
+    <span id="lightbox-close" onclick="closeLightbox()">X</span>
+    <img id="lightbox-img" src="" alt="Großes Bild">
+</div>
+
+<script>
+    // Lightbox öffnen
+    function openLightbox(imgSrc) {
+        document.getElementById('lightbox-img').src = imgSrc;
+        document.getElementById('lightbox').style.display = 'block';
+    }
+
+    // Lightbox schließen
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
+</script>
+
+<!-- Produkt-Bild mit Lightbox-Trigger -->
+<div class="product">
+    <h2 class="product-title">Weizenfeld Trauerkarte</h2>
+    <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte" onclick="openLightbox('Weizenfeld.png')">
+</div>
 
    <!-- Kategorien-Navigation -->
 <nav>
