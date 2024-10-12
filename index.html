@@ -6,6 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
     <style>
+        /* Lightbox-Container */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Lightbox-Inhalt */
+.lightbox-content {
+    max-width: 80%;
+    max-height: 80%;
+    margin: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+/* Lightbox schließen */
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.lightbox-caption {
+    margin: auto;
+    text-align: center;
+    color: white;
+    padding: 10px 0;
+}
+
         body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
         header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
         nav { margin-bottom: 20px; text-align: center; }
@@ -51,70 +93,70 @@
    <section id="trauer" class="product-list category">
     <!-- 10 Trauerkarten -->
     <div class="product">
-        <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte">
+        <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte" class="lightbox-image">
         <h2>Aufrichtige Anteilnahme - Weizenfeld</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-weizenfeld" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Weizenfeld', 'quantity-weizenfeld', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="Blatttrauer.png" alt="Blatt Trauerkarte">
+        <img src="Blatttrauer.png" alt="Blatt Trauerkarte" class="lightbox-image">
         <h2>In tiefer Trauer - Blatt</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-blatt" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Blatt', 'quantity-blatt', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="Blumentrauer.png" alt="Blumen Trauerkarte">
+        <img src="Blumentrauer.png" alt="Blumen Trauerkarte" class="lightbox-image">
         <h2>Aufrichtiges Beileid - Blumen</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-blumen" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Blumen', 'quantity-blumen', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="Engel.png" alt="Engel Trauerkarte">
+        <img src="Engel.png" alt="Engel Trauerkarte" class="lightbox-image">
         <h2>In tiefem Mitgefühl - Engel</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-engel" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Engel', 'quantity-engel', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="HolzstegTrauer.png" alt="Holzsteg Trauerkarte">
+        <img src="HolzstegTrauer.png" alt="Holzsteg Trauerkarte" class="lightbox-image">
         <h2>Aufrichtiges Beileid - Holzsteg</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-holzsteg" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Holzsteg', 'quantity-holzsteg', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="Lotusblumen Trauer.png" alt="Lotusblumen Trauerkarte">
+        <img src="Lotusblumen Trauer.png" alt="Lotusblumen Trauerkarte" class="lightbox-image">
         <h2>In liebevoller Erinnerung - Lotusblumen</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-lotusblume" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Lotusblume', 'quantity-lotusblume', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="Nachthimmel Trauer.png" alt="Nachthimmel Trauerkarte">
+        <img src="Nachthimmel Trauer.png" alt="Nachthimmel Trauerkarte" class="lightbox-image">
         <h2>In tiefer Trauer - Nachthimmel</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-nachthimmel" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Nachthimmel', 'quantity-nachthimmel', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="Trauervogel.png" alt="Trauervogel Trauerkarte">
+        <img src="Trauervogel.png" alt="Trauervogel Trauerkarte" class="lightbox-image">
         <h2>In tiefem Mitgefühl - Trauervogel</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-trauervogel" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Trauervogel', 'quantity-trauervogel', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="TrauerWinterWald.png" alt="Winterwald Trauerkarte">
+        <img src="TrauerWinterWald.png" alt="Winterwald Trauerkarte" class="lightbox-image">
         <h2>In stiller Erinnerung - Winterwald</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-winterwald" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Winterwald', 'quantity-winterwald', 0.8)">In den Warenkorb</button>
     </div>
     <div class="product">
-        <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte">
+        <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte" class="lightbox-image">
         <h2>Herzliche Anteilnahme - Weiße Blumen</h2>
         <p class="price">0,80 € netto</p>
         <input type="number" id="quantity-weisseblumen" class="quantity" min="1" value="1">
@@ -250,5 +292,28 @@
     <p>&copy; 2024 Dein Name. Alle Rechte vorbehalten.</p>
     <p>Kontakt: <a href="mailto:Nico.Zimmermann@Primero-Partners.com" style="color: #ff4081;">Nico.Zimmermann@Primero-Partners.com</a></p>
 </footer>
+<!-- Hier kommt dein gesamter HTML-Code -->
+
+<script>
+    // Lightbox öffnen
+    function openLightbox(imageSrc, captionText) {
+        document.getElementById('lightbox').style.display = "flex";
+        document.getElementById('lightbox-img').src = imageSrc;
+        document.getElementById('lightbox-caption').innerText = captionText;
+    }
+
+    // Lightbox schließen
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = "none";
+    }
+
+    // Alle PNG-Bilder anklickbar machen
+    document.querySelectorAll('.lightbox-image').forEach(function(image) {
+        image.addEventListener('click', function() {
+            openLightbox(image.src, image.alt);
+        });
+    });
+</script>
+
 </body>
 </html>
