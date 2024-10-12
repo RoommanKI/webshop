@@ -199,58 +199,64 @@
     </script>
 </body>
 </html>
-    <!-- Bestellformular -->
-    <section class="order-form">
-        <h2>Bestellung abschließen</h2>
-        <form id="order-form" action="https://formsubmit.co/Nico.Zimmermann@Primero-Partners.com" method="POST">
-            <input type="text" id="customer-name" name="Name" placeholder="Dein Name" required>
-            <input type="email" id="customer-email" name="Email" placeholder="Deine E-Mail-Adresse" required>
-            <input type="hidden" name="_subject" value="Neue Grußkarten-Bestellung">
-            <input type="hidden" name="Bestellung" id="order-details">
-            <button type="button" class="btn" onclick="finalizeOrder()">Fertig</button>
-        </form>
-    </section>
+<!-- Bestellformular -->
+<section class="order-form">
+    <h2>Bestellung abschließen</h2>
+    <form id="order-form" action="https://formsubmit.co/Nico.Zimmermann@Primero-Partners.com" method="POST">
+        <input type="text" id="customer-name" name="Name" placeholder="Dein Name" required>
+        <input type="email" id="customer-email" name="Email" placeholder="Deine E-Mail-Adresse" required>
+        <input type="hidden" name="_subject" value="Neue Grußkarten-Bestellung">
+        <input type="hidden" name="Bestellung" id="order-details">
+        <button type="button" class="btn" onclick="finalizeOrder()">Fertig</button>
+    </form>
+</section>
 
-    <script>
-        let cart = [];
+<script>
+    let cart = [];
 
-        function addToCart(productName, quantityId, price) {
-            const quantity = parseInt(document.getElementById(quantityId).value);
-            if (quantity > 0) {
-                const item = cart.find(item => item.product === productName);
-                if (item) {
-                    item.quantity += quantity;
-                } else {
-                    cart.push({ product: productName, quantity, price });
-                }
-                alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+    function addToCart(productName, quantityId, price) {
+        const quantity = parseInt(document.getElementById(quantityId).value);
+        if (quantity > 0) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += quantity;
             } else {
-                alert("Bitte eine gültige Anzahl eingeben.");
+                cart.push({ product: productName, quantity, price });
             }
+            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+        } else {
+            alert("Bitte eine gültige Anzahl eingeben.");
+        }
+    }
+
+    function finalizeOrder() {
+        const name = document.getElementById('customer-name').value;
+        const email = document.getElementById('customer-email').value;
+
+        // Prüfe, ob Name und E-Mail eingegeben wurden
+        if (!name || !email) {
+            alert('Bitte geben Sie Ihren Namen und Ihre E-Mail-Adresse ein.');
+            return;
         }
 
-        function finalizeOrder() {
-            const name = document.getElementById('customer-name').value;
-            const email = document.getElementById('customer-email').value;
-
-            if (!name || !email) {
-                alert('Bitte geben Sie Ihren Namen und Ihre E-Mail-Adresse ein.');
-                return;
-            }
-
-            if (cart.length === 0) {
-                alert('Ihr Warenkorb ist leer.');
-                return;
-            }
-
-            let orderSummary = 'Bestellung:\n';
-            cart.forEach(item => {
-                orderSummary += `${item.quantity}x ${item.product} - ${item.price}€\n`;
-            });
-
-            document.getElementById('order-details').value = orderSummary;
-
-            document.getElementById('order-form').submit();
-            alert('Ihre Bestellung wurde abgeschickt! Sie erhalten eine Bestätigung per E-Mail.');
+        // Prüfe, ob der Warenkorb leer ist
+        if (cart.length === 0) {
+            alert('Ihr Warenkorb ist leer.');
+            return;
         }
-    </script>
+
+        // Bestellung zusammenfassen
+        let orderSummary = 'Bestellung:\n';
+        cart.forEach(item => {
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+        });
+
+        // Füge die Zusammenfassung der Bestellung in das versteckte Feld ein
+        document.getElementById('order-details').value = orderSummary;
+
+        // Formular absenden
+        document.getElementById('order-form').submit();
+        alert('Ihre Bestellung wurde abgeschickt! Sie erhalten eine Bestätigung per E-Mail.');
+    }
+</script>
+
