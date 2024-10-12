@@ -313,7 +313,9 @@
     function closeLightbox() {
         document.getElementById('lightbox').style.display = "none";
     }
-
+// Verhindere, dass die Lightbox beim Laden geöffnet wird
+document.getElementById('lightbox').style.display = "none";
+    
     // Alle PNG-Bilder anklickbar machen
     document.querySelectorAll('.lightbox-image').forEach(function(image) {
         image.addEventListener('click', function() {
