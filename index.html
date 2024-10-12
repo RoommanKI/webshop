@@ -199,6 +199,14 @@
     </script>
 </body>
 </html>
+<!-- Warenkorb anzeigen -->
+<section class="cart">
+    <h2>Dein Warenkorb</h2>
+    <div id="cart-content">
+        <p>Ihr Warenkorb ist leer.</p>
+    </div>
+</section>
+
 <!-- Bestellformular -->
 <section class="order-form">
     <h2>Bestellung abschließen</h2>
@@ -207,13 +215,14 @@
         <input type="email" id="customer-email" name="Email" placeholder="Deine E-Mail-Adresse" required>
         <input type="hidden" name="_subject" value="Neue Grußkarten-Bestellung">
         <input type="hidden" name="Bestellung" id="order-details">
-        <button type="submit" class="btn" onclick="finalizeOrder()">Fertig</button> <!-- Ändere type zu submit -->
+        <button type="submit" class="btn" onclick="finalizeOrder()">Fertig</button>
     </form>
 </section>
 
 <script>
     let cart = [];
 
+    // Produkt zum Warenkorb hinzufügen
     function addToCart(productName, quantityId, price) {
         const quantity = parseInt(document.getElementById(quantityId).value);
         if (quantity > 0) {
@@ -223,23 +232,41 @@
             } else {
                 cart.push({ product: productName, quantity, price });
             }
+            updateCart(); // Aktualisiere den Warenkorb auf der Seite
             alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
         } else {
             alert("Bitte eine gültige Anzahl eingeben.");
         }
     }
 
+    // Warenkorb aktualisieren
+    function updateCart() {
+        const cartContent = document.getElementById('cart-content');
+        if (cart.length === 0) {
+            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+            return;
+        }
+
+        let cartHTML = '<ul>';
+        cart.forEach(item => {
+            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        });
+        cartHTML += '</ul>';
+        cartContent.innerHTML = cartHTML;
+    }
+
+    // Bestellung abschließen
     function finalizeOrder() {
         const name = document.getElementById('customer-name').value;
         const email = document.getElementById('customer-email').value;
 
-        // Prüfe, ob Name und E-Mail eingegeben wurden
+        // Prüfen, ob Name und E-Mail ausgefüllt sind
         if (!name || !email) {
             alert('Bitte geben Sie Ihren Namen und Ihre E-Mail-Adresse ein.');
             return;
         }
 
-        // Prüfe, ob der Warenkorb leer ist
+        // Prüfen, ob der Warenkorb leer ist
         if (cart.length === 0) {
             alert('Ihr Warenkorb ist leer.');
             return;
@@ -251,10 +278,11 @@
             orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
         });
 
-        // Füge die Zusammenfassung der Bestellung in das versteckte Feld ein
+        // Bestellung in das versteckte Feld für die E-Mail einfügen
         document.getElementById('order-details').value = orderSummary;
 
         // Formular absenden
+        document.getElementById('order-form').submit();
         alert('Ihre Bestellung wurde abgeschickt! Sie erhalten eine Bestätigung per E-Mail.');
     }
 </script>
