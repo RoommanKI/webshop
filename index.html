@@ -183,4 +183,44 @@
         alert('Ihre Bestellung wurde abgeschickt!');
     }
 </script>
+    <nav>
+    <a href="#trauerkarten" class="btn" onclick="showCategory('trauer')">Trauerkarten</a>
+    <a href="#hochzeit" class="btn" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
+</nav>
+
+<!-- Kategorienabschnitte -->
+<section id="trauer" class="category active">
+    <!-- Hier sind deine Trauerkarten -->
+    <!-- Beispiel für eine Karte -->
+    <div class="product">
+        <h2 class="product-title">Weizenfeld Trauerkarte</h2>
+        <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte">
+        <p>Preis: 0,80 € netto</p>
+        <input type="number" id="quantity-weizenfeld" value="1" min="1">
+        <button class="btn" onclick="addToCart('Weizenfeld Trauerkarte', 'quantity-weizenfeld', 0.80)">In den Warenkorb</button>
+    </div>
+    <!-- Weitere Trauerkarten -->
+</section>
+
+<section id="hochzeit" class="category">
+    <!-- Hier sind Hochzeitskarten -->
+    <div class="product">
+        <h2 class="product-title">Hochzeitskarte Beispiel</h2>
+        <img src="hochzeit.png" alt="Hochzeitskarte Beispiel">
+        <p>Preis: 1,20 € netto</p>
+        <input type="number" id="quantity-hochzeit" value="1" min="1">
+        <button class="btn" onclick="addToCart('Hochzeitskarte Beispiel', 'quantity-hochzeit', 1.20)">In den Warenkorb</button>
+    </div>
+</section>
+
+<script>
+    // Funktion zum Anzeigen der ausgewählten Kategorie
+    function showCategory(category) {
+        document.querySelectorAll('.category').forEach(function (el) {
+            el.style.display = 'none';
+        });
+        document.getElementById(category).style.display = 'block';
+    }
+</script>
+
 </html>
