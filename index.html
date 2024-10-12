@@ -121,6 +121,49 @@
             <button class="btn" onclick="addToCart('Weiße Blumen', 'quantity-weisseblumen', 0.8)">In den Warenkorb</button>
         </div>
     </section>
+    <!-- Warenkorb anzeigen -->
+<section class="cart">
+    <h2>Dein Warenkorb</h2>
+    <div id="cart-content">
+        <p>Ihr Warenkorb ist leer.</p>
+    </div>
+</section>
+
+<script>
+    const cart = [];
+
+    function addToCart(productName, quantityId, price) {
+        const quantity = parseInt(document.getElementById(quantityId).value);
+        if (quantity > 0) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += quantity;
+            } else {
+                cart.push({ product: productName, quantity, price });
+            }
+            updateCart(); // Aktualisiert den Warenkorb auf der Seite
+            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+        } else {
+            alert("Bitte eine gültige Anzahl eingeben.");
+        }
+    }
+
+    function updateCart() {
+        const cartContent = document.getElementById('cart-content');
+        if (cart.length === 0) {
+            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+            return;
+        }
+
+        let cartHTML = '<ul>';
+        cart.forEach(item => {
+            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        });
+        cartHTML += '</ul>';
+        cartContent.innerHTML = cartHTML;
+    }
+</script>
+
 
     <!-- Lightbox-Bereiche -->
     <div id="lightbox-weizenfeld" class="lightbox">
