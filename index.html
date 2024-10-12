@@ -145,4 +145,42 @@
     }
 </script>
 </body>
+    <!-- Bestellformular -->
+<section class="order-form">
+    <h2>Bestellung abschließen</h2>
+    <form id="order-form" action="https://formsubmit.co/Nico.Zimmermann@Primero-Partners.com" method="POST">
+        <input type="text" id="customer-name" name="Name" placeholder="Dein Name" required>
+        <input type="email" id="customer-email" name="Email" placeholder="Deine E-Mail-Adresse" required>
+        <input type="hidden" name="_subject" value="Neue Grußkarten-Bestellung">
+        <input type="hidden" name="Bestellung" id="order-details">
+        <button type="submit" class="btn" onclick="finalizeOrder()">Fertig</button>
+    </form>
+</section>
+
+<script>
+    // Bestellung abschließen
+    function finalizeOrder() {
+        const name = document.getElementById('customer-name').value;
+        const email = document.getElementById('customer-email').value;
+
+        if (!name || !email) {
+            alert('Bitte geben Sie Ihren Namen und Ihre E-Mail-Adresse ein.');
+            return;
+        }
+
+        if (cart.length === 0) {
+            alert('Ihr Warenkorb ist leer.');
+            return;
+        }
+
+        let orderSummary = 'Bestellung:\n';
+        cart.forEach(item => {
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+        });
+
+        document.getElementById('order-details').value = orderSummary;
+
+        alert('Ihre Bestellung wurde abgeschickt!');
+    }
+</script>
 </html>
