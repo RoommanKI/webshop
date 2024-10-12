@@ -207,7 +207,7 @@
         <input type="email" id="customer-email" name="Email" placeholder="Deine E-Mail-Adresse" required>
         <input type="hidden" name="_subject" value="Neue Grußkarten-Bestellung">
         <input type="hidden" name="Bestellung" id="order-details">
-        <button type="button" class="btn" onclick="finalizeOrder()">Fertig</button>
+        <button type="submit" class="btn" onclick="finalizeOrder()">Fertig</button> <!-- Ändere type zu submit -->
     </form>
 </section>
 
@@ -255,8 +255,6 @@
         document.getElementById('order-details').value = orderSummary;
 
         // Formular absenden
-        document.getElementById('order-form').submit();
         alert('Ihre Bestellung wurde abgeschickt! Sie erhalten eine Bestätigung per E-Mail.');
     }
 </script>
-
