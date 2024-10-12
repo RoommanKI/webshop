@@ -164,31 +164,18 @@
         <input type="number" id="quantity-weisseblumen" class="quantity" min="1" value="1">
         <button class="btn" onclick="addToCart('Weiße Blumen', 'quantity-weisseblumen', 0.8)">In den Warenkorb</button>
     </div>
-<section id="hochzeit" class="product-list category">
-    <!-- Hochzeitskarten -->
-    <div class="product">
-        <img src="Hochzeit.png" alt="Zur Hochzeit die herzlichsten Glückwünsche!" class="lightbox-image">
-        <h2>Zur Hochzeit die herzlichsten Glückwünsche</h2>
-        <p class="price">1,50 € netto</p>
-        <input type="number" id="quantity-hochzeit" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Hochzeit', 'quantity-hochzeit', 1.50)">In den Warenkorb</button>
-    </div>
-    <div class="product">
-        <img src="SilberHochzeit.png" alt="Silberhochzeit 25 Jahre" class="lightbox-image">
-        <h2>Silberhochzeit - 25 Jahre</h2>
-        <p class="price">1,50 € netto</p>
-        <input type="number" id="quantity-silberhochzeit" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Silberhochzeit', 'quantity-silberhochzeit', 1.50)">In den Warenkorb</button>
-    </div>
-    <div class="product">
-        <img src="Goldhochzeit.png" alt="Goldene Hochzeit 50 Jahre" class="lightbox-image">
-        <h2>Goldene Hochzeit - 50 Jahre</h2>
-        <p class="price">1,50 € netto</p>
-        <input type="number" id="quantity-goldhochzeit" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Goldene Hochzeit', 'quantity-goldhochzeit', 1.50)">In den Warenkorb</button>
-    </div>
 </section>
 
+    <!-- Hochzeitskarten -->
+    <section id="hochzeit" class="product-list category" style="display:none;">
+        <div class="product">
+            <img src="hochzeit.png" alt="Hochzeitskarte">
+            <h2>Herzlichen Glückwunsch zur Hochzeit</h2>
+            <p class="price">1,20 € netto</p>
+            <input type="number" id="quantity-hochzeit" class="quantity" min="1" value="1">
+            <button class="btn" onclick="addToCart('Hochzeitskarte', 'quantity-hochzeit', 1.2)">In den Warenkorb</button>
+        </div>
+    </section>
 <section id="glueckwunsch" class="product-list category" style="display: none;">
     <!-- 10 Glückwunschkarten -->
     <div class="product">
