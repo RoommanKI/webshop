@@ -63,12 +63,14 @@
         .cart { position: relative; display: inline-block; }
         #cart-popup { display: none; position: absolute; top: 50px; right: 10px; width: 300px; background: white; border: 1px solid #ccc; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         footer { background-color: #333; color: #fff; text-align: center; padding: 10px; margin-top: 20px; }
-        .product img {
-    width: 100%; /* Passt die Bilder an die Breite des Containers an */
-    height: 400px; /* Setzt die Höhe aller Bilder auf 200px */
-    object-fit: cover; /* Schneidet das Bild zu, um das Seitenverhältnis zu erhalten */
+       .product img {
+    width: 100%; /* Passt die Breite an den Container an */
+    height: auto; /* Höhe passt sich automatisch dem Seitenverhältnis an */
+    max-height: 300px; /* Beschränke die maximale Höhe */
+    object-fit: contain; /* Verhindert, dass das Bild abgeschnitten wird */
     border-radius: 8px;
 }
+
     </style>
 </head>
 <body>
