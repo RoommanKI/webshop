@@ -20,6 +20,11 @@
         .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
         .error-message { color: red; margin-top: 5px; }
     </style>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("XM0F9TmvuK3-NruDz");  // Ersetze DEIN_PUBLIC_KEY mit deinem tatsächlichen Public Key
+        })();
+    </script>
 </head>
 <body>
     <header>
@@ -45,7 +50,7 @@
         <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
 
         <!-- Formularfelder für Name, E-Mail, Adresse und Kommentar -->
-        <form id="order-form" action="https://formsubmit.co/deine-email@example.com" method="POST">
+        <form id="order-form">
             <div class="form-group">
                 <label for="name">Name *</label>
                 <input type="text" id="name" name="Name" required>
@@ -67,12 +72,12 @@
             </div>
 
             <!-- Versteckte Felder zum Übermitteln der Bestellinformationen -->
-            <input type="hidden" name="_subject" value="Neue Bestellung erhalten">
             <input type="hidden" id="order-summary-input" name="Bestellung">
             <input type="hidden" id="total-price-input" name="Gesamtpreis">
             <input type="hidden" id="discount-input" name="Rabatt">
 
-            <button type="submit" class="btn">Bestellung bestätigen</button>
+            <!-- Submit-Button bleibt erhalten, aber ohne FormSubmit -->
+            <button type="submit" class="btn" onclick="sendEmail(event)">Bestellung bestätigen</button>
         </form>
     </div>
 
@@ -91,6 +96,8 @@
         let totalPrice = 0;
         let discount = 0;
         let orderSummary = 'Bestellung:\n';
+
+        // Artikel in der Bestellung durchgehen
         cart.forEach(item => {
             const li = document.createElement('li');
             li.textContent = `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
@@ -147,6 +154,22 @@
         orderSummaryInput.value = orderSummary;
         totalPriceInput.value = totalPriceWithVat.toFixed(2); // Anfangspreis ohne Rabatt
         discountInput.value = discount.toFixed(2);
+
+        // Funktion zum Versenden der E-Mail mit EmailJS
+        function sendEmail(e) {
+            e.preventDefault(); // Verhindert das Standard-Submit des Formulars
+
+            // EmailJS sendet das Formular
+            emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
+                .then(function(response) {
+                    console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
+                    alert('Bestellung erfolgreich gesendet!');
+                    window.location.href = 'danke.html';  // Weiterleitung zur Dankeseite
+                }, function(error) {
+                    console.log('Fehler beim Senden der E-Mail', error);
+                    alert('Fehler beim Versenden der Bestellung.');
+                });
+        }
     </script>
 </body>
 </html>
