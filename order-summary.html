@@ -50,35 +50,36 @@
         <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
 
         <!-- Formularfelder für Name, E-Mail, Adresse und Kommentar -->
-        <form id="order-form">
-            <div class="form-group">
-                <label for="name">Name *</label>
-                <input type="text" id="name" name="Name" required>
-            </div>
+       <form id="order-form" onsubmit="sendEmail(event)">
+    <div class="form-group">
+        <label for="name">Name *</label>
+        <input type="text" id="name" name="Name" required>
+    </div>
 
-            <div class="form-group">
-                <label for="email">E-Mail *</label>
-                <input type="email" id="email" name="E-Mail" required>
-            </div>
+    <div class="form-group">
+        <label for="email">E-Mail *</label>
+        <input type="email" id="email" name="E-Mail" required>
+    </div>
 
-            <div class="form-group">
-                <label for="address">Adresse</label>
-                <input type="text" id="address" name="Adresse">
-            </div>
+    <div class="form-group">
+        <label for="address">Adresse</label>
+        <input type="text" id="address" name="Adresse">
+    </div>
 
-            <div class="form-group">
-                <label for="comment">Kommentar</label>
-                <textarea id="comment" name="Kommentar" rows="4"></textarea>
-            </div>
+    <div class="form-group">
+        <label for="comment">Kommentar</label>
+        <textarea id="comment" name="Kommentar" rows="4"></textarea>
+    </div>
 
-            <!-- Versteckte Felder zum Übermitteln der Bestellinformationen -->
-            <input type="hidden" id="order-summary-input" name="Bestellung">
-            <input type="hidden" id="total-price-input" name="Gesamtpreis">
-            <input type="hidden" id="discount-input" name="Rabatt">
+    <!-- Versteckte Felder zum Übermitteln der Bestellinformationen -->
+    <input type="hidden" id="order-summary-input" name="Bestellung">
+    <input type="hidden" id="total-price-input" name="Gesamtpreis">
+    <input type="hidden" id="discount-input" name="Rabatt">
 
-            <!-- Submit-Button bleibt erhalten, aber ohne FormSubmit -->
-            <button type="submit" class="btn" onclick="sendEmail(event)">Bestellung bestätigen</button>
-        </form>
+    <!-- Korrektes Submit-Button-Setup -->
+    <button type="submit" class="btn">Bestellung bestätigen</button>
+</form>
+
     </div>
 
     <script>
