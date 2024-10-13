@@ -553,9 +553,22 @@ function finalizeOrder() {
     // Speichere den Warenkorb im localStorage
     localStorage.setItem('cart', JSON.stringify(cart));
 
+    // Bestellübersicht aufrufen
+    let orderSummary = 'Bestellung:\n';
+    cart.forEach(item => {
+        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+    });
+    alert(`Ihre Bestellung:\n${orderSummary}`);
+
+    // Warenkorb zurücksetzen und anzeigen
+    cart = [];  // Warenkorb leeren
+    updateCart();  // Warenkorb aktualisieren
+    toggleCart();  // Warenkorb-Popup schließen
+
     // Weiterleitung zur Bestellübersichtsseite
     window.location.href = 'order-summary.html';
 }
+
 
         let orderSummary = 'Bestellung:\n';
         cart.forEach(item => {
@@ -617,5 +630,3 @@ document.getElementById('lightbox').style.display = "none";
 </body>
 </html>
 
-</body>
-</html>
