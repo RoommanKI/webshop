@@ -16,6 +16,9 @@
         .discount-section { margin-top: 20px; }
         .discount-input { width: 100%; padding: 10px; margin-top: 10px; }
         .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .error-message { color: red; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -41,8 +44,28 @@
         <p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
         <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
 
-        <!-- Verstecktes Formular zum Versenden der Bestellung über FormSubmit -->
-        <form id="order-form" action="https://formsubmit.co/Nico.Zimmermann@Primero-Partners.com" method="POST">
+        <!-- Formularfelder für Name, E-Mail, Adresse und Kommentar -->
+        <form id="order-form" action="https://formsubmit.co/deine-email@example.com" method="POST">
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="Name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-Mail *</label>
+                <input type="email" id="email" name="E-Mail" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Adresse</label>
+                <input type="text" id="address" name="Adresse">
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Kommentar</label>
+                <textarea id="comment" name="Kommentar" rows="4"></textarea>
+            </div>
+
             <!-- Versteckte Felder zum Übermitteln der Bestellinformationen -->
             <input type="hidden" name="_subject" value="Neue Bestellung erhalten">
             <input type="hidden" id="order-summary-input" name="Bestellung">
