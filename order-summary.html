@@ -41,8 +41,8 @@
         <p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
         <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
 
-        <!-- Verstecktes Formular zum Versenden der Bestellung -->
-        <form id="order-form" action="https://formsubmit.co/Nico.Zimmermann@Primero-Partners.com" method="POST">
+        <!-- Verstecktes Formular zum Versenden der Bestellung über FormSubmit -->
+        <form id="order-form" action="https://formsubmit.co/deine-email@example.com" method="POST">
             <!-- Versteckte Felder zum Übermitteln der Bestellinformationen -->
             <input type="hidden" name="_subject" value="Neue Bestellung erhalten">
             <input type="hidden" id="order-summary-input" name="Bestellung">
@@ -102,6 +102,10 @@
                 totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
                 discountMessage.textContent = `Rabattcode angewendet: ${discountCode}`;
                 discountMessage.style.color = 'green';
+
+                // Aktualisiere die versteckten Formularfelder
+                totalPriceInput.value = totalPriceWithVat.toFixed(2); // Aktualisierter Gesamtpreis inkl. MwSt
+                discountInput.value = discount.toFixed(2); // Rabattbetrag
             } else {
                 discountMessage.textContent = 'Ungültiger Rabattcode!';
                 discountMessage.style.color = 'red';
@@ -118,7 +122,7 @@
 
         // Setze die Bestellübersicht, den Gesamtpreis und den Rabatt in die versteckten Formularfelder
         orderSummaryInput.value = orderSummary;
-        totalPriceInput.value = totalPriceWithVat.toFixed(2);
+        totalPriceInput.value = totalPriceWithVat.toFixed(2); // Anfangspreis ohne Rabatt
         discountInput.value = discount.toFixed(2);
     </script>
 </body>
