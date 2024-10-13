@@ -11,7 +11,7 @@
         .order-summary h2 { color: #ff4081; }
         .order-summary ul { list-style: none; padding: 0; }
         .order-summary li { margin: 10px 0; }
-        .total-price { font-size: 1.5rem; color: #ff4081; margin-top: 20px; }
+        .total-price, .vat-price, .discount-price { font-size: 1.2rem; color: #ff4081; margin-top: 10px; }
         .btn { background-color: #ff4081; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
@@ -25,7 +25,9 @@
         <ul id="order-list">
             <!-- Bestellte Artikel werden hier angezeigt -->
         </ul>
-        <p class="total-price">Gesamtpreis: <span id="total-price"></span> €</p>
+        <p class="discount-price">Rabatt: <span id="discount"></span> €</p>
+        <p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
+        <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
         <button class="btn" onclick="finalizeOrder()">Bestellung bestätigen</button>
     </div>
 
@@ -34,6 +36,8 @@
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         const orderList = document.getElementById('order-list');
         const totalPriceElement = document.getElementById('total-price');
+        const vatElement = document.getElementById('vat');
+        const discountElement = document.getElementById('discount');
 
         let totalPrice = 0;
         cart.forEach(item => {
@@ -42,9 +46,30 @@
             orderList.appendChild(li);
             totalPrice += item.quantity * item.price;
         });
-        totalPriceElement.textContent = totalPrice.toFixed(2);
+
+        // Rabatt anwenden basierend auf dem Gesamtpreis
+        let discount = 0;
+        if (totalPrice > 100) {
+            discount = totalPrice * 0.10; // 10% Rabatt bei Bestellungen über 100€
+        } else if (totalPrice > 50) {
+            discount = totalPrice * 0.05; // 5% Rabatt bei Bestellungen über 50€
+        }
+        totalPrice -= discount; // Rabatt abziehen
+
+        // MwSt von 19% berechnen
+        const vat = totalPrice * 0.19;
+        const totalPriceWithVat = totalPrice + vat;
+
+        // Werte anzeigen
+        discountElement.textContent = discount.toFixed(2);
+        vatElement.textContent = vat.toFixed(2);
+        totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
 
         function finalizeOrder() {
+            if (cart.length === 0) {
+                alert('Ihr Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung bestätigen.');
+                return;
+            }
             alert('Ihre Bestellung wurde bestätigt!');
             localStorage.removeItem('cart'); // Warenkorb leeren
             window.location.href = 'index.html'; // Zurück zur Startseite
