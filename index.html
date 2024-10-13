@@ -489,57 +489,59 @@
 </div>
     </section>
     <!-- Warenkorb-Popup -->
-    <div id="cart-popup">
-        <h3>Dein Warenkorb</h3>
-        <div id="cart-content">
-            <p>Ihr Warenkorb ist leer.</p>
-        </div>
-        <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
-    </div>
+  <div id="cart-popup" style="display: none;">
+   <h3>Dein Warenkorb</h3>
+   <div id="cart-content">
+       <p>Ihr Warenkorb ist leer.</p>
+   </div>
+   <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+</div>
 <script>
-    let cart = [];
+   let cart = [];
 
-    // Warenkorb-Popup ein-/ausblenden
-    function toggleCart() {
-        const cartPopup = document.getElementById('cart-popup');
-        cartPopup.style.display = (cartPopup.style.display === 'none' || cartPopup.style.display === '') ? 'block' : 'none';
-    }
+   // Warenkorb-Popup ein-/ausblenden
+   function toggleCart() {
+       const cartPopup = document.getElementById('cart-popup');
+       cartPopup.style.display = (cartPopup.style.display === 'none' || cartPopup.style.display === '') ? 'block' : 'none';
+   }
 
-    // Produkt zum Warenkorb hinzufügen
-    function addToCart(productName, quantityId, price) {
-        const quantity = parseInt(document.getElementById(quantityId).value);
-        if (quantity > 0) {
-            const item = cart.find(item => item.product === productName);
-            if (item) {
-                item.quantity += quantity;
-            } else {
-                cart.push({ product: productName, quantity, price });
-            }
-            updateCart();  // Warenkorb aktualisieren
-            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
-        } else {
-            alert("Bitte eine gültige Anzahl eingeben.");
-        }
-    }
+   // Produkt zum Warenkorb hinzufügen
+   function addToCart(productName, quantityId, price) {
+       const quantity = parseInt(document.getElementById(quantityId).value);
+       if (quantity > 0) {
+           const item = cart.find(item => item.product === productName);
+           if (item) {
+               item.quantity += quantity;
+           } else {
+               cart.push({ product: productName, quantity, price });
+           }
+           updateCart();  // Warenkorb aktualisieren
+           alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+       } else {
+           alert("Bitte eine gültige Anzahl eingeben.");
+       }
+   }
 
-    // Warenkorb-Inhalt und Zähler aktualisieren
-    function updateCart() {
-        const cartContent = document.getElementById('cart-content');
-        const cartCount = document.getElementById('cart-count');
-        cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
+   // Warenkorb-Inhalt und Zähler aktualisieren
+   function updateCart() {
+       const cartContent = document.getElementById('cart-content');
+       const cartCount = document.getElementById('cart-count');
+       cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-        if (cart.length === 0) {
-            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-            return;
-        }
+       if (cart.length === 0) {
+           cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+           return;
+       }
 
-        let cartHTML = '<ul>';
-        cart.forEach(item => {
-            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-        });
-        cartHTML += '</ul>';
-        cartContent.innerHTML = cartHTML;
-    }
+       let cartHTML = '<ul>';
+       cart.forEach(item => {
+           cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+       });
+       cartHTML += '</ul>';
+       cartContent.innerHTML = cartHTML;
+   }
+</script>
+
 
 // Bestellung abschließen
 function finalizeOrder() {
