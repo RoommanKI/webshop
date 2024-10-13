@@ -13,6 +13,8 @@
         .order-summary li { margin: 10px 0; }
         .total-price, .vat-price, .discount-price { font-size: 1.2rem; color: #ff4081; margin-top: 10px; }
         .btn { background-color: #ff4081; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        .discount-section { margin-top: 20px; }
+        .discount-input { width: 100%; padding: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -25,6 +27,14 @@
         <ul id="order-list">
             <!-- Bestellte Artikel werden hier angezeigt -->
         </ul>
+        
+        <div class="discount-section">
+            <label for="discount-code">Rabattcode eingeben:</label>
+            <input type="text" id="discount-code" class="discount-input" placeholder="Geben Sie Ihren Rabattcode ein">
+            <button class="btn" onclick="applyDiscountCode()">Rabattcode anwenden</button>
+            <p id="discount-message" style="color: red; margin-top: 10px;"></p>
+        </div>
+
         <p class="discount-price">Rabatt: <span id="discount"></span> €</p>
         <p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
         <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
@@ -38,6 +48,7 @@
         const totalPriceElement = document.getElementById('total-price');
         const vatElement = document.getElementById('vat');
         const discountElement = document.getElementById('discount');
+        const discountMessage = document.getElementById('discount-message');
 
         let totalPrice = 0;
         cart.forEach(item => {
@@ -58,12 +69,42 @@
 
         // MwSt von 19% berechnen
         const vat = totalPrice * 0.19;
-        const totalPriceWithVat = totalPrice + vat;
+        let totalPriceWithVat = totalPrice + vat;
 
         // Werte anzeigen
         discountElement.textContent = discount.toFixed(2);
         vatElement.textContent = vat.toFixed(2);
         totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
+
+        // Rabattcodes und ihre Prozentsätze
+        const discountCodes = {
+            "RABATT10": 0.10, // 10% Rabatt
+            "RABATT20": 0.20  // 20% Rabatt
+        };
+
+        // Funktion zum Anwenden des Rabattcodes
+        function applyDiscountCode() {
+            const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
+            
+            if (discountCodes[discountCode]) {
+                const discountRate = discountCodes[discountCode];
+                const discountAmount = totalPrice * discountRate;
+                discount += discountAmount; // Anwenden des Rabattcodes auf den Gesamtpreis
+                totalPrice -= discountAmount; // Rabatt abziehen
+                
+                // Aktualisiere MwSt und Gesamtpreis
+                const newVat = totalPrice * 0.19;
+                totalPriceWithVat = totalPrice + newVat;
+
+                discountElement.textContent = discount.toFixed(2);
+                vatElement.textContent = newVat.toFixed(2);
+                totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
+                discountMessage.textContent = `Rabattcode angewendet: ${discountCode}`;
+                discountMessage.style.color = 'green';
+            } else {
+                discountMessage.textContent = 'Ungültiger Rabattcode!';
+            }
+        }
 
         function finalizeOrder() {
             if (cart.length === 0) {
