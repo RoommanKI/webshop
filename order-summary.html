@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestellübersicht</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
+        header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
+        .order-summary { max-width: 600px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .order-summary h2 { color: #ff4081; }
+        .order-summary ul { list-style: none; padding: 0; }
+        .order-summary li { margin: 10px 0; }
+        .total-price { font-size: 1.5rem; color: #ff4081; margin-top: 20px; }
+        .btn { background-color: #ff4081; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bestellübersicht</h1>
+    </header>
+
+    <div class="order-summary">
+        <h2>Ihre Bestellung</h2>
+        <ul id="order-list">
+            <!-- Bestellte Artikel werden hier angezeigt -->
+        </ul>
+        <p class="total-price">Gesamtpreis: <span id="total-price"></span> €</p>
+        <button class="btn" onclick="finalizeOrder()">Bestellung bestätigen</button>
+    </div>
+
+    <script>
+        // Bestellinformationen von localStorage laden
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const orderList = document.getElementById('order-list');
+        const totalPriceElement = document.getElementById('total-price');
+
+        let totalPrice = 0;
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
+            orderList.appendChild(li);
+            totalPrice += item.quantity * item.price;
+        });
+        totalPriceElement.textContent = totalPrice.toFixed(2);
+
+        function finalizeOrder() {
+            alert('Ihre Bestellung wurde bestätigt!');
+            localStorage.removeItem('cart'); // Warenkorb leeren
+            window.location.href = 'index.html'; // Zurück zur Startseite
+        }
+    </script>
+</body>
+</html>
