@@ -50,7 +50,7 @@
         <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
 
         <!-- Formularfelder für Name, E-Mail, Adresse und Kommentar -->
-       <form id="order-form" onsubmit="sendEmail(event)">
+<form id="order-form" onsubmit="sendEmail(event)">
     <div class="form-group">
         <label for="name">Name *</label>
         <input type="text" id="name" name="Name" required>
@@ -76,7 +76,7 @@
     <input type="hidden" id="total-price-input" name="Gesamtpreis">
     <input type="hidden" id="discount-input" name="Rabatt">
 
-    <!-- Korrektes Submit-Button-Setup -->
+    <!-- Ein einfacher Submit-Button ohne onclick -->
     <button type="submit" class="btn">Bestellung bestätigen</button>
 </form>
 
@@ -157,20 +157,21 @@
         discountInput.value = discount.toFixed(2);
 
         // Funktion zum Versenden der E-Mail mit EmailJS
-        function sendEmail(e) {
-            e.preventDefault(); // Verhindert das Standard-Submit des Formulars
+     function sendEmail(e) {
+    e.preventDefault(); // Verhindert das Standard-Submit des Formulars
 
-            // EmailJS sendet das Formular
-            emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
-                .then(function(response) {
-                    console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
-                    alert('Bestellung erfolgreich gesendet!');
-                    window.location.href = 'danke.html';  // Weiterleitung zur Dankeseite
-                }, function(error) {
-                    console.log('Fehler beim Senden der E-Mail', error);
-                    alert('Fehler beim Versenden der Bestellung.');
-                });
-        }
+    // EmailJS sendet das Formular
+    emailjs.sendForm('DEIN_SERVICE_ID', 'DEIN_TEMPLATE_ID', '#order-form')
+        .then(function(response) {
+            console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
+            alert('Bestellung erfolgreich gesendet!');
+            window.location.href = 'danke.html';  // Weiterleitung zur Dankeseite
+        }, function(error) {
+            console.log('Fehler beim Senden der E-Mail', error);
+            alert('Fehler beim Versenden der Bestellung.');
+        });
+}
+
     </script>
 </body>
 </html>
