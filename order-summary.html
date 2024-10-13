@@ -15,6 +15,7 @@
         .btn { background-color: #ff4081; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; }
         .discount-section { margin-top: 20px; }
         .discount-input { width: 100%; padding: 10px; margin-top: 10px; }
+        .form-group { margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -27,7 +28,8 @@
         <ul id="order-list">
             <!-- Bestellte Artikel werden hier angezeigt -->
         </ul>
-        
+
+        <!-- Rabattcode-Bereich -->
         <div class="discount-section">
             <label for="discount-code">Rabattcode eingeben:</label>
             <input type="text" id="discount-code" class="discount-input" placeholder="Geben Sie Ihren Rabattcode ein">
@@ -38,7 +40,17 @@
         <p class="discount-price">Rabatt: <span id="discount"></span> €</p>
         <p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
         <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
-        <button class="btn" onclick="finalizeOrder()">Bestellung bestätigen</button>
+
+        <!-- Verstecktes Formular zum Versenden der Bestellung -->
+        <form id="order-form" action="https://formsubmit.co/Nico.Zimmermann@Primero-Partners.com" method="POST">
+            <!-- Versteckte Felder zum Übermitteln der Bestellinformationen -->
+            <input type="hidden" name="_subject" value="Neue Bestellung erhalten">
+            <input type="hidden" id="order-summary-input" name="Bestellung">
+            <input type="hidden" id="total-price-input" name="Gesamtpreis">
+            <input type="hidden" id="discount-input" name="Rabatt">
+
+            <button type="submit" class="btn">Bestellung bestätigen</button>
+        </form>
     </div>
 
     <script>
@@ -48,33 +60,23 @@
         const totalPriceElement = document.getElementById('total-price');
         const vatElement = document.getElementById('vat');
         const discountElement = document.getElementById('discount');
+        const orderSummaryInput = document.getElementById('order-summary-input');
+        const totalPriceInput = document.getElementById('total-price-input');
+        const discountInput = document.getElementById('discount-input');
         const discountMessage = document.getElementById('discount-message');
 
         let totalPrice = 0;
+        let discount = 0;
+        let orderSummary = 'Bestellung:\n';
         cart.forEach(item => {
             const li = document.createElement('li');
             li.textContent = `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
             orderList.appendChild(li);
             totalPrice += item.quantity * item.price;
+
+            // Bestellübersicht für das Formular
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
         });
-
-        // Rabatt anwenden basierend auf dem Gesamtpreis
-        let discount = 0;
-        if (totalPrice > 100) {
-            discount = totalPrice * 0.10; // 10% Rabatt bei Bestellungen über 100€
-        } else if (totalPrice > 50) {
-            discount = totalPrice * 0.05; // 5% Rabatt bei Bestellungen über 50€
-        }
-        totalPrice -= discount; // Rabatt abziehen
-
-        // MwSt von 19% berechnen
-        const vat = totalPrice * 0.19;
-        let totalPriceWithVat = totalPrice + vat;
-
-        // Werte anzeigen
-        discountElement.textContent = discount.toFixed(2);
-        vatElement.textContent = vat.toFixed(2);
-        totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
 
         // Rabattcodes und ihre Prozentsätze
         const discountCodes = {
@@ -88,33 +90,36 @@
             
             if (discountCodes[discountCode]) {
                 const discountRate = discountCodes[discountCode];
-                const discountAmount = totalPrice * discountRate;
-                discount += discountAmount; // Anwenden des Rabattcodes auf den Gesamtpreis
-                totalPrice -= discountAmount; // Rabatt abziehen
+                discount = totalPrice * discountRate;
+                totalPrice -= discount; // Rabatt abziehen
                 
-                // Aktualisiere MwSt und Gesamtpreis
-                const newVat = totalPrice * 0.19;
-                totalPriceWithVat = totalPrice + newVat;
+                // Aktualisiere die Anzeige von MwSt und Gesamtpreis
+                const vat = totalPrice * 0.19;
+                const totalPriceWithVat = totalPrice + vat;
 
                 discountElement.textContent = discount.toFixed(2);
-                vatElement.textContent = newVat.toFixed(2);
+                vatElement.textContent = vat.toFixed(2);
                 totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
                 discountMessage.textContent = `Rabattcode angewendet: ${discountCode}`;
                 discountMessage.style.color = 'green';
             } else {
                 discountMessage.textContent = 'Ungültiger Rabattcode!';
+                discountMessage.style.color = 'red';
             }
         }
 
-        function finalizeOrder() {
-            if (cart.length === 0) {
-                alert('Ihr Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung bestätigen.');
-                return;
-            }
-            alert('Ihre Bestellung wurde bestätigt!');
-            localStorage.removeItem('cart'); // Warenkorb leeren
-            window.location.href = 'index.html'; // Zurück zur Startseite
-        }
+        // MwSt von 19% berechnen
+        const vat = totalPrice * 0.19;
+        const totalPriceWithVat = totalPrice + vat;
+
+        discountElement.textContent = '0.00';  // Angenommen, kein Rabatt vor Anwendung des Codes
+        vatElement.textContent = vat.toFixed(2);
+        totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
+
+        // Setze die Bestellübersicht, den Gesamtpreis und den Rabatt in die versteckten Formularfelder
+        orderSummaryInput.value = orderSummary;
+        totalPriceInput.value = totalPriceWithVat.toFixed(2);
+        discountInput.value = discount.toFixed(2);
     </script>
 </body>
 </html>
