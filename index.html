@@ -541,12 +541,20 @@
         cartContent.innerHTML = cartHTML;
     }
 
-    // Bestellung abschließen
-    function finalizeOrder() {
-        if (cart.length === 0) {
-            alert('Ihr Warenkorb ist leer.');
-            return;
-        }
+// Bestellung abschließen
+function finalizeOrder() {
+    if (cart.length === 0) {
+        alert('Ihr Warenkorb ist leer.');
+        return;
+    }
+
+    // Speichere den Warenkorb im localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Weiterleitung zur Bestellübersichtsseite
+    window.location.href = 'order-summary.html';
+}
+
         let orderSummary = 'Bestellung:\n';
         cart.forEach(item => {
             orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
