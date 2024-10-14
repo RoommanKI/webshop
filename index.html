@@ -693,25 +693,27 @@ document.querySelectorAll('.lightbox-image').forEach(function(image) {
     <p>&copy; 2024 Dein Name. Alle Rechte vorbehalten.</p>
     <p>Kontakt: <a href="mailto:Nico.Zimmermann@Primero-Partners.com" style="color: #ff4081;">Nico.Zimmermann@Primero-Partners.com</a></p>
 </footer>
- <script>
-        // Dummy-Zugangsdaten
-        const validUsername = "admin";
-        const validPassword = "password123";
+  <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Dummy-Zugangsdaten
+            const validUsername = "admin";
+            const validPassword = "password123";
 
-        // Funktion zur Überprüfung der Zugangsdaten
-        function checkLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
+            // Funktion zur Überprüfung der Zugangsdaten
+            window.checkLogin = function() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const errorMessage = document.getElementById('error-message');
 
-            // Überprüfen, ob Benutzername und Passwort korrekt sind
-            if (username === validUsername && password === validPassword) {
-                document.getElementById('login-form').style.display = 'none'; // Verstecke das Login-Formular
-                document.getElementById('content').style.display = 'block'; // Zeige den Inhalt an
-            } else {
-                errorMessage.textContent = 'Benutzername oder Passwort ist falsch.';
+                // Überprüfen, ob Benutzername und Passwort korrekt sind
+                if (username === validUsername && password === validPassword) {
+                    document.getElementById('login-form').style.display = 'none'; // Verstecke das Login-Formular
+                    document.getElementById('content').style.display = 'block'; // Zeige den Inhalt an
+                } else {
+                    errorMessage.textContent = 'Benutzername oder Passwort ist falsch.';
+                }
             }
-        }
+        });
     </script>
 </body>
 </html>
