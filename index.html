@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-</head>
-
-
-
-
-
-    <head>
-    <body>
     <title>Webshop - Grußkarten</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
         #content { display: none; } /* Versteckt den Inhalt vor der Anmeldung */
         .login-container { text-align: center; margin-top: 100px; }
         .form-group { margin-bottom: 15px; }
         .error-message { color: red; }
+        /* Kategorien standardmäßig verstecken */
+        .category { display: none; }
+
+        /* Allgemeine Stile für die Seite und die Produkte */
+        .product-list { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .product { background-color: #fff; border-radius: 8px; padding: 20px; width: 300px; text-align: center; }
+        .product img { width: 100%; max-height: 300px; object-fit: contain; }
+        .price { font-size: 1.2rem; color: #ff4081; margin: 10px 0; }
+        .btn { background-color: #ff4081; color: white; padding: 10px 15px; cursor: pointer; }
     </style>
-    </body>
 </head>
 <body>
 
@@ -41,15 +41,13 @@
 
     <!-- Hier wird der Inhalt eingeblendet, wenn man sich erfolgreich anmeldet -->
     <div id="content">
-        
-    <!-- Hauptinhalt der Seite (Webshop, etc.) wird hier eingefügt -->
-    
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webshop - Grußkarten</title>
-    <style>
+        <header>
+            <h1>Webshop - Grußkarten</h1>
+            <div class="cart">
+                <i class="fas fa-shopping-cart" style="font-size: 24px; cursor: pointer;" onclick="toggleCart()"></i>
+                <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background-color: #ff4081; color: white; padding: 5px 10px; border-radius: 50%;">0</span>
+            </div>
+        </header>
         /* Kategorien standardmäßig verstecken */
         .category {
             display: none;
@@ -727,77 +725,37 @@ document.querySelectorAll('.lightbox-image').forEach(function(image) {
 
       <!-- JavaScript zur Supabase-Integration -->
     <script>
-        // Deine Supabase-URL und der API-Schlüssel (findest du im Supabase Dashboard unter "Settings" > "API")
+        <!-- JavaScript zur Supabase-Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
         const SUPABASE_URL = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
         const SUPABASE_PUBLIC_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
 
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
 
-        // Registrierung eines neuen Benutzers
         async function signUp(email, password) {
-            const { user, error } = await supabase.auth.signUp({
-                email: email,
-                password: password
-            });
-            
+            const { user, error } = await supabase.auth.signUp({ email, password });
             if (error) {
-                console.error('Error bei der Registrierung:', error.message);
+                console.error('Fehler bei der Registrierung:', error.message);
             } else {
                 console.log('Registrierung erfolgreich:', user);
             }
         }
 
-        // Anmeldung eines Benutzers
         async function signIn(email, password) {
-            const { session, error } = await supabase.auth.signIn({
-                email: email,
-                password: password
-            });
-            
+            const { session, error } = await supabase.auth.signIn({ email, password });
             if (error) {
                 console.error('Fehler bei der Anmeldung:', error.message);
             } else {
                 console.log('Anmeldung erfolgreich:', session);
-                // Weiterleitung oder geschützte Seite anzeigen
             }
         }
 
-        // Daten aus der "products" Tabelle abrufen
-        async function getProducts() {
-            const { data, error } = await supabase
-                .from('products')  // Name der Tabelle
-                .select('*');       // Alle Spalten auswählen
-
-            if (error) {
-                console.error('Fehler beim Abrufen der Produkte:', error.message);
-            } else {
-                console.log('Produkte:', data);
-            }
-        }
-
-        // Produkt zur "products" Tabelle hinzufügen
-        async function addProduct(productName, productPrice) {
-            const { data, error } = await supabase
-                .from('products')  // Name der Tabelle
-                .insert([
-                    { name: productName, price: productPrice }
-                ]);
-
-            if (error) {
-                console.error('Fehler beim Hinzufügen des Produkts:', error.message);
-            } else {
-                console.log('Produkt erfolgreich hinzugefügt:', data);
-            }
-        }
-
-        // Authentifizierungsstatus überwachen
         supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 console.log('Benutzer eingeloggt:', session.user);
-                // Zeige geschützte Inhalte an
             } else {
                 console.log('Benutzer ist nicht eingeloggt');
-                // Weiterleitung zur Login-Seite oder Zeige Anmeldeformular
             }
         });
     </script>
