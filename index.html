@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login erforderlich</title>
+    <title>Webshop - Anmeldung</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; text-align: center; }
         .login-container { margin-top: 100px; max-width: 300px; margin-left: auto; margin-right: auto; background: white; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; }
@@ -31,37 +31,10 @@
 </div>
 
 <div id="content" style="display:none;">
-    <!-- Hier wird der Hauptinhalt der Website eingefügt -->
-    <h1>Willkommen im Webshop</h1>
-    <!-- Der restliche HTML-Inhalt deiner Webseite geht hier weiter -->
-</div>
+    <!-- Hauptinhalt der Seite (Webshop, etc.) wird hier eingefügt -->
 
-<script>
-// Feste Zugangsdaten (im Code gespeichert)
-const validUsername = "admin";
-const validPassword = "password123";
-
-// Funktion zur Überprüfung der Anmeldedaten
-function checkLogin() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const errorMessage = document.getElementById('error-message');
-
-    // Zugangsdaten überprüfen
-    if (username === validUsername && password === validPassword) {
-        // Anmelden erfolgreich: Login-Formular ausblenden, Inhalt anzeigen
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
-    } else {
-        // Fehlermeldung anzeigen
-        errorMessage.textContent = 'Benutzername oder Passwort ist falsch.';
-    }
-}
-</script>
-
-</body>
-</html>
-<html lang="de">
+<div id="content" style="display:none;">
+    
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <meta charset="UTF-8">
@@ -719,4 +692,23 @@ document.querySelectorAll('.lightbox-image').forEach(function(image) {
     <p>&copy; 2024 Dein Name. Alle Rechte vorbehalten.</p>
     <p>Kontakt: <a href="mailto:Nico.Zimmermann@Primero-Partners.com" style="color: #ff4081;">Nico.Zimmermann@Primero-Partners.com</a></p>
 </footer>
+<script>
+// Dein JavaScript (Login-Überprüfung)
+const validUsername = "admin";
+const validPassword = "password123";
 
+function checkLogin() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorMessage = document.getElementById('error-message');
+
+    if (username === validUsername && password === validPassword) {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+    } else {
+        errorMessage.textContent = 'Benutzername oder Passwort ist falsch.';
+    }
+}
+</script>
+</body>
+</html>
