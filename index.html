@@ -74,6 +74,9 @@
     object-fit: contain; /* Verhindert, dass das Bild abgeschnitten wird */
     border-radius: 8px;
 }
+       #content {
+            display: none; /* Versteckt den Inhalt initial */
+        } 
 
     </style>
 </head>
@@ -108,8 +111,9 @@
             // Zugangsdaten überprüfen
             if (username === validUsername && password === validPassword) {
                 // Anmelden erfolgreich
-                document.getElementById('login-form').style.display = 'none';  // Anmeldeformular ausblenden
-                document.getElementById('content').style.display = 'block';  // Geschützten Inhalt anzeigen
+document.getElementById('login-form').style.display = 'none';  // Anmeldeformular ausblenden
+document.getElementById('content').style.display = 'block';  // Geschützten Inhalt anzeigen
+
             } else {
                 // Fehlermeldung anzeigen
                 errorMessage.textContent = 'Benutzername oder Passwort ist falsch.';
