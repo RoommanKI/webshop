@@ -752,18 +752,19 @@ document.getElementById('register-form').addEventListener('submit', async functi
 
     try {
         // Registrierungsanfrage an Supabase
-        const { error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        });
+      const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+});
 
-        if (error) {
-            // Fehler anzeigen, falls etwas schief geht
-            errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-        } else {
-            // Erfolgsnachricht oder Weiterleitung nach erfolgreicher Registrierung
-            alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
-        }
+if (error) {
+    errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+    console.error('Error:', error); // Hier wird der Fehler in der Konsole angezeigt
+} else {
+    console.log('Registration success:', data); // Erfolgreiche Antwort wird in der Konsole angezeigt
+    alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
+}
+
     } catch (err) {
         errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
     }
