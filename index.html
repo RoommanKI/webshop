@@ -7,38 +7,6 @@
 
     <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script>
-        // Supabase-Client initialisieren
-        document.addEventListener('DOMContentLoaded', function() {
-            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-            // Registrierungsformular verarbeiten
-            document.getElementById('register-form').addEventListener('submit', async function(event) {
-                event.preventDefault();
-
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const errorMessage = document.getElementById('register-error');
-
-                try {
-                    const { data, error } = await supabase.auth.signUp({
-                        email: email,
-                        password: password,
-                    });
-
-                    if (error) {
-                        errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-                    } else {
-                        alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
-                    }
-                } catch (err) {
-                    errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
-                }
-            });
-        });
-    </script>
 
     <style>
         body {
@@ -114,5 +82,38 @@
         </form>
     </div>
 
+    <!-- Supabase-Initialisierung und Registrierung -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Supabase-Client initialisieren
+            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+            // Registrierungsformular verarbeiten
+            document.getElementById('register-form').addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const errorMessage = document.getElementById('register-error');
+
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email: email,
+                        password: password,
+                    });
+
+                    if (error) {
+                        errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+                    } else {
+                        alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
+                    }
+                } catch (err) {
+                    errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
