@@ -7,7 +7,6 @@
 
     <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
 </head>
 <body>
 
@@ -28,17 +27,17 @@
         </form>
     </div>
 
-    <!-- Supabase Registrierung Script -->
     <script>
-        window.onload = async function () {
+        // Wir verschieben die Supabase-Client-Initialisierung in das window.onload-Event
+        window.onload = function () {
             // Supabase-Client initialisieren
             const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
             const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
             const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-            console.log("Supabase successfully initialized.");
+            console.log("Supabase initialized successfully.");
 
-            // Formular-Submit-Event
+            // Registrierungsformular Event-Listener
             document.getElementById('register-form').addEventListener('submit', async function(event) {
                 event.preventDefault(); // Verhindert das automatische Neuladen der Seite
 
