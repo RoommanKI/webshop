@@ -7,6 +7,17 @@
 
     <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+    <script>
+        // Supabase-Client außerhalb der Event Listener initialisieren
+        let supabase;
+
+        window.onload = function() {
+            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+            supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        };
+    </script>
 </head>
 <body>
 
@@ -32,10 +43,11 @@
         document.getElementById('register-form').addEventListener('submit', async function(event) {
             event.preventDefault(); // Verhindert das automatische Neuladen der Seite
 
-            // Supabase-Client initialisieren bei Bedarf (direkt im Event)
-            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+            // Prüfen, ob Supabase korrekt initialisiert wurde
+            if (!supabase) {
+                console.error('Supabase wurde nicht korrekt initialisiert.');
+                return;
+            }
 
             // E-Mail und Passwort aus dem Formular holen
             const email = document.getElementById('email').value;
