@@ -12,50 +12,49 @@
 
     <!-- Stylesheets -->
     <style>
-        /* Grundlegende Seiteinstellungen */
+ /* Basic Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
         header {
+            display: flex;
+            justify-content: space-between; /* Space between the left and right elements */
+            align-items: center; /* Align items vertically */
             background-color: #ff4081;
             color: white;
             padding: 20px;
-            text-align: center;
         }
-/* Absolute positioning for the form container */
+
+        /* Container for forms */
         .form-container {
-            position: relative;
+            display: flex;
+            justify-content: space-between;
             width: 100%;
         }
 
-        /* Position the registration form to the left */
-        .form-container .register-form {
-            position: absolute;
-            left: 20px;
-            top: 10px;
-            background: white;
+        .form-container form {
+            background-color: white;
             padding: 10px;
             border-radius: 5px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Position the login form to the right */
-        .form-container .login-form {
-            position: absolute;
-            right: 20px;
-            top: 10px;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Registration form aligned to the left */
+        .register-form {
+            margin-right: auto;
         }
-        /* Navigation Styling */
+
+        /* Login form aligned to the right */
+        .login-form {
+            margin-left: auto;
+        }
+
         nav {
-            margin-top: 120px; /* Push the nav below the forms */
+            margin-top: 50px;
             text-align: center;
         }
 
@@ -70,6 +69,8 @@
 
         nav a:hover {
             background-color: #e73370;
+        }
+
         }
 
         /* Container für Hauptinhalt */
