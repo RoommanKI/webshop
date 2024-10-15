@@ -7,14 +7,7 @@
 
      <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script>
-        // Supabase-Client initialisieren
-        document.addEventListener('DOMContentLoaded', function() {
-            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-        });
-    </script>
+    
     <!-- Font Awesome für Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -73,21 +66,21 @@
         </div>
         <p>Wählen Sie Ihre Karten und legen Sie sie in den Warenkorb</p>
 
-        <div class="register-container">
-    <h2>Registrieren</h2>
-    <form id="register-form">
-        <div class="form-group">
-            <label for="email">E-Mail:</label>
-            <input type="email" id="email" placeholder="E-Mail eingeben" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Passwort:</label>
-            <input type="password" id="register-password" placeholder="Passwort eingeben" required>
-        </div>
-        <button type="submit">Registrieren</button>
-        <p id="register-error" class="error-message"></p>
-    </form>
-</div>
+       <div class="register-container">
+        <h2>Registrieren</h2>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="email">E-Mail:</label>
+                <input type="email" id="email" placeholder="E-Mail eingeben" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Passwort:</label>
+                <input type="password" id="password" placeholder="Passwort eingeben" required>
+            </div>
+            <button type="submit">Registrieren</button>
+            <p id="register-error" class="error-message"></p>
+        </form>
+    </div>
 
     </header>
 
@@ -309,6 +302,47 @@
         });
     });
 </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Supabase-Client initialisieren
+            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+            // Event Listener für das Registrierungsformular
+            const registerForm = document.getElementById('register-form');
+            const errorMessage = document.getElementById('register-error');
+
+            if (registerForm) {
+                registerForm.addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Verhindert das automatische Neuladen der Seite
+
+                    // E-Mail und Passwort aus dem Formular holen
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+
+                    try {
+                        // Registrierungsanfrage an Supabase
+                        const { data, error } = await supabase.auth.signUp({
+                            email: email,
+                            password: password,
+                        });
+
+                        if (error) {
+                            errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+                        } else {
+                            alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
+                        }
+
+                    } catch (err) {
+                        errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+                    }
+                });
+            } else {
+                console.error('Register form element not found');
+            }
+        });
+    </script>
 
     
 </body>
