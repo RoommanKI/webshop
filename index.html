@@ -25,6 +25,36 @@
             padding: 20px;
             text-align: center;
         }
+        /* Flexbox container for forms */
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        /* Positioning the registration form to the left */
+        .form-container .register-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* Positioning the login form to the right */
+        .form-container .login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .form-container form {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
         nav {
             margin-bottom: 20px;
