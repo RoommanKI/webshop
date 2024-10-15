@@ -73,91 +73,36 @@
         <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
         <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
     </nav>
+<!-- Registration Form -->
 <h2>Registrieren</h2>
-    <form id="register-form">
-        <div class="form-group">
-            <label for="email">E-Mail:</label>
-            <input type="email" id="email" placeholder="E-Mail eingeben" autocomplete="email" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Passwort:</label>
-            <input type="password" id="password" placeholder="Passwort eingeben" autocomplete="new-password" required>
-        </div>
-        <button type="submit">Registrieren</button>
-        <p id="register-error" class="error-message"></p>
-    </form>
+<form id="register-form">
+    <div class="form-group">
+        <label for="register-email">E-Mail:</label>
+        <input type="email" id="register-email" placeholder="E-Mail eingeben" autocomplete="email" required>
+    </div>
+    <div class="form-group">
+        <label for="register-password">Passwort:</label>
+        <input type="password" id="register-password" placeholder="Passwort eingeben" autocomplete="new-password" required>
+    </div>
+    <button type="submit">Registrieren</button>
+    <p id="register-error" class="error-message"></p>
+</form>
+
+<!-- Login Form -->
 <h2>Anmelden</h2>
-    <form id="login-form">
-        <div class="form-group">
-            <label for="login-email">E-Mail:</label>
-            <input type="email" id="login-email" placeholder="E-Mail eingeben" autocomplete="email" required>
-        </div>
-        <div class="form-group">
-            <label for="login-password">Passwort:</label>
-            <input type="password" id="login-password" placeholder="Passwort eingeben" autocomplete="current-password" required>
-        </div>
-        <button type="submit">Anmelden</button>
-        <p id="login-error" class="error-message"></p>
-    </form>
-   
-    <!-- Supabase SDK and script -->
-    <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+<form id="login-form">
+    <div class="form-group">
+        <label for="login-email">E-Mail:</label>
+        <input type="email" id="login-email" placeholder="E-Mail eingeben" autocomplete="email" required>
+    </div>
+    <div class="form-group">
+        <label for="login-password">Passwort:</label>
+        <input type="password" id="login-password" placeholder="Passwort eingeben" autocomplete="current-password" required>
+    </div>
+    <button type="submit">Anmelden</button>
+    <p id="login-error" class="error-message"></p>
+</form>
 
-        // Supabase initialization
-        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-        const supabase = createClient(supabaseUrl, supabaseKey);
-
-        // Registration logic
-        document.getElementById('register-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent page reload
-
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const errorMessage = document.getElementById('register-error');
-
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) {
-                    errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-                } else {
-                    alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails zur Bestätigung.');
-                }
-            } catch (err) {
-                errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
-            }
-        });
-
-        // Login logic
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent page reload
-
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorMessage = document.getElementById('login-error');
-
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) {
-                    errorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-                } else {
-                    alert('Anmeldung erfolgreich! Sie werden weitergeleitet.');
-                    // Add logic here to redirect or load additional content after successful login
-                }
-            } catch (err) {
-                errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
-            }
-        });
-    </script>
     <!-- Hauptinhalt -->
     <div id="main-content">
         <!-- Startseite Abschnitt -->
@@ -165,33 +110,13 @@
             <h2>Willkommen in unserem Grußkarten-Shop!</h2>
             <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
         </section>
-
-        <!-- Kategorien (werden per JavaScript angezeigt/versteckt) -->
-        <section id="trauer" class="product-list category" style="display: none;">
-            <h3>Trauerkarten</h3>
-            <!-- Platzhalter für Produkte -->
-        </section>
-
-        <section id="hochzeit" class="product-list category" style="display: none;">
-            <h3>Hochzeitskarten</h3>
-            <!-- Platzhalter für Produkte -->
-        </section>
-
-        <section id="glueckwunsch" class="product-list category" style="display: none;">
-            <h3>Glückwunschkarten</h3>
-            <!-- Platzhalter für Produkte -->
-        </section>
-
-        <section id="weihnachten" class="product-list category" style="display: none;">
-            <h3>Weihnachtskarten</h3>
-            <!-- Platzhalter für Produkte -->
-        </section>
-
-        <section id="events" class="product-list category" style="display: none;">
-            <h3>Eventkarten</h3>
-            <!-- Platzhalter für Produkte -->
-        </section>
-    </div>
+<!-- Placeholder for categories (hidden initially) -->
+    <section id="trauer" class="product-list category" style="display: none;"></section>
+    <section id="hochzeit" class="product-list category" style="display: none;"></section>
+    <section id="glueckwunsch" class="product-list category" style="display: none;"></section>
+    <section id="weihnachten" class="product-list category" style="display: none;"></section>
+    <section id="events" class="product-list category" style="display: none;"></section>
+</div>
 
     <!-- Warenkorb-Popup -->
     <div id="cart-popup" style="display: none;">
@@ -285,24 +210,24 @@
     }
 </script>
 
-<!-- Registrierung und Login mit Supabase -->
-<script>
-    // Supabase-Client initialisieren
+<!-- Supabase SDK and Scripts -->
+<script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // Supabase Initialization
     const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Registrierung
+    // Registration Logic
     document.getElementById('register-form').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Verhindert das automatische Neuladen der Seite
+        event.preventDefault();
 
-        // E-Mail und Passwort aus dem Formular holen
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('register-email').value;
         const password = document.getElementById('register-password').value;
         const errorMessage = document.getElementById('register-error');
 
         try {
-            // Registrierungsanfrage an Supabase
             const { data, error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
@@ -310,27 +235,23 @@
 
             if (error) {
                 errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-                console.error('Error:', error);
             } else {
-                console.log('Registration success:', data);
-                alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
+                alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails.');
             }
         } catch (err) {
-            errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+            errorMessage.textContent = `Fehler: ${err.message}`;
         }
     });
 
-    // Login
-    document.getElementById('login-form-inner').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Verhindert das automatische Neuladen der Seite
+    // Login Logic
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-        // E-Mail und Passwort aus dem Formular holen
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
         const loginErrorMessage = document.getElementById('login-error');
 
         try {
-            // Login-Anfrage an Supabase
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
@@ -338,19 +259,14 @@
 
             if (error) {
                 loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-                console.error('Error:', error);
             } else {
-                console.log('Login success:', data);
                 alert('Anmeldung erfolgreich!');
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('content').style.display = 'block';
             }
         } catch (err) {
-            loginErrorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+            loginErrorMessage.textContent = `Fehler: ${err.message}`;
         }
     });
 </script>
-
 <!-- Lightbox-Skripte -->
 <script>
     // Lightbox öffnen
