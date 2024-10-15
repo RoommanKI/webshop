@@ -30,47 +30,42 @@
 
     <!-- Supabase Registrierung Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', async function () {
-            // Warten, bis das Supabase SDK geladen ist
-            try {
-                // Supabase-Client initialisieren
-                const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-                const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        window.onload = async function () {
+            // Supabase-Client initialisieren
+            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-                console.log("Supabase successfully initialized.");
+            console.log("Supabase successfully initialized.");
 
-                // Formular-Submit-Event
-                document.getElementById('register-form').addEventListener('submit', async function(event) {
-                    event.preventDefault(); // Verhindert das automatische Neuladen der Seite
+            // Formular-Submit-Event
+            document.getElementById('register-form').addEventListener('submit', async function(event) {
+                event.preventDefault(); // Verhindert das automatische Neuladen der Seite
 
-                    // E-Mail und Passwort aus dem Formular holen
-                    const email = document.getElementById('email').value;
-                    const password = document.getElementById('password').value;
-                    const errorMessage = document.getElementById('register-error');
+                // E-Mail und Passwort aus dem Formular holen
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const errorMessage = document.getElementById('register-error');
 
-                    try {
-                        // Registrierungsanfrage an Supabase
-                        const { error } = await supabase.auth.signUp({
-                            email: email,
-                            password: password,
-                        });
+                try {
+                    // Registrierungsanfrage an Supabase
+                    const { error } = await supabase.auth.signUp({
+                        email: email,
+                        password: password,
+                    });
 
-                        if (error) {
-                            errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-                            console.error('Error:', error); // Fehler in der Konsole anzeigen
-                        } else {
-                            alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
-                        }
-
-                    } catch (err) {
-                        errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+                    if (error) {
+                        errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+                        console.error('Error:', error); // Fehler in der Konsole anzeigen
+                    } else {
+                        alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
                     }
-                });
-            } catch (err) {
-                console.error('Error initializing Supabase:', err);
-            }
-        });
+
+                } catch (err) {
+                    errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+                }
+            });
+        }
     </script>
 
 </body>
