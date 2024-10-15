@@ -3,76 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase Registrierung</title>
-
-    <!-- Supabase SDK -->
+    <title>Supabase Registration</title>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
     <script>
-        // Supabase-Client außerhalb der Event Listener initialisieren
-        let supabase;
-
-        window.onload = function() {
+        document.addEventListener("DOMContentLoaded", function() {
             const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
             const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-            supabase = supabase.createClient(supabaseUrl, supabaseKey);
-        };
-    </script>
-</head>
-<body>
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    <!-- Registrierungsformular -->
-    <div class="register-container">
-        <h2>Registrieren</h2>
-        <form id="register-form">
-            <div class="form-group">
-                <label for="email">E-Mail:</label>
-                <input type="email" id="email" placeholder="E-Mail eingeben" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Passwort:</label>
-                <input type="password" id="password" placeholder="Passwort eingeben" required>
-            </div>
-            <button type="submit">Registrieren</button>
-            <p id="register-error" class="error-message"></p>
-        </form>
-    </div>
+            document.getElementById('register-form').addEventListener('submit', async function(event) {
+                event.preventDefault();
 
-    <script>
-        // Formular Event-Listener
-        document.getElementById('register-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Verhindert das automatische Neuladen der Seite
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
 
-            // Prüfen, ob Supabase korrekt initialisiert wurde
-            if (!supabase) {
-                console.error('Supabase wurde nicht korrekt initialisiert.');
-                return;
-            }
-
-            // E-Mail und Passwort aus dem Formular holen
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('register-error');
-
-            try {
-                // Registrierungsanfrage an Supabase
-                const { error } = await supabase.auth.signUp({
+                const { data, error } = await supabase.auth.signUp({
                     email: email,
                     password: password,
                 });
 
                 if (error) {
-                    errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-                    console.error('Error:', error); // Fehler in der Konsole anzeigen
+                    console.error('Registration error:', error.message);
                 } else {
-                    alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails, um Ihre Adresse zu bestätigen.');
+                    alert('Registration successful, check your email for confirmation.');
                 }
-
-            } catch (err) {
-                errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
-            }
+            });
         });
     </script>
-
+</head>
+<body>
+    <h2>Register</h2>
+    <form id="register-form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+        <br>
+        <button type="submit">Register</button>
+    </form>
 </body>
 </html>
