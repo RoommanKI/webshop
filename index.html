@@ -219,7 +219,7 @@
         </div>
         <div class="form-group">
             <label for="password">Passwort:</label>
-            <input type="password" id="password" placeholder="Passwort eingeben" required>
+            <input type="password" id="register-password" placeholder="Passwort eingeben" required>
         </div>
         <button type="submit">Registrieren</button>
         <p id="register-error" class="error-message"></p>
@@ -739,9 +739,7 @@ document.querySelectorAll('.lightbox-image').forEach(function(image) {
     </script>
 
     <script>
-        // Supabase initialisieren
-const supabase = supabase.createClient('https://vaugbzzhenbkmcuuoeai.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE');
-
+       
 document.getElementById('register-form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Verhindert das automatische Neuladen der Seite
 
