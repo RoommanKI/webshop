@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
+    <style>
         /* Basic Styles */
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +18,6 @@
             padding: 0;
         }
 
-        /* Flexbox header */
         header {
             display: flex;
             justify-content: space-between;
@@ -27,6 +27,68 @@
             padding: 20px;
         }
 
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: white;
+            color: #ff4081;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff4081;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            color: red;
+        }
+
+        nav {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #ff4081;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background-color: #e73370;
+        }
         /* Form containers in header */
         .form-container {
             display: flex;
@@ -79,51 +141,57 @@
             border-radius: 50%;
         }
 
-        nav {
-            margin-top: 50px;
-            text-align: center;
-        }
-
-        nav a {
-            margin: 0 10px;
-            padding: 10px 20px;
-            background-color: #ff4081;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        nav a:hover {
-            background-color: #e73370;
-        }
-
     </style>
 </head>
 <body>
 
 <!-- Header -->
 <header>
-    <!-- Registration form -->
-    <div class="form-container">
+    
+    <!-- Buttons for opening modals -->
+    <div class="header-buttons">
+        <button id="registerBtn">Registrieren</button>
+        <button id="loginBtn">Anmelden</button>
+    </div>
+<!-- Registration Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeRegister">&times;</span>
+        <h2>Registrieren</h2>
         <form id="register-form">
-            <input type="email" id="register-email" placeholder="E-Mail" autocomplete="email" required>
-            <input type="password" id="register-password" placeholder="Passwort" autocomplete="new-password" required>
+            <div class="form-group">
+                <label for="register-email">E-Mail:</label>
+                <input type="email" id="register-email" placeholder="E-Mail eingeben" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Passwort:</label>
+                <input type="password" id="register-password" placeholder="Passwort eingeben" autocomplete="new-password" required>
+            </div>
             <button type="submit">Registrieren</button>
+            <p id="register-error" class="error-message"></p>
         </form>
     </div>
+</div>
 
-    <!-- Title in the center -->
-    <h1>Webshop - Grußkarten</h1>
-
-    <!-- Login form on the right -->
-    <div class="form-container">
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeLogin">&times;</span>
+        <h2>Anmelden</h2>
         <form id="login-form">
-            <input type="email" id="login-email" placeholder="E-Mail" autocomplete="email" required>
-            <input type="password" id="login-password" placeholder="Passwort" autocomplete="current-password" required>
+            <div class="form-group">
+                <label for="login-email">E-Mail:</label>
+                <input type="email" id="login-email" placeholder="E-Mail eingeben" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Passwort:</label>
+                <input type="password" id="login-password" placeholder="Passwort eingeben" autocomplete="current-password" required>
+            </div>
             <button type="submit">Anmelden</button>
+            <p id="login-error" class="error-message"></p>
         </form>
     </div>
-</header>
+</div>
 
 <!-- Navigation -->
 <nav>
@@ -297,6 +365,48 @@
         }
     });
 </script>
+
+      // Modal control logic
+    const registerModal = document.getElementById("registerModal");
+    const loginModal = document.getElementById("loginModal");
+
+    // Get buttons and close elements
+    const registerBtn = document.getElementById("registerBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const closeRegister = document.getElementById("closeRegister");
+    const closeLogin = document.getElementById("closeLogin");
+
+    // Show registration modal
+    registerBtn.onclick = function() {
+        registerModal.style.display = "flex";
+    };
+
+    // Show login modal
+    loginBtn.onclick = function() {
+        loginModal.style.display = "flex";
+    };
+
+    // Close registration modal
+    closeRegister.onclick = function() {
+        registerModal.style.display = "none";
+    };
+
+    // Close login modal
+    closeLogin.onclick = function() {
+        loginModal.style.display = "none";
+    };
+
+    // Close modal if user clicks outside the modal content
+    window.onclick = function(event) {
+        if (event.target == registerModal) {
+            registerModal.style.display = "none";
+        }
+        if (event.target == loginModal) {
+            loginModal.style.display = "none";
+        }
+    };
+</script>
+    
 <!-- Lightbox-Skripte -->
 <script>
     // Lightbox öffnen
