@@ -3,45 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase Registration</title>
+    <title>Webshop - Registrierung</title>
+    
+    <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        // Initialize Supabase client inside DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function () {
             const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+            const supabaseKey = 'your-supabase-key-here';
             const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-            document.getElementById('register-form').addEventListener('submit', async function(event) {
+            
+            // Event listener for form submission
+            document.getElementById('register-form').addEventListener('submit', async function (event) {
                 event.preventDefault();
-
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
-
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) {
-                    console.error('Registration error:', error.message);
-                } else {
-                    alert('Registration successful, check your email for confirmation.');
+                const errorMessage = document.getElementById('register-error');
+                
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email: email,
+                        password: password,
+                    });
+                    
+                    if (error) {
+                        errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+                    } else {
+                        alert('Registrierung erfolgreich! Überprüfen Sie Ihre E-Mails.');
+                    }
+                } catch (err) {
+                    errorMessage.textContent = `Fehler: ${err.message}`;
                 }
             });
         });
     </script>
 </head>
 <body>
-    <h2>Register</h2>
+    <h2>Registrierung</h2>
     <form id="register-form">
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
-        <br>
-        <button type="submit">Register</button>
+        <div>
+            <label for="email">E-Mail:</label>
+            <input type="email" id="email" required>
+        </div>
+        <div>
+            <label for="password">Passwort:</label>
+            <input type="password" id="password" required>
+        </div>
+        <button type="submit">Registrieren</button>
+        <p id="register-error" style="color: red;"></p>
     </form>
 </body>
 </html>
