@@ -5,14 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
 
-
-
-    <!-- Font Awesome für Icons -->
+   <!-- Font Awesome für Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- Stylesheets -->
     <style>
- /* Basic Styles */
+        /* Basic Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -20,37 +17,66 @@
             padding: 0;
         }
 
+        /* Flexbox header */
         header {
             display: flex;
-            justify-content: space-between; /* Space between the left and right elements */
-            align-items: center; /* Align items vertically */
+            justify-content: space-between;
+            align-items: center;
             background-color: #ff4081;
             color: white;
             padding: 20px;
         }
 
-        /* Container for forms */
+        /* Form containers in header */
         .form-container {
             display: flex;
-            justify-content: space-between;
-            width: 100%;
+            align-items: center;
+            gap: 20px;
         }
 
         .form-container form {
+            display: flex;
+            align-items: center;
+            background-color: transparent;
+        }
+
+        form input {
+            padding: 5px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 3px;
+        }
+
+        form button {
+            padding: 5px 10px;
             background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #ff4081;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
         }
 
-        /* Registration form aligned to the left */
-        .register-form {
-            margin-right: auto;
+        form button:hover {
+            background-color: #ff4081;
+            color: white;
         }
 
-        /* Login form aligned to the right */
-        .login-form {
-            margin-left: auto;
+        .cart {
+            position: relative;
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #fff;
+            color: #ff4081;
+            padding: 5px 10px;
+            border-radius: 50%;
         }
 
         nav {
@@ -71,37 +97,42 @@
             background-color: #e73370;
         }
 
-        }
-
-        /* Container für Hauptinhalt */
-        #main-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Weitere spezifische Stile können hier ergänzt werden */
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <h1>Webshop - Grußkarten</h1>
-        <div class="cart">
-            <i class="fas fa-shopping-cart" style="font-size: 24px; cursor: pointer;" onclick="toggleCart()"></i>
-            <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background-color: #ff4081; color: white; padding: 5px 10px; border-radius: 50%;">0</span>
-        </div>
-        <p>Wählen Sie Ihre Karten und legen Sie sie in den Warenkorb</p>
-    </header>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="#trauerkarten" onclick="showCategory('trauer')">Trauerkarten</a>
-        <a href="#hochzeitskarten" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
-        <a href="#glueckwunschkarten" onclick="showCategory('glueckwunsch')">Glückwunschkarten</a>
-        <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
-        <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
-    </nav>
+<!-- Header -->
+<header>
+    <!-- Registration form -->
+    <div class="form-container">
+        <form id="register-form">
+            <input type="email" id="register-email" placeholder="E-Mail" autocomplete="email" required>
+            <input type="password" id="register-password" placeholder="Passwort" autocomplete="new-password" required>
+            <button type="submit">Registrieren</button>
+        </form>
+    </div>
+
+    <!-- Title in the center -->
+    <h1>Webshop - Grußkarten</h1>
+
+    <!-- Login form on the right -->
+    <div class="form-container">
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="E-Mail" autocomplete="email" required>
+            <input type="password" id="login-password" placeholder="Passwort" autocomplete="current-password" required>
+            <button type="submit">Anmelden</button>
+        </form>
+    </div>
+</header>
+
+<!-- Navigation -->
+<nav>
+    <a href="#trauerkarten" onclick="showCategory('trauer')">Trauerkarten</a>
+    <a href="#hochzeitskarten" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
+    <a href="#glueckwunschkarten" onclick="showCategory('glueckwunsch')">Glückwunschkarten</a>
+    <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
+    <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
+</nav>
 <!-- Registration Form -->
 <h2>Registrieren</h2>
 <form id="register-form">
