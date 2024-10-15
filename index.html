@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supabase Registration</title>
-
-    <!-- Supabase SDK -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <h2>Registrieren</h2>
@@ -23,36 +20,35 @@
         <p id="register-error" class="error-message"></p>
     </form>
 
-    <script>
-        window.addEventListener('load', function() {
-            // Initialize Supabase inside the event listener
-            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    <!-- Supabase SDK loaded via module -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-            // Handle the form submission
-            document.getElementById('register-form').addEventListener('submit', async function(event) {
-                event.preventDefault(); // Prevent page reload on form submission
+        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const errorMessage = document.getElementById('register-error');
+        document.getElementById('register-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent page reload
 
-                try {
-                    const { data, error } = await supabase.auth.signUp({
-                        email: email,
-                        password: password,
-                    });
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('register-error');
 
-                    if (error) {
-                        errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-                    } else {
-                        alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails.');
-                    }
-                } catch (err) {
-                    errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) {
+                    errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+                } else {
+                    alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails.');
                 }
-            });
+            } catch (err) {
+                errorMessage.textContent = `Ein unerwarteter Fehler ist aufgetreten: ${err.message}`;
+            }
         });
     </script>
 </body>
