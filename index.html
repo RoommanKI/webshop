@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <style>
-    <style>
         /* Basic Styles */
         body {
             font-family: Arial, sans-serif;
@@ -18,6 +17,7 @@
             padding: 0;
         }
 
+        /* Flexbox header */
         header {
             display: flex;
             justify-content: space-between;
@@ -27,26 +27,13 @@
             padding: 20px;
         }
 
+        /* Header buttons for login and registration */
         .header-buttons {
             display: flex;
             gap: 10px;
         }
 
-        button {
-            padding: 10px 15px;
-            background-color: white;
-            color: #ff4081;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #ff4081;
-            color: white;
-        }
-
-        /* Modal Styles */
+        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -72,6 +59,20 @@
             color: red;
         }
 
+        button {
+            padding: 10px 15px;
+            background-color: white;
+            color: #ff4081;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff4081;
+            color: white;
+        }
+
         nav {
             margin-top: 50px;
             text-align: center;
@@ -89,70 +90,21 @@
         nav a:hover {
             background-color: #e73370;
         }
-        /* Form containers in header */
-        .form-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .form-container form {
-            display: flex;
-            align-items: center;
-            background-color: transparent;
-        }
-
-        form input {
-            padding: 5px;
-            margin-right: 5px;
-            border: none;
-            border-radius: 3px;
-        }
-
-        form button {
-            padding: 5px 10px;
-            background-color: white;
-            color: #ff4081;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        form button:hover {
-            background-color: #ff4081;
-            color: white;
-        }
-
-        .cart {
-            position: relative;
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        #cart-count {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: #fff;
-            color: #ff4081;
-            padding: 5px 10px;
-            border-radius: 50%;
-        }
-
     </style>
 </head>
 <body>
 
 <!-- Header -->
 <header>
-    
+    <h1 style="margin: 0;">Webshop - Grußkarten</h1>
+
     <!-- Buttons for opening modals -->
     <div class="header-buttons">
         <button id="registerBtn">Registrieren</button>
         <button id="loginBtn">Anmelden</button>
     </div>
+</header>
+
 <!-- Registration Modal -->
 <div id="registerModal" class="modal">
     <div class="modal-content">
@@ -201,35 +153,49 @@
     <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
     <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
 </nav>
-    <!-- Hauptinhalt -->
-    <div id="main-content">
-        <!-- Startseite Abschnitt -->
-        <section id="startseite" style="padding: 20px; text-align: center;">
-            <h2>Willkommen in unserem Grußkarten-Shop!</h2>
-            <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
-        </section>
-<!-- Placeholder for categories (hidden initially) -->
-    <section id="trauer" class="product-list category" style="display: none;"></section>
-    <section id="hochzeit" class="product-list category" style="display: none;"></section>
-    <section id="glueckwunsch" class="product-list category" style="display: none;"></section>
-    <section id="weihnachten" class="product-list category" style="display: none;"></section>
-    <section id="events" class="product-list category" style="display: none;"></section>
+<!-- Hauptinhalt -->
+<div id="main-content">
+    <!-- Startseite Abschnitt -->
+    <section id="startseite" style="padding: 20px; text-align: center;">
+        <h2>Willkommen in unserem Grußkarten-Shop!</h2>
+        <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
+    </section>
+
+    <!-- Placeholder for categories (hidden initially) -->
+    <section id="trauer" class="product-list category" style="display: none;">
+        <h3>Trauerkarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
+    </section>
+
+    <section id="hochzeit" class="product-list category" style="display: none;">
+        <h3>Hochzeitskarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
+    </section>
+
+    <section id="glueckwunsch" class="product-list category" style="display: none;">
+        <h3>Glückwunschkarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
+    </section>
+
+    <section id="weihnachten" class="product-list category" style="display: none;">
+        <h3>Weihnachtskarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
+    </section>
+
+    <section id="events" class="product-list category" style="display: none;">
+        <h3>Eventkarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
+    </section>
 </div>
 
-    <!-- Warenkorb-Popup -->
-    <div id="cart-popup" style="display: none;">
-        <h3>Ihr Warenkorb</h3>
-        <div id="cart-content">
-            <p>Ihr Warenkorb ist leer.</p>
-        </div>
-        <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+<!-- Warenkorb-Popup -->
+<div id="cart-popup" style="display: none;">
+    <h3>Ihr Warenkorb</h3>
+    <div id="cart-content">
+        <p>Ihr Warenkorb ist leer.</p>
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Dein Name. Alle Rechte vorbehalten.</p>
-        <p>Kontakt: <a href="mailto:deine.email@domain.com" style="color: #ff4081;">deine.email@domain.com</a></p>
-    </footer>
+    <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+</div>
 <!-- Skripte -->
 <script>
     // Kategorien anzeigen/verstecken
@@ -365,8 +331,97 @@
         }
     });
 </script>
+<!-- Modal Styles for Popup -->
+<style>
+    /* The Modal (background) */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+        justify-content: center;
+        align-items: center;
+    }
 
-      // Modal control logic
+    /* Modal Content Box */
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        width: 300px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    /* Close button for modal */
+    .close {
+        color: #ff4081;
+        float: right;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #e73370;
+    }
+
+    /* Button styling for modal */
+    .modal button {
+        background-color: #ff4081;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .modal button:hover {
+        background-color: #e73370;
+    }
+</style>
+
+<!-- Registration Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeRegister">&times;</span>
+        <h2>Registrieren</h2>
+        <form id="register-form-modal">
+            <input type="email" id="register-email" placeholder="E-Mail" autocomplete="email" required><br><br>
+            <input type="password" id="register-password" placeholder="Passwort" autocomplete="new-password" required><br><br>
+            <button type="submit">Registrieren</button>
+        </form>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeLogin">&times;</span>
+        <h2>Anmelden</h2>
+        <form id="login-form-modal">
+            <input type="email" id="login-email" placeholder="E-Mail" autocomplete="email" required><br><br>
+            <input type="password" id="login-password" placeholder="Passwort" autocomplete="current-password" required><br><br>
+            <button type="submit">Anmelden</button>
+        </form>
+    </div>
+</div>
+
+<!-- Popup Trigger Buttons in the Header -->
+<header>
+    <button id="registerBtn">Registrieren</button>
+    <h1>Webshop - Grußkarten</h1>
+    <button id="loginBtn">Anmelden</button>
+</header>
+
+<!-- Modal Script Logic -->
+<script>
+    // Modal control logic
     const registerModal = document.getElementById("registerModal");
     const loginModal = document.getElementById("loginModal");
 
@@ -406,28 +461,6 @@
         }
     };
 </script>
-    
-<!-- Lightbox-Skripte -->
-<script>
-    // Lightbox öffnen
-    function openLightbox(imageSrc, captionText) {
-        document.getElementById('lightbox').style.display = "flex";
-        document.getElementById('lightbox-img').src = imageSrc;
-        document.getElementById('lightbox-caption').innerText = captionText;
-    }
-
-    // Lightbox schließen
-    function closeLightbox() {
-        document.getElementById('lightbox').style.display = "none";
-    }
-
-    // Alle PNG-Bilder anklickbar machen
-    document.querySelectorAll('.lightbox-image').forEach(function(image) {
-        image.addEventListener('click', function() {
-            openLightbox(image.src, image.alt);
-        });
-    });
-</script>
-
-    
 </body>
+</html>
+
