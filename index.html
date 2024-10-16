@@ -690,15 +690,12 @@ function showProfileIcon() {
             <div class="profile-container" style="position: relative;">
                 <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
                 <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
+                <a href="#" style="display: block; padding: 5px;">Profil</a>
                     <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
-                    <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
+                        <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
                 </div>
             </div>
         `;
-    }
-}
-
 
         // Attach event listener to the profile icon to toggle the menu
         const profileIcon = document.getElementById('profileIcon');
@@ -712,8 +709,8 @@ function showProfileIcon() {
             localStorage.removeItem('loggedIn');
             location.reload(); // Reload to show the login/register buttons
         });
-    
-
+    }
+}
 
 
     
@@ -790,21 +787,16 @@ document.getElementById('lightbox').style.display = "none";
         });
     });
 
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.getElementById('profileIcon');
     const profileDropdown = document.getElementById('profileDropdown');
+    const logoutOption = document.getElementById('profile-logout');
 
-    if (profileIcon && profileDropdown) {
-        // Toggle dropdown visibility
-        profileIcon.addEventListener('click', function () {
-            profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-    } else {
-        console.error("Profile icon or dropdown not found");
-    }
-});
+    // Toggle dropdown visibility
+    profileIcon.addEventListener('click', function () {
+        profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+    });
 
-   
     // Logout option click
     logoutOption.addEventListener('click', function () {
         localStorage.removeItem('loggedIn');
@@ -823,12 +815,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerButtons = document.querySelector('.header-buttons');
     
     if (loggedIn === 'true') {
-        showProfileIcon(); // Ensure it's defined here
+        showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
     } else {
         headerButtons.style.display = 'flex';
     }
 });
-
 
 </script>
 </body>
