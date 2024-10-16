@@ -593,7 +593,34 @@ document.getElementById('cart-icon').addEventListener('click', function() {
     const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
     const supabase = createClient(supabaseUrl, supabaseKey);
+document.addEventListener('DOMContentLoaded', function() {
+    // Login logic goes here
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const loginErrorMessage = document.getElementById('login-error');
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) {
+                    loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+                } else {
+                    alert('Anmeldung erfolgreich!');
+                    document.getElementById('profileIcon').style.display = 'block';
+                }
+            } catch (err) {
+                loginErrorMessage.textContent = `Fehler: ${err.message}`;
+            }
+        });
+    });
+    
+    
     // Registration Logic
     document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -690,35 +717,6 @@ document.getElementById('lightbox').style.display = "none";
         image.addEventListener('click', function() {
             openLightbox(image.src, image.alt);
         });
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-    // Login Logic
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const loginErrorMessage = document.getElementById('login-error');
-
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-            } else {
-                // Successful login
-                alert('Anmeldung erfolgreich!');
-                // Show the profile icon after successful login
-                document.getElementById('profileIcon').style.display = 'block';
-            }
-        } catch (err) {
-            loginErrorMessage.textContent = `Fehler: ${err.message}`;
-        }
-    });
-});
 </script>
 </body>
 </html>
