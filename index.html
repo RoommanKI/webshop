@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
 
-    /* Lightbox styling */
+/* Lightbox styling */
 .lightbox {
     display: none;
     position: fixed;
@@ -21,11 +21,13 @@
     background-color: rgba(0, 0, 0, 0.9);
     justify-content: center;
     align-items: center;
+    display: flex; /* Ensure flex is active to center image */
 }
 
 .lightbox-content {
     max-width: 80%;
     max-height: 80%;
+    object-fit: contain; /* Ensure large images fit inside */
 }
 
 .lightbox-close {
@@ -36,6 +38,7 @@
     color: white;
     cursor: pointer;
 }
+
 
 /* Basic Styles */
 body {
@@ -602,12 +605,12 @@ nav a:hover {
     };
 </script>
     <script>
-    // Lightbox open function
+ // Lightbox open function
 function openLightbox(imageSrc) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     lightboxImg.src = imageSrc;
-    lightbox.style.display = 'flex';
+    lightbox.style.display = 'flex'; // Ensure it's visible
 }
 
 // Lightbox close function
@@ -632,12 +635,12 @@ document.querySelectorAll('.product img').forEach(function(image) {
     });
 });
 
+
 </script>
-    <!-- Lightbox HTML structure -->
+<!-- Lightbox HTML structure -->
 <div id="lightbox" class="lightbox">
     <span class="lightbox-close">&times;</span>
     <img id="lightbox-img" class="lightbox-content">
 </div>
-
 </body>
 </html>
