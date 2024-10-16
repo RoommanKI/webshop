@@ -677,10 +677,16 @@ function showProfileIcon() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
+    
+    // If the user is logged in, show the profile icon and hide the login/register buttons
     if (loggedIn === 'true') {
-        showProfileIcon();  // Show profile icon if the user is logged in
+        showProfileIcon(); 
+    } else {
+        // If not logged in, ensure the login and register buttons are visible
+        document.querySelector('.header-buttons').style.display = 'flex';
     }
 });
+
     // Get the header buttons container
     const headerButtons = document.querySelector('.header-buttons');
 
