@@ -618,70 +618,7 @@ document.getElementById('cart-icon').addEventListener('click', function() {
         }
     });
 
-    // Login Logic
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
 
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const loginErrorMessage = document.getElementById('login-error');
-
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-            } else {
-                alert('Anmeldung erfolgreich!');
-document.getElementById('profileIcon').addEventListener('click', function() {
-    const logout = confirm('Möchten Sie sich abmelden?');
-    if (logout) {
-        // Clear localStorage and reload the page to show the login buttons
-        localStorage.removeItem('loggedIn');
-        location.reload();
-    }
-});
-
-                
-            // Store user login state in localStorage
-            localStorage.setItem('loggedIn', 'true');
-            showProfileIcon();  // Show profile icon upon successful login
-                
-            }
-        } catch (err) {
-            loginErrorMessage.textContent = `Fehler: ${err.message}`;
-        }
-    });
-document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn');
-
-    if (loggedIn === 'true') {
-        showProfileIcon();  // Show profile icon if the user is logged in
-    }
-});
-
-    function showProfileIcon() {
-    // Get the header buttons container
-    const headerButtons = document.querySelector('.header-buttons');
-
-    // Clear login and registration buttons
-    headerButtons.innerHTML = `
-        <div class="profile-container">
-            <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-        </div>
-    `;
-
-    // Add event listener for profile icon click (you can add a dropdown or log-out)
-    document.getElementById('profileIcon').addEventListener('click', function() {
-        alert('Profil Optionen: Profil anzeigen oder Abmelden');
-        // You can add more logic here for showing profile details or logout
-    });
-}
-
-    
 </script>
 
 <!-- Modal Script Logic -->
@@ -754,6 +691,34 @@ document.getElementById('lightbox').style.display = "none";
             openLightbox(image.src, image.alt);
         });
     });
+    document.addEventListener('DOMContentLoaded', function() {
+    // Login Logic
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const loginErrorMessage = document.getElementById('login-error');
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+            } else {
+                // Successful login
+                alert('Anmeldung erfolgreich!');
+                // Show the profile icon after successful login
+                document.getElementById('profileIcon').style.display = 'block';
+            }
+        } catch (err) {
+            loginErrorMessage.textContent = `Fehler: ${err.message}`;
+        }
+    });
+});
 </script>
 </body>
 </html>
