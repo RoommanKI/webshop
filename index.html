@@ -712,8 +712,8 @@ function showProfileIcon() {
             localStorage.removeItem('loggedIn');
             location.reload(); // Reload to show the login/register buttons
         });
-    }
-}
+    
+
 
 
     
@@ -790,16 +790,21 @@ document.getElementById('lightbox').style.display = "none";
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.getElementById('profileIcon');
     const profileDropdown = document.getElementById('profileDropdown');
-    const logoutOption = document.getElementById('profile-logout');
 
-    // Toggle dropdown visibility
-    profileIcon.addEventListener('click', function () {
-        profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-    });
+    if (profileIcon && profileDropdown) {
+        // Toggle dropdown visibility
+        profileIcon.addEventListener('click', function () {
+            profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    } else {
+        console.error("Profile icon or dropdown not found");
+    }
+});
 
+   
     // Logout option click
     logoutOption.addEventListener('click', function () {
         localStorage.removeItem('loggedIn');
@@ -818,11 +823,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerButtons = document.querySelector('.header-buttons');
     
     if (loggedIn === 'true') {
-        showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
+        showProfileIcon(); // Ensure it's defined here
     } else {
         headerButtons.style.display = 'flex';
     }
 });
+
 
 </script>
 </body>
