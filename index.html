@@ -452,14 +452,13 @@ nav a:hover {
     </section>
 </div>
 
-<!-- Warenkorb-Popup -->
-<div id="cart-popup" style="display: none;">
-    <h3>Ihr Warenkorb</h3>
-    <div id="cart-content">
-        <p>Ihr Warenkorb ist leer.</p>
-    </div>
-    <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
-</div>
+    <!-- Warenkorb-Popup -->
+  <div id="cart-popup" style="display: none;">
+   <h3>Dein Warenkorb</h3>
+   <div id="cart-content">
+       <p>Ihr Warenkorb ist leer.</p>
+   </div>
+   <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
 <!-- Skripte -->
 <script>
     // Kategorien anzeigen/verstecken
@@ -523,6 +522,8 @@ nav a:hover {
             alert('Ihr Warenkorb ist leer.');
             return;
         }
+ // Speichere den Warenkorb im localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
 
         // Bestellübersicht aufrufen
         let orderSummary = 'Bestellung:\n';
@@ -535,9 +536,24 @@ nav a:hover {
         cart = [];
         updateCart();
         toggleCart();  // Warenkorb-Popup schließen
+
+        
+    // Weiterleitung zur Bestellübersichtsseite
+    window.location.href = 'order-summary.html';
     }
 </script>
+<script>
 
+        let orderSummary = 'Bestellung:\n';
+        cart.forEach(item => {
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+        });
+        alert(`Ihre Bestellung:\n${orderSummary}`);
+        cart = [];  // Warenkorb leeren
+        updateCart();  // Warenkorb zurücksetzen
+        toggleCart();  // Warenkorb-Popup schließen
+    }
+</script>
 <!-- Supabase SDK and Scripts -->
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
