@@ -673,6 +673,9 @@ document.getElementById('login-form').addEventListener('submit', async function(
             alert('Anmeldung erfolgreich!');
             localStorage.setItem('loggedIn', 'true');  // Store login state
             showProfileIcon();  // Display the profile icon
+
+                        // Close the login modal
+            document.getElementById('loginModal').style.display = 'none';
         }
     } catch (err) {
         loginErrorMessage.textContent = `Fehler: ${err.message}`;
