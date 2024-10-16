@@ -503,6 +503,14 @@ nav a:hover {
 </div>
 <!-- Skripte -->
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const loggedIn = localStorage.getItem('loggedIn');
+
+    if (loggedIn === 'true') {
+        showProfileIcon();  // Show profile icon if the user is logged in
+    }
+});
+
     // Kategorien anzeigen/verstecken
     function showCategory(category) {
         // Alle Kategorien verstecken
@@ -617,34 +625,62 @@ document.getElementById('cart-icon').addEventListener('click', function() {
             errorMessage.textContent = `Fehler: ${err.message}`;
         }
     });
+// Login Logic
+document.getElementById('login-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-    // Login Logic
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const loginErrorMessage = document.getElementById('login-error');
 
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const loginErrorMessage = document.getElementById('login-error');
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
 
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-            } else {
-                alert('Anmeldung erfolgreich!');
-document.getElementById('profileIcon').addEventListener('click', function() {
-    const logout = confirm('Möchten Sie sich abmelden?');
-    if (logout) {
-        // Clear localStorage and reload the page to show the login buttons
-        localStorage.removeItem('loggedIn');
-        location.reload();
+        if (error) {
+            loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+        } else {
+            alert('Anmeldung erfolgreich!');
+            
+            // Store user login state in localStorage
+            localStorage.setItem('loggedIn', 'true');
+            
+            // Show profile icon after login
+            showProfileIcon();  
+        }
+    } catch (err) {
+        loginErrorMessage.textContent = `Fehler: ${err.message}`;
     }
 });
 
+
+       function showProfileIcon() {
+    // Get the header buttons container
+    const headerButtons = document.querySelector('.header-buttons');
+
+    // Clear login and registration buttons
+    headerButtons.innerHTML = `
+        <div class="profile-container">
+            <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+        </div>
+    `;
+
+    // Add event listener for profile icon click
+    const profileIcon = document.getElementById('profileIcon');
+    if (profileIcon) {
+        profileIcon.addEventListener('click', function() {
+            const logout = confirm('Möchten Sie sich abmelden?');
+            if (logout) {
+                // Clear login state and reload page
+                localStorage.removeItem('loggedIn');
+                location.reload();
+            }
+        });
+    }
+}
+         
                 
             // Store user login state in localStorage
             localStorage.setItem('loggedIn', 'true');
