@@ -130,33 +130,30 @@
             }
         }
 
-        // Call the loadProfile function on page load
-        loadProfile();
+       // Save profile data without needing to display the email in the form
+document.getElementById('profile-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-        // Save profile data
-        document.getElementById('profile-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
+    const name = document.getElementById('name').value;
+    const vorname = document.getElementById('vorname').value;
+    const straße = document.getElementById('straße').value;
+    const stadt = document.getElementById('stadt').value;
+    const plz = document.getElementById('plz').value;
 
-            const name = document.getElementById('name').value;
-            const vorname = document.getElementById('vorname').value;
-            const straße = document.getElementById('straße').value;
-            const stadt = document.getElementById('stadt').value;
-            const plz = document.getElementById('plz').value;
+    try {
+        const { data, error } = await supabase
+            .from('profile')
+            .upsert({ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail });
 
-            try {
-                const { data, error } = await supabase
-                    .from('profile')
-                    .upsert({ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail });
-
-                if (error) {
-                    document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
-                } else {
-                    alert('Profil gespeichert!');
-                }
-            } catch (err) {
-                document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
-            }
-        });
+        if (error) {
+            document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
+        } else {
+            alert('Profil gespeichert!');
+        }
+    } catch (err) {
+        document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
+    }
+});
     </script>
 </body>
 </html>
