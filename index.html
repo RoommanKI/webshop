@@ -230,6 +230,29 @@ nav a:hover {
     object-fit: contain; /* Verhindert, dass das Bild abgeschnitten wird */
     border-radius: 8px;
 }
+/* Cart icon styling */
+.cart {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cart i {
+    font-size: 24px;
+    color: white;
+}
+
+#cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+    font-size: 14px;
+}
 
 </style>
 
@@ -245,6 +268,11 @@ nav a:hover {
         <button id="registerBtn">Registrieren</button>
         <button id="loginBtn">Anmelden</button>
     </div>
+     <!-- Cart icon with counter -->
+        <div id="cart-icon" class="cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count">0</span> <!-- Cart item count -->
+        </div>
 </header>
 
 <!-- Registration Modal -->
@@ -471,6 +499,10 @@ nav a:hover {
         // Die ausgewählte Kategorie anzeigen
         document.getElementById(category).style.display = 'flex';
     }
+// Warenkorb Icon Klickbar machen
+document.getElementById('cart-icon').addEventListener('click', function() {
+    toggleCart(); // Show or hide the cart popup
+});
 
     // Warenkorb-Logik
     let cart = [];
