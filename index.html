@@ -12,7 +12,38 @@
    .header-buttons {
     display: none; /* Hidden by default */
 }
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 40px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 150px;
+    z-index: 1000;
+}
 
+.profile-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-dropdown ul li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+}
+
+.profile-dropdown ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
     
     .profile-icon {
     font-size: 24px;
@@ -290,6 +321,16 @@ nav a:hover {
         <button id="registerBtn">Registrieren</button>
         <button id="loginBtn">Anmelden</button>
     </div>
+<div class="profile-container">
+    <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+    <div id="profileDropdown" class="profile-dropdown">
+        <ul>
+            <li id="profile-orders">Bestellungen</li>
+            <li id="profile-address">Adresse</li>
+            <li id="profile-logout">Logout</li>
+        </ul>
+    </div>
+</div>
 
 </header>
 
@@ -756,6 +797,31 @@ document.getElementById('lightbox').style.display = "none";
             openLightbox(image.src, image.alt);
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('profileIcon');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const logoutOption = document.getElementById('profile-logout');
+
+    // Toggle dropdown visibility
+    profileIcon.addEventListener('click', function () {
+        profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Logout option click
+    logoutOption.addEventListener('click', function () {
+        localStorage.removeItem('loggedIn');
+        location.reload();  // Reload the page to reflect logged-out state
+    });
+
+    // Close the dropdown if clicking outside
+    window.addEventListener('click', function (event) {
+        if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
+            profileDropdown.style.display = 'none';
+        }
+    });
+});
+
 </script>
 </body>
 </html>
