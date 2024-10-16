@@ -683,15 +683,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function showProfileIcon() {
-    const headerButtons = document.querySelector('.header-buttons');
-    headerButtons.innerHTML = `
-        <div class="profile-container">
-            <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-        </div>
-    `;
-}
-
 
     // Add an event listener to the profile icon for logout functionality
     document.getElementById('profileIcon').addEventListener('click', function() {
