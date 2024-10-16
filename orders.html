@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ihre Bestellungen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff4081;
+        }
+        .order-list {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .order {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .order:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ihre Bestellungen</h1>
+    <div id="order-list" class="order-list">
+        <!-- Orders will be listed here -->
+        <p>Es wurden keine Bestellungen gefunden.</p>
+    </div>
+
+    <script>
+        // Simulate retrieving orders from localStorage or a database
+        const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+        const orderList = document.getElementById('order-list');
+
+        if (orders.length > 0) {
+            orderList.innerHTML = '';
+            orders.forEach((order, index) => {
+                orderList.innerHTML += `
+                    <div class="order">
+                        <h3>Bestellung #${index + 1}</h3>
+                        <p>${order.items.map(item => `${item.quantity}x ${item.product}`).join(', ')}</p>
+                        <p><strong>Gesamt: ${order.total.toFixed(2)} €</strong></p>
+                    </div>
+                `;
+            });
+        }
+    </script>
+
+</body>
+</html>
