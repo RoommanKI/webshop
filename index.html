@@ -9,6 +9,11 @@
    <!-- Font Awesome für Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
+   .header-buttons {
+    display: none; /* Hidden by default */
+}
+
+    
     .profile-icon {
     font-size: 24px;
     color: white;
@@ -503,14 +508,6 @@ nav a:hover {
 </div>
 <!-- Skripte -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn');
-
-    if (loggedIn === 'true') {
-        showProfileIcon();  
-    }  // Ensure this matches the if block properly
-});
-
     // Kategorien anzeigen/verstecken
     function showCategory(category) {
         // Alle Kategorien verstecken
@@ -674,34 +671,39 @@ function showProfileIcon() {
         }
     });
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
+    const headerButtons = document.querySelector('.header-buttons');
     
-    // If the user is logged in, show the profile icon and hide the login/register buttons
+    // If the user is logged in, show the profile icon
     if (loggedIn === 'true') {
         showProfileIcon(); 
     } else {
-        // If not logged in, ensure the login and register buttons are visible
-        document.querySelector('.header-buttons').style.display = 'flex';
+        // If not logged in, show the login and register buttons
+        headerButtons.style.display = 'flex';
     }
 });
 
-    // Get the header buttons container
+function showProfileIcon() {
     const headerButtons = document.querySelector('.header-buttons');
-
-    // Clear login and registration buttons
+    
+    // Replace login and registration buttons with the profile icon
     headerButtons.innerHTML = `
         <div class="profile-container">
             <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
         </div>
     `;
 
-    // Add event listener for profile icon click (you can add a dropdown or log-out)
+    // Add an event listener to the profile icon for logout functionality
     document.getElementById('profileIcon').addEventListener('click', function() {
-        alert('Profil Optionen: Profil anzeigen oder Abmelden');
-        // You can add more logic here for showing profile details or logout
+        const logout = confirm('Möchten Sie sich abmelden?');
+        if (logout) {
+            localStorage.removeItem('loggedIn');  // Clear login state
+            location.reload();  // Reload the page to show login buttons again
+        }
     });
+}
+
     
 </script>
 
