@@ -78,21 +78,20 @@
     
     <form id="profile-form">
         <label for="name">Name:</label>
-<input type="text" id="name" required><br>
+        <input type="text" id="name" required><br>
 
-<label for="vorname">Vorname:</label>
-<input type="text" id="vorname" required><br>
+        <label for="vorname">Vorname:</label>
+        <input type="text" id="vorname" required><br>
 
-<label for="straße">Straße:</label>
-<input type="text" id="straße" required><br>
+        <label for="straße">Straße:</label>
+        <input type="text" id="straße" required><br>
 
-<label for="stadt">Stadt:</label>
-<input type="text" id="stadt" required><br>
+        <label for="stadt">Stadt:</label>
+        <input type="text" id="stadt" required><br>
 
-<label for="plz">PLZ:</label>
-<input type="text" id="plz" required><br>
+        <label for="plz">PLZ:</label>
+        <input type="text" id="plz" required><br>
 
-        
         <button type="submit">Speichern</button>
         <p id="profile-error" class="error-message"></p>
     </form>
@@ -101,60 +100,64 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
         const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+        const supabaseKey = 'your-supabase-key';
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-              const userEmail = localStorage.getItem('userEmail');  // Retrieve email from localStorage
+        // Fetch email from localStorage (set after login)
+        const userEmail = localStorage.getItem('userEmail');  
 
-        // Preload the user's profile data
-async function loadProfile() {
-    try {
-        const { data, error } = await supabase
-            .from('profile')
-            .select('Name, Vorname, Straße, Stadt, PLZ')
-            .eq('Email', userEmail);  // Query for email
+        // Function to load user profile from database
+        async function loadProfile() {
+            try {
+                const { data, error } = await supabase
+                    .from('profile')
+                    .select('Name, Vorname, Straße, Stadt, PLZ')
+                    .eq('Email', userEmail);  
 
-        if (error) {
-            document.getElementById('profile-error').textContent = `Fehler beim Laden des Profils: ${error.message}`;
-        } else if (data.length === 0) {
-            document.getElementById('profile-error').textContent = 'Kein Profil gefunden.';
-        } else {
-            const profile = data[0];
-            document.getElementById('name').value = profile.Name || '';
-            document.getElementById('vorname').value = profile.Vorname || '';
-            document.getElementById('straße').value = profile.Straße || '';
-            document.getElementById('stadt').value = profile.Stadt || '';
-            document.getElementById('plz').value = profile.PLZ || '';
+                if (error) {
+                    document.getElementById('profile-error').textContent = `Fehler beim Laden des Profils: ${error.message}`;
+                } else if (data.length === 0) {
+                    document.getElementById('profile-error').textContent = 'Kein Profil gefunden.';
+                } else {
+                    const profile = data[0];
+                    document.getElementById('name').value = profile.Name || '';
+                    document.getElementById('vorname').value = profile.Vorname || '';
+                    document.getElementById('straße').value = profile.Straße || '';
+                    document.getElementById('stadt').value = profile.Stadt || '';
+                    document.getElementById('plz').value = profile.PLZ || '';
+                }
+            } catch (err) {
+                document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
+            }
         }
-    } catch (err) {
-        document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
-    }
-}
 
-       // Save profile data without needing to display the email in the form
-document.getElementById('profile-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
+        // Call the loadProfile function when the page is loaded
+        loadProfile();
 
-    const name = document.getElementById('name').value;
-    const vorname = document.getElementById('vorname').value;
-    const straße = document.getElementById('straße').value;
-    const stadt = document.getElementById('stadt').value;
-    const plz = document.getElementById('plz').value;
+        // Save the profile data when the form is submitted
+        document.getElementById('profile-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-    try {
-        const { data, error } = await supabase
-            .from('profile')
-            .upsert({ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail });
+            const name = document.getElementById('name').value;
+            const vorname = document.getElementById('vorname').value;
+            const straße = document.getElementById('straße').value;
+            const stadt = document.getElementById('stadt').value;
+            const plz = document.getElementById('plz').value;
 
-        if (error) {
-            document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
-        } else {
-            alert('Profil gespeichert!');
-        }
-    } catch (err) {
-        document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
-    }
-});
+            try {
+                const { data, error } = await supabase
+                    .from('profile')
+                    .upsert({ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail });
+
+                if (error) {
+                    document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
+                } else {
+                    alert('Profil gespeichert!');
+                }
+            } catch (err) {
+                document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
+            }
+        });
     </script>
 </body>
 </html>
