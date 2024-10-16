@@ -660,16 +660,6 @@ function showProfileIcon() {
     }
 }
 
-
-    // Add event listener for profile icon click (you can add a dropdown or log-out)
-    document.getElementById('profileIcon').addEventListener('click', function() {
-        const logout = confirm('Möchten Sie sich abmelden?');
-        if (logout) {
-            // Clear localStorage and reload the page to show the login buttons
-            localStorage.removeItem('loggedIn');
-            location.reload();
-        }
-    });
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
     const headerButtons = document.querySelector('.header-buttons');
