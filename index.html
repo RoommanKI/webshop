@@ -90,15 +90,16 @@ nav a:hover {
     background-color: #e73370;
 }
 
-/* Grid layout for product cards */
+/* Flexbox layout for product cards */
 .product-list {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 Spalten */
-    gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     margin-top: 20px;
-    max-width: 1200px; /* Max width for large screens */
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    gap: 20px; /* Abstand zwischen den Produkten */
 }
 
 /* Style for each product card */
@@ -109,6 +110,8 @@ nav a:hover {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: calc(20% - 20px); /* Fünf Karten pro Reihe */
+    box-sizing: border-box;
 }
 
 /* Image inside the product card */
@@ -144,27 +147,21 @@ nav a:hover {
 }
 
 /* Responsive Anpassungen */
-@media (max-width: 1200px) {
-    .product-list {
-        grid-template-columns: repeat(4, 1fr); /* 4 Spalten für mittlere Bildschirme */
+@media (max-width: 1000px) {
+    .product {
+        width: calc(33.33% - 20px); /* 3 Spalten für mittlere Bildschirme */
     }
 }
 
-@media (max-width: 900px) {
-    .product-list {
-        grid-template-columns: repeat(3, 1fr); /* 3 Spalten für kleinere Bildschirme */
+@media (max-width: 768px) {
+    .product {
+        width: calc(50% - 20px); /* 2 Spalten für kleine Bildschirme */
     }
 }
 
-@media (max-width: 600px) {
-    .product-list {
-        grid-template-columns: repeat(2, 1fr); /* 2 Spalten für sehr kleine Bildschirme */
-    }
-}
-
-@media (max-width: 400px) {
-    .product-list {
-        grid-template-columns: 1fr; /* 1 Spalte für Handys */
+@media (max-width: 500px) {
+    .product {
+        width: 100%; /* 1 Spalte für sehr kleine Bildschirme */
     }
 }
 
