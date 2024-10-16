@@ -94,9 +94,8 @@
         /* Grid layout for product cards */
 .product-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    justify-items: center;
+    grid-template-columns: repeat(5, 1fr); /* 5 Spalten */
+    gap: 20px; /* Abstand zwischen den Produkten */
     margin-top: 20px;
 }
 
@@ -104,10 +103,10 @@
 .product {
     background-color: white;
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    max-width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Image inside the product card */
