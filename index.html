@@ -796,17 +796,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.getElementById('profileIcon');
     const profileDropdown = document.getElementById('profileDropdown');
     const logoutOption = document.getElementById('profile-logout');
+    const profileOrders = document.getElementById('profile-orders');
 
-    // Add event listener for "Orders" option in the profile dropdown
-    document.getElementById('profile-orders').addEventListener('click', function() {
-        window.location.href = 'orders.html'; // Redirect to orders page
-    });
+    // Ensure that the elements are available before attaching the event listeners
+    if (profileOrders) {
+        profileOrders.addEventListener('click', function() {
+            window.location.href = 'orders.html'; // Redirect to orders page
+        });
+    }
 
-    // Add other profile dropdown logic here (like logout or address handling)
-    // Toggle dropdown visibility
-    profileIcon.addEventListener('click', function () {
-        profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-    });
+    if (logoutOption) {
+        logoutOption.addEventListener('click', function () {
+            localStorage.removeItem('loggedIn');
+            location.reload(); // Reload page after logout
+        });
+    }
+
+    if (profileIcon) {
+        profileIcon.addEventListener('click', function () {
+            profileDropdown.classList.toggle('show'); // Show/Hide profile dropdown
+        });
+    }
+});
+
 
     // Logout option click
     logoutOption.addEventListener('click', function () {
