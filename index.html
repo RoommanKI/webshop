@@ -680,17 +680,6 @@ document.getElementById('login-form').addEventListener('submit', async function(
         });
     }
 }
-         
-                
-            // Store user login state in localStorage
-            localStorage.setItem('loggedIn', 'true');
-            showProfileIcon();  // Show profile icon upon successful login
-                
-            }
-        } catch (err) {
-            loginErrorMessage.textContent = `Fehler: ${err.message}`;
-        }
-    });
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
 
