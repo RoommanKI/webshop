@@ -650,10 +650,6 @@ showProfileIcon();
 });
 
 
-function showProfileIcon() {
-    // Get the header buttons container
-    const headerButtons = document.querySelector('.header-buttons');
-
     // Clear login and registration buttons
     headerButtons.innerHTML = `
         <div class="profile-container">
@@ -693,6 +689,7 @@ function showProfileIcon() {
             <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
         </div>
     `;
+}
 
     // Add an event listener to the profile icon for logout functionality
     document.getElementById('profileIcon').addEventListener('click', function() {
