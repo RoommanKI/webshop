@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+</head>
+<body>
+    <h1>Profilseite</h1>
+    <form id="profile-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="Ihr Name" required>
+        <br>
+
+        <label for="address">Adresse:</label>
+        <input type="text" id="address" placeholder="Ihre Adresse" required>
+        <br>
+
+        <label for="city">Stadt:</label>
+        <input type="text" id="city" placeholder="Ihre Stadt" required>
+        <br>
+
+        <label for="postal-code">Postleitzahl:</label>
+        <input type="text" id="postal-code" placeholder="Ihre Postleitzahl" required>
+        <br>
+
+        <button type="submit">Speichern</button>
+        <p id="profile-message"></p>
+    </form>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const supabaseUrl = 'https://your-supabase-url';
+        const supabaseKey = 'your-supabase-api-key';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        // Profile Form submission
+        document.getElementById('profile-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const city = document.getElementById('city').value;
+            const postalCode = document.getElementById('postal-code').value;
+
+            // Add data to Supabase
+            const { data, error } = await supabase
+                .from('profiles')
+                .insert([
+                    { name: name, address: address, city: city, postal_code: postalCode }
+                ]);
+
+            if (error) {
+                document.getElementById('profile-message').textContent = `Fehler: ${error.message}`;
+            } else {
+                document.getElementById('profile-message').textContent = 'Profil erfolgreich gespeichert!';
+            }
+        });
+    </script>
+</body>
+</html>
