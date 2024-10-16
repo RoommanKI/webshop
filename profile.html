@@ -107,28 +107,29 @@
               const userEmail = localStorage.getItem('userEmail');  // Retrieve email from localStorage
 
         // Preload the user's profile data
-        async function loadProfile() {
-            try {
-                const { data, error } = await supabase
-                    .from('profile')
-                    .select('Name, Vorname, Straße, Stadt, PLZ')
-                    .eq('Email', userEmail)  // Use the email to retrieve profile
-                    .single();
+async function loadProfile() {
+    try {
+        const { data, error } = await supabase
+            .from('profile')
+            .select('Name, Vorname, Straße, Stadt, PLZ')
+            .eq('Email', userEmail);  // Query for email
 
-                if (error) {
-                    document.getElementById('profile-error').textContent = `Fehler beim Laden des Profils: ${error.message}`;
-                } else {
-                    // Fill the form with the data
-                    document.getElementById('name').value = data.Name || '';
-                    document.getElementById('vorname').value = data.Vorname || '';
-                    document.getElementById('straße').value = data.Straße || '';
-                    document.getElementById('stadt').value = data.Stadt || '';
-                    document.getElementById('plz').value = data.PLZ || '';
-                }
-            } catch (err) {
-                document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
-            }
+        if (error) {
+            document.getElementById('profile-error').textContent = `Fehler beim Laden des Profils: ${error.message}`;
+        } else if (data.length === 0) {
+            document.getElementById('profile-error').textContent = 'Kein Profil gefunden.';
+        } else {
+            const profile = data[0];
+            document.getElementById('name').value = profile.Name || '';
+            document.getElementById('vorname').value = profile.Vorname || '';
+            document.getElementById('straße').value = profile.Straße || '';
+            document.getElementById('stadt').value = profile.Stadt || '';
+            document.getElementById('plz').value = profile.PLZ || '';
         }
+    } catch (err) {
+        document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
+    }
+}
 
        // Save profile data without needing to display the email in the form
 document.getElementById('profile-form').addEventListener('submit', async function(event) {
