@@ -90,6 +90,57 @@
         nav a:hover {
             background-color: #e73370;
         }
+
+        /* Grid layout for product cards */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    margin-top: 20px;
+}
+
+/* Style for each product card */
+.product {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 250px;
+}
+
+/* Image inside the product card */
+.product img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Style for product titles and price */
+.product h2 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.product .price {
+    font-weight: bold;
+    color: #ff4081;
+}
+
+/* Buttons */
+.product button {
+    padding: 10px;
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.product button:hover {
+    background-color: #e73370;
+}
     </style>
 </head>
 <body>
