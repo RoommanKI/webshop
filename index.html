@@ -691,38 +691,34 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
 
 function showProfileIcon() {
-    const headerButtons = document.querySelector('.header-buttons');  // Ensure it's defined here
+    const headerButtons = document.querySelector('.header-buttons');
     if (headerButtons) {
         headerButtons.innerHTML = `
-            <div class="profile-container">
+            <div class="profile-container" style="position: relative;">
                 <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
+                    <a href="#" style="display: block; padding: 5px;">Address</a>
+                    <a href="#" style="display: block; padding: 5px;">Orders</a>
+                </div>
             </div>
         `;
+
+        // Attach event listener to the profile icon to toggle the menu
+        const profileIcon = document.getElementById('profileIcon');
+        const profileMenu = document.getElementById('profileMenu');
+        profileIcon.addEventListener('click', function () {
+            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+        });
+
+        // Add logout functionality
+        document.getElementById('logoutLink').addEventListener('click', function () {
+            localStorage.removeItem('loggedIn');
+            location.reload(); // Reload to show the login/register buttons
+        });
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn');
-    const headerButtons = document.querySelector('.header-buttons');
-    
-    // If the user is logged in, show the profile icon
-    if (loggedIn === 'true') {
-        showProfileIcon(); 
-    } else {
-        // If not logged in, show the login and register buttons
-        headerButtons.style.display = 'flex';
-    }
-});
-
-
-    // Add an event listener to the profile icon for logout functionality
-    document.getElementById('profileIcon').addEventListener('click', function() {
-        const logout = confirm('Möchten Sie sich abmelden?');
-        if (logout) {
-            localStorage.removeItem('loggedIn');  // Clear login state
-            location.reload();  // Reload the page to show login buttons again
-        }
-    });
 
     
 </script>
@@ -820,6 +816,16 @@ document.getElementById('lightbox').style.display = "none";
             profileDropdown.style.display = 'none';
         }
     });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const loggedIn = localStorage.getItem('loggedIn');
+    const headerButtons = document.querySelector('.header-buttons');
+    
+    if (loggedIn === 'true') {
+        showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
+    } else {
+        headerButtons.style.display = 'flex';
+    }
 });
 
 </script>
