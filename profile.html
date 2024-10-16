@@ -2,6 +2,8 @@
 <html lang="de">
 <head>
     <title>Profilseite</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -102,41 +104,49 @@
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        // Get the logged-in user's email or ID (replace 'user_email' with your actual logic)
-        const userEmail = localStorage.getItem('userEmail'); // Assuming you store the user email after login
-        
-        async function loadProfileData() {
-            const { data, error } = await supabase
-                .from('profile')
-                .select('*')
-                .eq('Email', userEmail) // Assuming 'Email' is a column in your profile table
-                .single();
+              const userEmail = localStorage.getItem('userEmail');  // Retrieve email from localStorage
 
-            if (data) {
-                // Populate form with the fetched data
-                document.getElementById('name').value = data.Name || '';
-                document.getElementById('vorname').value = data.Vorname || '';
-                document.getElementById('straße').value = data.Straße || '';
-                document.getElementById('stadt').value = data.Stadt || '';
-                document.getElementById('plz').value = data.PLZ || '';
-            } else if (error) {
-                console.error("Fehler beim Laden des Profils:", error.message);
+        // Preload the user's profile data
+        async function loadProfile() {
+            try {
+                const { data, error } = await supabase
+                    .from('profile')
+                    .select('Name, Vorname, Straße, Stadt, PLZ')
+                    .eq('Email', userEmail)  // Use the email to retrieve profile
+                    .single();
+
+                if (error) {
+                    document.getElementById('profile-error').textContent = `Fehler beim Laden des Profils: ${error.message}`;
+                } else {
+                    // Fill the form with the data
+                    document.getElementById('name').value = data.Name || '';
+                    document.getElementById('vorname').value = data.Vorname || '';
+                    document.getElementById('straße').value = data.Straße || '';
+                    document.getElementById('stadt').value = data.Stadt || '';
+                    document.getElementById('plz').value = data.PLZ || '';
+                }
+            } catch (err) {
+                document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
             }
         }
 
+        // Call the loadProfile function on page load
+        loadProfile();
+
+        // Save profile data
         document.getElementById('profile-form').addEventListener('submit', async function(event) {
             event.preventDefault();
-            
+
             const name = document.getElementById('name').value;
             const vorname = document.getElementById('vorname').value;
             const straße = document.getElementById('straße').value;
             const stadt = document.getElementById('stadt').value;
             const plz = document.getElementById('plz').value;
-            
+
             try {
                 const { data, error } = await supabase
                     .from('profile')
-                    .upsert([{ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail }]);
+                    .upsert({ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail });
 
                 if (error) {
                     document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
@@ -147,9 +157,6 @@
                 document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
             }
         });
-
-        // Load the profile data when the page loads
-        loadProfileData();
     </script>
 </body>
 </html>
