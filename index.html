@@ -593,34 +593,7 @@ document.getElementById('cart-icon').addEventListener('click', function() {
     const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
     const supabase = createClient(supabaseUrl, supabaseKey);
-document.addEventListener('DOMContentLoaded', function() {
-    // Login logic goes here
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
 
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const loginErrorMessage = document.getElementById('login-error');
-
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) {
-                    loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-                } else {
-                    alert('Anmeldung erfolgreich!');
-                    document.getElementById('profileIcon').style.display = 'block';
-                }
-            } catch (err) {
-                loginErrorMessage.textContent = `Fehler: ${err.message}`;
-            }
-        });
-    });
-    
-    
     // Registration Logic
     document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -645,7 +618,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Login Logic
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const loginErrorMessage = document.getElementById('login-error');
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+            } else {
+                alert('Anmeldung erfolgreich!');
+document.getElementById('profileIcon').addEventListener('click', function() {
+    const logout = confirm('Möchten Sie sich abmelden?');
+    if (logout) {
+        // Clear localStorage and reload the page to show the login buttons
+        localStorage.removeItem('loggedIn');
+        location.reload();
+    }
+});
+
+                
+            // Store user login state in localStorage
+            localStorage.setItem('loggedIn', 'true');
+            showProfileIcon();  // Show profile icon upon successful login
+                
+            }
+        } catch (err) {
+            loginErrorMessage.textContent = `Fehler: ${err.message}`;
+        }
+    });
+document.addEventListener('DOMContentLoaded', function() {
+    const loggedIn = localStorage.getItem('loggedIn');
+
+    if (loggedIn === 'true') {
+        showProfileIcon();  // Show profile icon if the user is logged in
+    }
+});
+
+    function showProfileIcon() {
+    // Get the header buttons container
+    const headerButtons = document.querySelector('.header-buttons');
+
+    // Clear login and registration buttons
+    headerButtons.innerHTML = `
+        <div class="profile-container">
+            <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+        </div>
+    `;
+
+    // Add event listener for profile icon click (you can add a dropdown or log-out)
+    document.getElementById('profileIcon').addEventListener('click', function() {
+        alert('Profil Optionen: Profil anzeigen oder Abmelden');
+        // You can add more logic here for showing profile details or logout
+    });
+}
+
+    
 </script>
 
 <!-- Modal Script Logic -->
@@ -698,37 +734,26 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <script>
-// Lightbox open function
-function openLightbox(imageSrc) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    lightboxImg.src = imageSrc;
-    lightbox.style.display = 'flex';  // Show the lightbox
-}
-
-// Lightbox close function
-function closeLightbox() {
-    document.getElementById('lightbox').style.display = 'none';  // Hide the lightbox
-}
-
-// Event listeners for images to open lightbox
-document.querySelectorAll('.lightbox-image').forEach(function(image) {
-    image.addEventListener('click', function() {
-        openLightbox(image.src);  // Open the lightbox with the clicked image
-    });
-});
-
-// Close the lightbox when clicking outside the image
-document.getElementById('lightbox').addEventListener('click', function(event) {
-    if (event.target === this) {
-        closeLightbox();  // Close the lightbox
+    // Lightbox öffnen
+    function openLightbox(imageSrc, captionText) {
+        document.getElementById('lightbox').style.display = "flex";
+        document.getElementById('lightbox-img').src = imageSrc;
+        document.getElementById('lightbox-caption').innerText = captionText;
     }
-});
+
+    // Lightbox schließen
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = "none";
+    }
+// Verhindere, dass die Lightbox beim Laden geöffnet wird
+document.getElementById('lightbox').style.display = "none";
+    
     // Alle PNG-Bilder anklickbar machen
     document.querySelectorAll('.lightbox-image').forEach(function(image) {
         image.addEventListener('click', function() {
             openLightbox(image.src, image.alt);
         });
+    });
 </script>
 </body>
 </html>
