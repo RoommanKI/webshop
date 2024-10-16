@@ -8,39 +8,47 @@
    <!-- Font Awesome für Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-
-/* Lightbox styling */
+/* Lightbox-Container */
 .lightbox {
     display: none;
     position: fixed;
-    z-index: 10;
+    z-index: 999;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
-    justify-content: center;
-    align-items: center;
+    display: flex; /* Flexbox für Zentrierung */
+    justify-content: center; /* Horizontal zentrieren */
+    align-items: center; /* Vertikal zentrieren */
 }
 
-    display: flex; /* Ensure flex is active to center image */
-}
-
+/* Lightbox-Inhalt */
 .lightbox-content {
     max-width: 80%;
     max-height: 80%;
-    object-fit: contain; /* Ensure large images fit inside */
+    margin: auto;
+    display: block;
+    border-radius: 8px;
+    object-fit: contain;
 }
 
+
+/* Lightbox schließen */
 .lightbox-close {
     position: absolute;
     top: 20px;
-    right: 30px;
-    font-size: 40px;
+    right: 35px;
     color: white;
+    font-size: 40px;
+    font-weight: bold;
     cursor: pointer;
 }
 
+/* Bildunterschrift entfernen */
+.lightbox-caption {
+    display: none;
+}
 
 /* Basic Styles */
 body {
@@ -606,42 +614,34 @@ nav a:hover {
         }
     };
 </script>
-    <script>
-// Lightbox open function
-function openLightbox(imageSrc) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    lightboxImg.src = imageSrc;
-    lightbox.style.display = 'flex'; // Shows the Lightbox when an image is clicked
-}
-
-// Lightbox close function
-function closeLightbox() {
-    document.getElementById('lightbox').style.display = 'none';
-}
-
-// Close the lightbox when clicking outside of the image
-document.getElementById('lightbox').addEventListener('click', function(event) {
-    if (event.target === this) {
-        closeLightbox();
-    }
-});
-
-// Close the lightbox when clicking the close button
-document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-
-// Apply lightbox to all images in the product list
-document.querySelectorAll('.product img').forEach(function(image) {
-    image.addEventListener('click', function() {
-        openLightbox(image.src);
-    });
-});
-
-</script>
-<!-- Lightbox HTML structure -->
+<!-- Lightbox-Container -->
 <div id="lightbox" class="lightbox">
-    <span class="lightbox-close">&times;</span>
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
     <img id="lightbox-img" class="lightbox-content">
+    <div id="lightbox-caption" class="lightbox-caption"></div>
 </div>
+
+<script>
+    // Lightbox öffnen
+    function openLightbox(imageSrc, captionText) {
+        document.getElementById('lightbox').style.display = "flex";
+        document.getElementById('lightbox-img').src = imageSrc;
+        document.getElementById('lightbox-caption').innerText = captionText;
+    }
+
+    // Lightbox schließen
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = "none";
+    }
+// Verhindere, dass die Lightbox beim Laden geöffnet wird
+document.getElementById('lightbox').style.display = "none";
+    
+    // Alle PNG-Bilder anklickbar machen
+    document.querySelectorAll('.lightbox-image').forEach(function(image) {
+        image.addEventListener('click', function() {
+            openLightbox(image.src, image.alt);
+        });
+    });
+</script>
 </body>
 </html>
