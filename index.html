@@ -21,6 +21,8 @@
     background-color: rgba(0, 0, 0, 0.9);
     justify-content: center;
     align-items: center;
+}
+
     display: flex; /* Ensure flex is active to center image */
 }
 
@@ -605,12 +607,12 @@ nav a:hover {
     };
 </script>
     <script>
- // Lightbox open function
+// Lightbox open function
 function openLightbox(imageSrc) {
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     lightboxImg.src = imageSrc;
-    lightbox.style.display = 'flex'; // Ensure it's visible
+    lightbox.style.display = 'flex'; // Shows the Lightbox when an image is clicked
 }
 
 // Lightbox close function
@@ -634,7 +636,6 @@ document.querySelectorAll('.product img').forEach(function(image) {
         openLightbox(image.src);
     });
 });
-
 
 </script>
 <!-- Lightbox HTML structure -->
