@@ -670,6 +670,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
         if (error) {
             loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
         } else {
+            localStorage.setItem('userEmail', email);  // Store email in localStorage
             alert('Anmeldung erfolgreich!');
             localStorage.setItem('loggedIn', 'true');  // Store login state
             showProfileIcon();  // Display the profile icon
