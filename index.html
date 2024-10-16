@@ -8,6 +8,35 @@
    <!-- Font Awesome für Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
+
+    /* Lightbox styling */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+.lightbox-content {
+    max-width: 80%;
+    max-height: 80%;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+}
+
 /* Basic Styles */
 body {
     font-family: Arial, sans-serif;
@@ -571,6 +600,42 @@ nav a:hover {
             loginModal.style.display = "none";
         }
     };
+    // Lightbox open function
+function openLightbox(imageSrc) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    lightboxImg.src = imageSrc;
+    lightbox.style.display = 'flex';
+}
+
+// Lightbox close function
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+}
+
+// Close the lightbox when clicking outside of the image
+document.getElementById('lightbox').addEventListener('click', function(event) {
+    if (event.target === this) {
+        closeLightbox();
+    }
+});
+
+// Close the lightbox when clicking the close button
+document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+
+// Apply lightbox to all images in the product list
+document.querySelectorAll('.product img').forEach(function(image) {
+    image.addEventListener('click', function() {
+        openLightbox(image.src);
+    });
+});
+
 </script>
+    <!-- Lightbox HTML structure -->
+<div id="lightbox" class="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" class="lightbox-content">
+</div>
+
 </body>
 </html>
