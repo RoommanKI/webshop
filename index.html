@@ -624,7 +624,7 @@ document.getElementById('cart-icon').addEventListener('click', function() {
     });
 // Login Logic
 document.getElementById('login-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent page reload
 
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
@@ -640,9 +640,8 @@ document.getElementById('login-form').addEventListener('submit', async function(
             loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
         } else {
             alert('Anmeldung erfolgreich!');
-// Successful login logic
-localStorage.setItem('loggedIn', 'true');
-showProfileIcon();
+            localStorage.setItem('loggedIn', 'true');  // Store login state
+            showProfileIcon();  // Display the profile icon
         }
     } catch (err) {
         loginErrorMessage.textContent = `Fehler: ${err.message}`;
@@ -681,14 +680,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function showProfileIcon() {
     const headerButtons = document.querySelector('.header-buttons');
-    
-    // Replace login and registration buttons with the profile icon
     headerButtons.innerHTML = `
         <div class="profile-container">
             <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
         </div>
     `;
 }
+
 
     // Add an event listener to the profile icon for logout functionality
     document.getElementById('profileIcon').addEventListener('click', function() {
