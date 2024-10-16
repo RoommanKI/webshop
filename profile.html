@@ -95,7 +95,8 @@
         <button type="submit">Speichern</button>
         <p id="profile-error" class="error-message"></p>
     </form>
-
+<!-- Emergency delete button -->
+<button id="emergency-delete" style="margin-top: 20px;">DatenFalsch? - Profil löschen</button>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -168,6 +169,44 @@ async function loadProfile() {
                 document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
             }
         });
+        document.getElementById('emergency-delete').addEventListener('click', async function() {
+    const confirmDelete = confirm("Sind Sie sicher, dass Sie Ihr Profil löschen möchten?");
+
+    if (confirmDelete) {
+        try {
+            const { data, error } = await supabase
+                .from('profile')
+                .delete()
+                .eq('Email', userEmail);  // Delete by email
+
+            if (error) {
+                document.getElementById('profile-error').textContent = `Fehler beim Löschen des Profils: ${error.message}`;
+            } else {
+                alert('Profil wurde gelöscht!');
+
+                // Enable input fields to allow new data
+                document.getElementById('name').disabled = false;
+                document.getElementById('vorname').disabled = false;
+                document.getElementById('straße').disabled = false;
+                document.getElementById('stadt').disabled = false;
+                document.getElementById('plz').disabled = false;
+
+                // Clear input fields
+                document.getElementById('name').value = '';
+                document.getElementById('vorname').value = '';
+                document.getElementById('straße').value = '';
+                document.getElementById('stadt').value = '';
+                document.getElementById('plz').value = '';
+
+                // Show Save button again
+                document.querySelector('button[type="submit"]').style.display = 'block';
+            }
+        } catch (err) {
+            document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
+        }
+    }
+});
+
     </script>
 </body>
 </html>
