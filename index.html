@@ -598,27 +598,32 @@ document.getElementById('cart-icon').addEventListener('click', function() {
         cartContent.innerHTML = cartHTML;
     }
 
-    // Bestellung abschließen
-    function finalizeOrder() {
-        if (cart.length === 0) {
-            alert('Ihr Warenkorb ist leer.');
-            return;
-        }
-
-        // Bestellübersicht aufrufen
-        let orderSummary = 'Bestellung:\n';
-        cart.forEach(item => {
-            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-        });
-        alert(`Ihre Bestellung:\n${orderSummary}`);
-
-        // Warenkorb zurücksetzen
-        cart = [];
-        updateCart();
-        toggleCart();  // Warenkorb-Popup schließen
-            // Weiterleitung zur Bestellübersichtsseite
-    window.location.href = 'order-summary.html';
+// Bestellung abschließen
+function finalizeOrder() {
+    if (cart.length === 0) {
+        alert('Ihr Warenkorb ist leer.');
+        return;
     }
+
+    // Bestellübersicht aufrufen
+    let orderSummary = 'Bestellung:\n';
+    cart.forEach(item => {
+        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+    });
+    alert(`Ihre Bestellung:\n${orderSummary}`);
+
+    // Save order summary to localStorage
+    localStorage.setItem('orderSummary', JSON.stringify(cart));
+
+    // Warenkorb zurücksetzen
+    cart = [];
+    updateCart();
+    toggleCart();  // Warenkorb-Popup schließen
+    
+    // Weiterleitung zur Bestellübersichtsseite
+    window.location.href = 'order-summary.html';
+}
+
 </script>
 
 <!-- Supabase SDK and Scripts -->
@@ -787,11 +792,17 @@ document.getElementById('lightbox').style.display = "none";
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.getElementById('profileIcon');
     const profileDropdown = document.getElementById('profileDropdown');
     const logoutOption = document.getElementById('profile-logout');
 
+    // Add event listener for "Orders" option in the profile dropdown
+    document.getElementById('profile-orders').addEventListener('click', function() {
+        window.location.href = 'orders.html'; // Redirect to orders page
+    });
+
+    // Add other profile dropdown logic here (like logout or address handling)
     // Toggle dropdown visibility
     profileIcon.addEventListener('click', function () {
         profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
