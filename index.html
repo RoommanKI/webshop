@@ -698,20 +698,32 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <script>
-    // Lightbox öffnen
-    function openLightbox(imageSrc, captionText) {
-        document.getElementById('lightbox').style.display = "flex";
-        document.getElementById('lightbox-img').src = imageSrc;
-        document.getElementById('lightbox-caption').innerText = captionText;
-    }
+// Lightbox open function
+function openLightbox(imageSrc) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    lightboxImg.src = imageSrc;
+    lightbox.style.display = 'flex';  // Show the lightbox
+}
 
-    // Lightbox schließen
-    function closeLightbox() {
-        document.getElementById('lightbox').style.display = "none";
+// Lightbox close function
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';  // Hide the lightbox
+}
+
+// Event listeners for images to open lightbox
+document.querySelectorAll('.lightbox-image').forEach(function(image) {
+    image.addEventListener('click', function() {
+        openLightbox(image.src);  // Open the lightbox with the clicked image
+    });
+});
+
+// Close the lightbox when clicking outside the image
+document.getElementById('lightbox').addEventListener('click', function(event) {
+    if (event.target === this) {
+        closeLightbox();  // Close the lightbox
     }
-// Verhindere, dass die Lightbox beim Laden geöffnet wird
-document.getElementById('lightbox').style.display = "none";
-    
+});
     // Alle PNG-Bilder anklickbar machen
     document.querySelectorAll('.lightbox-image').forEach(function(image) {
         image.addEventListener('click', function() {
