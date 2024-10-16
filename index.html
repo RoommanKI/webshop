@@ -503,12 +503,12 @@ nav a:hover {
 </div>
 <!-- Skripte -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
 
     if (loggedIn === 'true') {
-        showProfileIcon();  // Show profile icon if the user is logged in
-    }
+        showProfileIcon();  
+    }  // Ensure this matches the if block properly
 });
 
     // Kategorien anzeigen/verstecken
