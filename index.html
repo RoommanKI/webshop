@@ -643,12 +643,9 @@ document.getElementById('login-form').addEventListener('submit', async function(
             loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
         } else {
             alert('Anmeldung erfolgreich!');
-            
-            // Store user login state in localStorage
-            localStorage.setItem('loggedIn', 'true');
-            
-            // Show profile icon after login
-            showProfileIcon();  
+// Successful login logic
+localStorage.setItem('loggedIn', 'true');
+showProfileIcon();
         }
     } catch (err) {
         loginErrorMessage.textContent = `Fehler: ${err.message}`;
@@ -656,7 +653,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
 });
 
 
-       function showProfileIcon() {
+function showProfileIcon() {
     // Get the header buttons container
     const headerButtons = document.querySelector('.header-buttons');
 
@@ -667,26 +664,23 @@ document.getElementById('login-form').addEventListener('submit', async function(
         </div>
     `;
 
-    // Add event listener for profile icon click
-    const profileIcon = document.getElementById('profileIcon');
-    if (profileIcon) {
-        profileIcon.addEventListener('click', function() {
-            const logout = confirm('Möchten Sie sich abmelden?');
-            if (logout) {
-                // Clear login state and reload page
-                localStorage.removeItem('loggedIn');
-                location.reload();
-            }
-        });
-    }
+    // Add event listener for profile icon click (you can add a dropdown or log-out)
+    document.getElementById('profileIcon').addEventListener('click', function() {
+        const logout = confirm('Möchten Sie sich abmelden?');
+        if (logout) {
+            // Clear localStorage and reload the page to show the login buttons
+            localStorage.removeItem('loggedIn');
+            location.reload();
+        }
+    });
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
-
     if (loggedIn === 'true') {
         showProfileIcon();  // Show profile icon if the user is logged in
     }
-    function showProfileIcon() {
+});
     // Get the header buttons container
     const headerButtons = document.querySelector('.header-buttons');
 
