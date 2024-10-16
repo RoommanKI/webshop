@@ -96,7 +96,9 @@
         <p id="profile-error" class="error-message"></p>
     </form>
 <!-- Emergency delete button -->
-<button id="emergency-delete" style="margin-top: 20px;">DatenFalsch? - Profil löschen</button>
+<button id="emergency-delete" style="margin-top: 20px; padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer;">
+    DatenFalsch? - Profil löschen
+</button>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -170,7 +172,7 @@ async function loadProfile() {
             }
         });
         document.getElementById('emergency-delete').addEventListener('click', async function() {
-    const confirmDelete = confirm("Sind Sie sicher, dass Sie Ihr Profil löschen möchten?");
+    const confirmDelete = confirm("Sind Sie sicher, dass Sie Ihr Daten neu eingeben möchten?");
 
     if (confirmDelete) {
         try {
