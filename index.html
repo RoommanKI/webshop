@@ -543,6 +543,36 @@ nav a:hover {
 </div>
 <!-- Skripte -->
 <script>
+    function showProfileIcon() {
+        const headerButtons = document.querySelector('.header-buttons');
+        if (headerButtons) {
+            headerButtons.innerHTML = `
+                <div class="profile-container" style="position: relative;">
+                    <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                    <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
+                        <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
+                        <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
+                    </div>
+                </div>
+            `;
+            
+            // Attach event listener to the profile icon to toggle the menu
+            const profileIcon = document.getElementById('profileIcon');
+            const profileMenu = document.getElementById('profileMenu');
+            profileIcon.addEventListener('click', function () {
+                profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+            });
+
+            // Add logout functionality
+            document.getElementById('logoutLink').addEventListener('click', function () {
+                localStorage.removeItem('loggedIn');
+                location.reload(); // Reload to show the login/register buttons
+            });
+        }
+    }
+
+
     // Kategorien anzeigen/verstecken
     function showCategory(category) {
         // Alle Kategorien verstecken
@@ -688,36 +718,6 @@ document.getElementById('login-form').addEventListener('submit', async function(
 });
 
 
-function showProfileIcon() {
-    const headerButtons = document.querySelector('.header-buttons');
-    if (headerButtons) {
-        headerButtons.innerHTML = `
-            <div class="profile-container" style="position: relative;">
-                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
-                    <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
-                    <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
-                </div>
-            </div>
-        `;
-        
-        // Attach event listener to the profile icon to toggle the menu
-        const profileIcon = document.getElementById('profileIcon');
-        const profileMenu = document.getElementById('profileMenu');
-        profileIcon.addEventListener('click', function () {
-            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-        });
-
-        // Add logout functionality
-        document.getElementById('logoutLink').addEventListener('click', function () {
-            localStorage.removeItem('loggedIn');
-            location.reload(); // Reload to show the login/register buttons
-        });
-    }
-}
-
-
 
     
 </script>
@@ -816,28 +816,27 @@ document.getElementById('lightbox').style.display = "none";
         }
     });
 });
-document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn');
-    const headerButtons = document.querySelector('.header-buttons');
-    const prices = document.querySelectorAll('.price');
+    document.addEventListener('DOMContentLoaded', function() {
+        const loggedIn = localStorage.getItem('loggedIn');
+        const headerButtons = document.querySelector('.header-buttons');
+        const prices = document.querySelectorAll('.price');
 
-    // Ensure showProfileIcon is defined
-    if (loggedIn === 'true') {
-        showProfileIcon(); // Call showProfileIcon after ensuring it's defined
+        if (loggedIn === 'true') {
+            showProfileIcon();  // Call showProfileIcon after ensuring it's defined
 
-        // Show prices if logged in
-        prices.forEach(function(price) {
-            price.classList.remove('hidden');
-        });
-    } else {
-        headerButtons.style.display = 'flex';
+            // Show prices if logged in
+            prices.forEach(function(price) {
+                price.classList.remove('hidden');
+            });
+        } else {
+            headerButtons.style.display = 'flex';
 
-        // Hide prices if not logged in
-        prices.forEach(function(price) {
-            price.classList.add('hidden');
-        });
-    }
-});
+            // Hide prices if not logged in
+            prices.forEach(function(price) {
+                price.classList.add('hidden');
+            });
+        }
+    });
 
 
 
