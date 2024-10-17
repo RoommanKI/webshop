@@ -12,6 +12,10 @@
    .header-buttons {
     display: none; /* Hidden by default */
 }
+    .hidden {
+    display: none;
+}
+
 .profile-dropdown {
     display: none;
     position: absolute;
@@ -385,59 +389,59 @@ nav a:hover {
     <div class="product">
         <img src="Blatttrauer.png" alt="Blatt Trauerkarte" class="lightbox-image">
         <h2>In tiefer Trauer - Blatt</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-blatt" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Blatt', 'quantity-blatt', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Blatt', 'quantity-blatt', 1.0)">In den Warenkorb</button>
     </div>
     <div class="product">
         <img src="Blumentrauer.png" alt="Blumen Trauerkarte" class="lightbox-image">
         <h2>Aufrichtiges Beileid - Blumen</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-blumen" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Blumen', 'quantity-blumen', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Blumen', 'quantity-blumen', 1.0)">In den Warenkorb</button>
     </div>
     
     <div class="product">
         <img src="HolzstegTrauer.png" alt="Holzsteg Trauerkarte" class="lightbox-image">
         <h2>Aufrichtiges Beileid - Holzsteg</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-holzsteg" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Holzsteg', 'quantity-holzsteg', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Holzsteg', 'quantity-holzsteg', 1.0)">In den Warenkorb</button>
     </div>
     <div class="product">
         <img src="Lotusblumen Trauer.png" alt="Lotusblumen Trauerkarte" class="lightbox-image">
         <h2>In liebevoller Erinnerung - Lotusblumen</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-lotusblume" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Lotusblume', 'quantity-lotusblume', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Lotusblume', 'quantity-lotusblume', 1.0)">In den Warenkorb</button>
     </div>
     <div class="product">
         <img src="Nachthimmel Trauer.png" alt="Nachthimmel Trauerkarte" class="lightbox-image">
         <h2>In tiefer Trauer - Nachthimmel</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-nachthimmel" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Nachthimmel', 'quantity-nachthimmel', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Nachthimmel', 'quantity-nachthimmel', 1.0)">In den Warenkorb</button>
     </div>
     <div class="product">
         <img src="Trauervogel.png" alt="Trauervogel Trauerkarte" class="lightbox-image">
         <h2>In tiefem Mitgefühl - Trauervogel</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-trauervogel" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Trauervogel', 'quantity-trauervogel', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Trauervogel', 'quantity-trauervogel', 1.0)">In den Warenkorb</button>
     </div>
     <div class="product">
         <img src="TrauerWinterWald.png" alt="Winterwald Trauerkarte" class="lightbox-image">
         <h2>In stiller Erinnerung - Winterwald</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-winterwald" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Winterwald', 'quantity-winterwald', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Winterwald', 'quantity-winterwald', 1.0)">In den Warenkorb</button>
     </div>
     <div class="product">
         <img src="weißeblume.png" alt="Weiße Blumen Trauerkarte" class="lightbox-image">
         <h2>Herzliche Anteilnahme - Weiße Blumen</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-weisseblumen" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Weiße Blumen', 'quantity-weisseblumen', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Weiße Blumen', 'quantity-weisseblumen', 1.0)">In den Warenkorb</button>
     </div>
        <div class="product">
     <img src="Lagerfeuer.png" alt="In stillem Gedenken" class="lightbox-image">
@@ -449,9 +453,9 @@ nav a:hover {
 <div class="product">
         <img src="Weizenfeld.png" alt="Weizenfeld Trauerkarte" class="lightbox-image">
         <h2>Aufrichtige Anteilnahme - Weizenfeld</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-weizenfeld" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Weizenfeld', 'quantity-weizenfeld', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Weizenfeld', 'quantity-weizenfeld', 1.0)">In den Warenkorb</button>
     </div>
 <div class="product">
     <img src="NeuerAnfang.png" alt="In tiefem Mitgefühl" class="lightbox-image">
@@ -471,9 +475,9 @@ nav a:hover {
 <div class="product">
         <img src="Engel.png" alt="Engel Trauerkarte" class="lightbox-image">
         <h2>In tiefem Mitgefühl - Engel</h2>
-        <p class="price">0,80 € netto</p>
+        <p class="price hidden">1,00 € </p>
         <input type="number" id="quantity-engel" class="quantity" min="1" value="1">
-        <button class="btn" onclick="addToCart('Engel', 'quantity-engel', 0.8)">In den Warenkorb</button>
+        <button class="btn" onclick="addToCart('Engel', 'quantity-engel', 1.0)">In den Warenkorb</button>
     </div>
 <div class="product">
     <img src="SeeMond.png" alt="In stiller Trauer" class="lightbox-image">
@@ -814,13 +818,25 @@ document.getElementById('lightbox').style.display = "none";
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
     const headerButtons = document.querySelector('.header-buttons');
+    const prices = document.querySelectorAll('.price'); // Step 4 - Select all price elements
     
     if (loggedIn === 'true') {
-        showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
+        showProfileIcon(); // Ensure the profile icon appears after login
+        
+        // Step 4 - If logged in, show the prices
+        prices.forEach(function(price) {
+            price.classList.remove('hidden');
+        });
     } else {
         headerButtons.style.display = 'flex';
+        
+        // Step 4 - If not logged in, hide the prices
+        prices.forEach(function(price) {
+            price.classList.add('hidden');
+        });
     }
 });
+
 
 </script>
 </body>
