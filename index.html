@@ -531,6 +531,16 @@ nav a:hover {
         <h3>Eventkarten</h3>
         <!-- Hier könnten Produkte hinzugefügt werden -->
     </section>
+    <div id="main-content">
+    <!-- Other sections like category descriptions, welcome message, etc. -->
+    
+    <!-- Add the product-list container for dynamically inserting products -->
+    <section id="product-list" class="product-list">
+        <!-- Products will be dynamically added here -->
+    </section>
+    
+    <!-- Other sections for different product categories -->
+</div>
 </div>
 
 <!-- Warenkorb-Popup -->
@@ -818,39 +828,40 @@ document.getElementById('lightbox').style.display = "none";
         }
     });
 });
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function () {
     const loggedIn = localStorage.getItem('loggedIn');
     const headerButtons = document.querySelector('.header-buttons');
-    const prices = document.querySelectorAll('.price');
-    const quantities = document.querySelectorAll('.quantity');
-    const cartButtons = document.querySelectorAll('.btn');
+    const productList = document.getElementById('product-list'); // Adjust to match your product container
 
+    // Fetch products from Supabase
+    const { data: products, error } = await supabase
+        .from('products')  // Ensure this matches your Supabase table name
+        .select('*');
+
+    if (error) {
+        console.error('Error fetching products:', error.message);
+        return;
+    }
+
+    // Dynamically insert products into the product list
+    products.forEach(product => {
+        const productHtml = `
+            <div class="product">
+                <img src="${product.imageUrl}" alt="${product.name}" class="lightbox-image">
+                <h2>${product.name}</h2>
+                <p class="price ${loggedIn !== 'true' ? 'hidden' : ''}">${product.price} €</p>
+                <input type="number" id="quantity-${product.id}" class="quantity ${loggedIn !== 'true' ? 'hidden' : ''}" min="1" value="1">
+                <button class="btn ${loggedIn !== 'true' ? 'hidden' : ''}" onclick="addToCart('${product.name}', 'quantity-${product.id}', ${product.price})">In den Warenkorb</button>
+            </div>
+        `;
+        productList.innerHTML += productHtml;
+    });
+
+    // If the user is logged in, show the profile icon and the product details
     if (loggedIn === 'true') {
         showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
-
-        // Show prices, quantities, and buttons if logged in
-        prices.forEach(function(price) {
-            price.classList.remove('hidden');
-        });
-        quantities.forEach(function(quantity) {
-            quantity.classList.remove('hidden');
-        });
-        cartButtons.forEach(function(button) {
-            button.classList.remove('hidden');
-        });
     } else {
         headerButtons.style.display = 'flex';
-
-        // Hide prices, quantities, and buttons if not logged in
-        prices.forEach(function(price) {
-            price.classList.add('hidden');
-        });
-        quantities.forEach(function(quantity) {
-            quantity.classList.add('hidden');
-        });
-        cartButtons.forEach(function(button) {
-            button.classList.add('hidden');
-        });
     }
 });
 
