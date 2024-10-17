@@ -695,13 +695,13 @@ function showProfileIcon() {
             <div class="profile-container" style="position: relative;">
                 <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
                 <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
+                    <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
                     <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
-                        <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
+                    <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
                 </div>
             </div>
         `;
-
+        
         // Attach event listener to the profile icon to toggle the menu
         const profileIcon = document.getElementById('profileIcon');
         const profileMenu = document.getElementById('profileMenu');
@@ -716,6 +716,7 @@ function showProfileIcon() {
         });
     }
 }
+
 
 
     
@@ -820,9 +821,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerButtons = document.querySelector('.header-buttons');
     const prices = document.querySelectorAll('.price');
 
+    // Ensure showProfileIcon is defined
     if (loggedIn === 'true') {
-        showProfileIcon(); // Ensure the profile icon is shown after login
-        
+        showProfileIcon(); // Call showProfileIcon after ensuring it's defined
+
         // Show prices if logged in
         prices.forEach(function(price) {
             price.classList.remove('hidden');
@@ -836,6 +838,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
 
 
 
