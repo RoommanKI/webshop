@@ -103,14 +103,24 @@
         <a href="#" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
         <a href="#" onclick="showCategory('events')">Eventkarten</a>
     </nav>
+<!-- Navigation -->
 
-    <!-- Main content where categories will be displayed -->
-    <div id="main-content">
-        <!-- Placeholder sections for categories -->
-        <section id="trauer" class="category">
-            <h2>Trauerkarten</h2>
-            <div id="trauerkarten-products"></div>
-        </section>
+<!-- Main Content -->
+<div id="main-content">
+    <!-- Startseite Abschnitt -->
+    <section id="startseite" style="padding: 20px; text-align: center;">
+        <h2>Willkommen in unserem Grußkarten-Shop!</h2>
+        <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
+    </section>
+
+    <!-- This is where the products for Trauerkarten should be loaded -->
+    <section id="trauerkarten-products" class="product-list" style="display: none;">
+        <!-- Dynamically loaded Trauerkarten products will appear here -->
+    </section>
+
+    <!-- Sections for other categories can follow -->
+</div>
+
 
         <section id="hochzeit" class="category">
             <h2>Hochzeitskarten</h2>
