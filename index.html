@@ -376,6 +376,7 @@ nav a:hover {
     <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
     <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
 </nav>
+
 <!-- Hauptinhalt -->
 <div id="main-content">
     <!-- Startseite Abschnitt -->
@@ -384,7 +385,17 @@ nav a:hover {
         <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
     </section>
 
-           <section id="trauer" class="product-list category"style="display: none;">
+    <!-- Dynamically Loaded Product List -->
+    <section id="product-list" class="product-list">
+        <!-- Products will be dynamically added here -->
+    </section>
+
+    <!-- Categories Section -->
+    <section id="trauer" class="product-list category" style="display: none;">
+        <!-- Trauerkarten products will be listed here -->
+    </section>
+</div>
+
     
     <div class="product">
         <img src="Blatttrauer.png" alt="Blatt Trauerkarte" class="lightbox-image">
@@ -847,8 +858,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     products.forEach(product => {
         const productHtml = `
             <div class="product">
-                <img src="${product.imageUrl}" alt="${product.name}" class="lightbox-image">
+                <img src="${product.image_url}" alt="${product.name}" class="lightbox-image">
                 <h2>${product.name}</h2>
+                <p class="description">${product.description}</p>
                 <p class="price ${loggedIn !== 'true' ? 'hidden' : ''}">${product.price} €</p>
                 <input type="number" id="quantity-${product.id}" class="quantity ${loggedIn !== 'true' ? 'hidden' : ''}" min="1" value="1">
                 <button class="btn ${loggedIn !== 'true' ? 'hidden' : ''}" onclick="addToCart('${product.name}', 'quantity-${product.id}', ${product.price})">In den Warenkorb</button>
@@ -864,6 +876,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         headerButtons.style.display = 'flex';
     }
 });
+
 
 
 
