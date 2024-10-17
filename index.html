@@ -820,14 +820,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const headerButtons = document.querySelector('.header-buttons');
     const prices = document.querySelectorAll('.price');
 
-    // Ensure showProfileIcon is defined
-    function showProfileIcon() {
-        // Code for showing the profile icon
-    }
-
     if (loggedIn === 'true') {
-        showProfileIcon(); // Call showProfileIcon after ensuring it's defined
-
+        showProfileIcon(); // Ensure the profile icon is shown after login
+        
         // Show prices if logged in
         prices.forEach(function(price) {
             price.classList.remove('hidden');
@@ -840,8 +835,6 @@ document.addEventListener('DOMContentLoaded', function() {
             price.classList.add('hidden');
         });
     }
-
-    // Add other event listeners or DOM interactions here if necessary
 });
 
 
