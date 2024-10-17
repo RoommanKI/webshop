@@ -5,197 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
     <style>
-        /* Basic Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #ff4081;
-            color: white;
-            padding: 20px;
-        }
-
-        nav {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        nav a {
-            margin: 0 10px;
-            padding: 10px 20px;
-            background-color: #ff4081;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        nav a:hover {
-            background-color: #e73370;
-        }
-
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-
-        .product {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            width: 300px;
-            transition: transform 0.3s ease;
-        }
-
-        .product img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .product:hover img {
-            transform: scale(1.1);
-        }
-
-        .product:hover {
-            transform: scale(1.05);
-        }
-
-        .price {
-            font-size: 1.2rem;
-            color: #ff4081;
-            margin: 10px 0;
-        }
-
-        .quantity {
-            margin: 10px 0;
-            width: 60px;
-            text-align: center;
-        }
-
-        .btn {
-            background-color: #ff4081;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .cart {
-            position: relative;
-            display: inline-block;
-        }
-
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
+        /* Your existing styles here */
+        .category { display: none; }
+        .active { display: block; }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#trauerkarten" onclick="showCategory('trauer')">Trauerkarten</a>
+        <a href="#hochzeitskarten" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
+        <a href="#glueckwunschkarten" onclick="showCategory('glueckwunsch')">Glückwunschkarten</a>
+        <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
+        <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
+    </nav>
 
-<!-- Header -->
-<header>
-    <h1 style="margin: 0;">Webshop - Grußkarten</h1>
-</header>
+    <!-- Hauptinhalt -->
+    <div id="main-content">
+        <!-- Categories -->
+        <section id="trauerkarten" class="category">
+            <h2>Trauerkarten</h2>
+            <div id="trauerkarten-products"></div>
+        </section>
+        <section id="hochzeitskarten" class="category">
+            <h2>Hochzeitskarten</h2>
+            <div id="hochzeitskarten-products"></div>
+        </section>
+        <section id="glueckwunschkarten" class="category">
+            <h2>Glückwunschkarten</h2>
+            <div id="glueckwunschkarten-products"></div>
+        </section>
+        <section id="weihnachtskarten" class="category">
+            <h2>Weihnachtskarten</h2>
+            <div id="weihnachtskarten-products"></div>
+        </section>
+        <section id="eventkarten" class="category">
+            <h2>Eventkarten</h2>
+            <div id="eventkarten-products"></div>
+        </section>
+    </div>
 
-<!-- Navigation -->
-<nav>
-    <a href="#trauerkarten" onclick="showCategory('trauerkarten')">Trauerkarten</a>
-    <a href="#hochzeitskarten" onclick="showCategory('hochzeitskarten')">Hochzeitskarten</a>
-    <a href="#glueckwunschkarten" onclick="showCategory('glueckwunschkarten')">Glückwunschkarten</a>
-    <a href="#weihnachtskarten" onclick="showCategory('weihnachtskarten')">Weihnachtskarten</a>
-    <a href="#eventkarten" onclick="showCategory('eventkarten')">Eventkarten</a>
-</nav>
+    <script>
+        function showCategory(categoryId) {
+            // Hide all categories
+            const categories = document.querySelectorAll('.category');
+            categories.forEach(cat => cat.style.display = 'none');
 
-<!-- Main Content -->
-<div id="main-content">
-    <!-- Product Sections -->
-    <section id="trauerkarten" class="product-list category" style="display: none;"></section>
-    <section id="hochzeitskarten" class="product-list category" style="display: none;"></section>
-    <section id="glueckwunschkarten" class="product-list category" style="display: none;"></section>
-    <section id="weihnachtskarten" class="product-list category" style="display: none;"></section>
-    <section id="eventkarten" class="product-list category" style="display: none;"></section>
-</div>
-
-<!-- Supabase Script -->
-<script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-    // Supabase Initialization
-    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    // Function to load products by category
-    async function loadProductsByCategory(category) {
-        const { data: products, error } = await supabase
-            .from('products') // Ensure this matches your Supabase table name
-            .select('*')
-            .eq('category', category);
-
-        if (error) {
-            console.error('Error fetching products:', error.message);
-            return;
+            // Show the selected category
+            const selectedCategory = document.getElementById(categoryId + 'karten');
+            if (selectedCategory) {
+                selectedCategory.style.display = 'block';
+            }
         }
 
-        const productList = document.getElementById(category);
-        productList.innerHTML = ''; // Clear current products
+        // Example Supabase call for fetching products (for one category, repeat for others)
+        async function loadProducts(category, containerId) {
+            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Your key here
+            const supabase = createClient(supabaseUrl, supabaseKey);
 
-        products.forEach(product => {
-            const productHtml = `
-                <div class="product">
-                    <img src="${product.image_url}" alt="${product.name}">
-                    <h2>${product.name}</h2>
-                    <p>${product.description}</p>
-                    <p class="price">${product.price} €</p>
-                </div>
-            `;
-            productList.innerHTML += productHtml;
+            const { data: products, error } = await supabase
+                .from('products')
+                .select('*')
+                .eq('category', category);
+
+            if (error) {
+                console.error('Error fetching products:', error);
+                return;
+            }
+
+            const container = document.getElementById(containerId);
+            container.innerHTML = ''; // Clear existing products
+
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}" />
+                    <h3>${product.name}</h3>
+                    <p>${product.price} €</p>
+                `;
+                container.appendChild(productDiv);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load products for all categories
+            loadProducts('trauer', 'trauerkarten-products');
+            loadProducts('hochzeit', 'hochzeitskarten-products');
+            loadProducts('glueckwunsch', 'glueckwunschkarten-products');
+            loadProducts('weihnachten', 'weihnachtskarten-products');
+            loadProducts('events', 'eventkarten-products');
         });
-    }
+    </script>
 
-    // Function to show a category section and load its products
-    function showCategory(category) {
-        // Hide all categories
-        const categories = document.querySelectorAll('.category');
-        categories.forEach(cat => cat.style.display = 'none');
-
-        // Show the selected category
-        const selectedCategory = document.getElementById(category);
-        selectedCategory.style.display = 'flex';
-
-        // Load the products for this category
-        loadProductsByCategory(category);
-    }
-
-    // Load default category on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        showCategory('trauerkarten'); // You can change this to any default category
-    });
-</script>
-
+    <!-- Supabase library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </body>
 </html>
