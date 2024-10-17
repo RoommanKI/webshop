@@ -818,24 +818,32 @@ document.getElementById('lightbox').style.display = "none";
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn');
     const headerButtons = document.querySelector('.header-buttons');
-    const prices = document.querySelectorAll('.price'); // Step 4 - Select all price elements
-    
+    const prices = document.querySelectorAll('.price');
+
+    // Ensure showProfileIcon is defined
+    function showProfileIcon() {
+        // Code for showing the profile icon
+    }
+
     if (loggedIn === 'true') {
-        showProfileIcon(); // Ensure the profile icon appears after login
-        
-        // Step 4 - If logged in, show the prices
+        showProfileIcon(); // Call showProfileIcon after ensuring it's defined
+
+        // Show prices if logged in
         prices.forEach(function(price) {
             price.classList.remove('hidden');
         });
     } else {
         headerButtons.style.display = 'flex';
-        
-        // Step 4 - If not logged in, hide the prices
+
+        // Hide prices if not logged in
         prices.forEach(function(price) {
             price.classList.add('hidden');
         });
     }
+
+    // Add other event listeners or DOM interactions here if necessary
 });
+
 
 
 </script>
