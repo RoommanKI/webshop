@@ -711,6 +711,8 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
                         // Close the login modal
             document.getElementById('loginModal').style.display = 'none';
+            // Automatically reload the page after login
+            location.reload();
         }
     } catch (err) {
         loginErrorMessage.textContent = `Fehler: ${err.message}`;
