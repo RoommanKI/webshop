@@ -12,21 +12,27 @@
     <script>
         let supabase;
 
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             // Initialize Supabase client
             const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
             const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-            supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-            // Call the function to load products
-            loadProducts('trauer', 'trauerkarten-products');
-            loadProducts('hochzeit', 'hochzeitskarten-products');
-            loadProducts('glueckwunsch', 'glueckwunschkarten-products');
-            loadProducts('weihnachten', 'weihnachtskarten-products');
-            loadProducts('events', 'eventkarten-products');
+            if (window.supabase) {
+                supabase = supabase.createClient(supabaseUrl, supabaseKey);
+                console.log("Supabase initialized successfully.");
+                
+                // Load products after Supabase initialization
+                loadProducts('trauer', 'trauerkarten-products');
+                loadProducts('hochzeit', 'hochzeitskarten-products');
+                loadProducts('glueckwunsch', 'glueckwunschkarten-products');
+                loadProducts('weihnachten', 'weihnachtskarten-products');
+                loadProducts('events', 'eventkarten-products');
 
-            // Default to showing the first category (e.g., 'trauer')
-            showCategory('trauer');
+                // Default to showing the first category
+                showCategory('trauer');
+            } else {
+                console.error('Supabase library failed to load.');
+            }
         });
     </script>
 
