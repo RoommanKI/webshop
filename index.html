@@ -819,30 +819,35 @@ document.getElementById('lightbox').style.display = "none";
     });
 });
 document.addEventListener('DOMContentLoaded', function() {
-        const loggedIn = localStorage.getItem('loggedIn');
-        const headerButtons = document.querySelector('.header-buttons');
-        const prices = document.querySelectorAll('.price');
+    const loggedIn = localStorage.getItem('loggedIn');
+    const prices = document.querySelectorAll('.price');
+    const quantities = document.querySelectorAll('.quantity');
+    const cartButtons = document.querySelectorAll('.btn');
 
-        function updatePricesVisibility() {
-            if (loggedIn === 'true') {
-                prices.forEach(function(price) {
-                    price.classList.remove('hidden');
-                });
-            } else {
-                prices.forEach(function(price) {
-                    price.classList.add('hidden');
-                });
-            }
-        }
-
-        if (loggedIn === 'true') {
-            showProfileIcon(); // Call showProfileIcon if logged in
-        } else {
-            headerButtons.style.display = 'flex';
-        }
-
-        updatePricesVisibility(); // Update prices visibility based on login status
-    });
+    if (loggedIn === 'true') {
+        // Show prices, quantities, and buttons if logged in
+        prices.forEach(function(price) {
+            price.classList.remove('hidden');
+        });
+        quantities.forEach(function(quantity) {
+            quantity.classList.remove('hidden');
+        });
+        cartButtons.forEach(function(button) {
+            button.classList.remove('hidden');
+        });
+    } else {
+        // Hide prices, quantities, and buttons if not logged in
+        prices.forEach(function(price) {
+            price.classList.add('hidden');
+        });
+        quantities.forEach(function(quantity) {
+            quantity.classList.add('hidden');
+        });
+        cartButtons.forEach(function(button) {
+            button.classList.add('hidden');
+        });
+    }
+});
 
 
 
