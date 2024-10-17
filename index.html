@@ -104,7 +104,7 @@
     <!-- Supabase JavaScript Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        // Initialize Supabase with your credentials
+        // Initialize Supabase with your credentials (Move this part to the top)
         const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
