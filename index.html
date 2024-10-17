@@ -816,28 +816,31 @@ document.getElementById('lightbox').style.display = "none";
         }
     });
 });
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
         const loggedIn = localStorage.getItem('loggedIn');
         const headerButtons = document.querySelector('.header-buttons');
         const prices = document.querySelectorAll('.price');
 
-        if (loggedIn === 'true') {
-            showProfileIcon();  // Call showProfileIcon after ensuring it's defined
+        function updatePricesVisibility() {
+            if (loggedIn === 'true') {
+                prices.forEach(function(price) {
+                    price.classList.remove('hidden');
+                });
+            } else {
+                prices.forEach(function(price) {
+                    price.classList.add('hidden');
+                });
+            }
+        }
 
-            // Show prices if logged in
-            prices.forEach(function(price) {
-                price.classList.remove('hidden');
-            });
+        if (loggedIn === 'true') {
+            showProfileIcon(); // Call showProfileIcon if logged in
         } else {
             headerButtons.style.display = 'flex';
-
-            // Hide prices if not logged in
-            prices.forEach(function(price) {
-                price.classList.add('hidden');
-            });
         }
-    });
 
+        updatePricesVisibility(); // Update prices visibility based on login status
+    });
 
 
 
