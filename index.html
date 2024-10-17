@@ -5,69 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
     <style>
-        /* Your existing styles here */
-        .category { display: none; }
-        .active { display: block; }
+        /* Basic styles for navigation and layout */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #ff4081;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background-color: #e73370;
+        }
+
+        .category {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* Product styles */
+        .product {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .product img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .product h3 {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .product p {
+            color: #ff4081;
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav>
-        <a href="#trauerkarten" onclick="showCategory('trauer')">Trauerkarten</a>
-        <a href="#hochzeitskarten" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
-        <a href="#glueckwunschkarten" onclick="showCategory('glueckwunsch')">Glückwunschkarten</a>
-        <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
-        <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
+        <a href="#" onclick="showCategory('trauer')">Trauerkarten</a>
+        <a href="#" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
+        <a href="#" onclick="showCategory('glueckwunsch')">Glückwunschkarten</a>
+        <a href="#" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
+        <a href="#" onclick="showCategory('events')">Eventkarten</a>
     </nav>
 
-    <!-- Hauptinhalt -->
+    <!-- Main content where categories will be displayed -->
     <div id="main-content">
-        <!-- Categories -->
-        <section id="trauerkarten" class="category">
+        <!-- Placeholder sections for categories -->
+        <section id="trauer" class="category">
             <h2>Trauerkarten</h2>
             <div id="trauerkarten-products"></div>
         </section>
-        <section id="hochzeitskarten" class="category">
+
+        <section id="hochzeit" class="category">
             <h2>Hochzeitskarten</h2>
             <div id="hochzeitskarten-products"></div>
         </section>
-        <section id="glueckwunschkarten" class="category">
+
+        <section id="glueckwunsch" class="category">
             <h2>Glückwunschkarten</h2>
             <div id="glueckwunschkarten-products"></div>
         </section>
-        <section id="weihnachtskarten" class="category">
+
+        <section id="weihnachten" class="category">
             <h2>Weihnachtskarten</h2>
             <div id="weihnachtskarten-products"></div>
         </section>
-        <section id="eventkarten" class="category">
+
+        <section id="events" class="category">
             <h2>Eventkarten</h2>
             <div id="eventkarten-products"></div>
         </section>
     </div>
 
+    <!-- Supabase JavaScript Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        function showCategory(categoryId) {
-            // Hide all categories
-            const categories = document.querySelectorAll('.category');
-            categories.forEach(cat => cat.style.display = 'none');
+        // Initialize Supabase with your credentials
+        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-            // Show the selected category
-            const selectedCategory = document.getElementById(categoryId + 'karten');
-            if (selectedCategory) {
-                selectedCategory.style.display = 'block';
-            }
+        // Show the selected category and hide others
+        function showCategory(categoryId) {
+            const categories = document.querySelectorAll('.category');
+            categories.forEach(cat => cat.style.display = 'none'); // Hide all
+            document.getElementById(categoryId).style.display = 'block'; // Show selected
         }
 
-        // Example Supabase call for fetching products (for one category, repeat for others)
+        // Function to load products into the correct category
         async function loadProducts(category, containerId) {
-            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Your key here
-            const supabase = createClient(supabaseUrl, supabaseKey);
-
             const { data: products, error } = await supabase
-                .from('products')
+                .from('products')  // Supabase table name: 'products'
                 .select('*')
-                .eq('category', category);
+                .eq('category', category);  // Fetch products matching the category
 
             if (error) {
                 console.error('Error fetching products:', error);
@@ -75,31 +129,33 @@
             }
 
             const container = document.getElementById(containerId);
-            container.innerHTML = ''; // Clear existing products
+            container.innerHTML = ''; // Clear previous products
 
+            // Loop through and add products to the container
             products.forEach(product => {
-                const productDiv = document.createElement('div');
-                productDiv.classList.add('product');
-                productDiv.innerHTML = `
-                    <img src="${product.imageUrl}" alt="${product.name}" />
-                    <h3>${product.name}</h3>
-                    <p>${product.price} €</p>
+                const productHtml = `
+                    <div class="product">
+                        <img src="${product.image_url}" alt="${product.name}" />
+                        <h3>${product.name}</h3>
+                        <p>${product.price} €</p>
+                        <p>${product.description}</p>
+                    </div>
                 `;
-                container.appendChild(productDiv);
+                container.innerHTML += productHtml;
             });
         }
 
+        // Load products for each category after the page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Load products for all categories
             loadProducts('trauer', 'trauerkarten-products');
             loadProducts('hochzeit', 'hochzeitskarten-products');
             loadProducts('glueckwunsch', 'glueckwunschkarten-products');
             loadProducts('weihnachten', 'weihnachtskarten-products');
             loadProducts('events', 'eventkarten-products');
+
+            // Default to showing the first category (e.g., 'trauer')
+            showCategory('trauer');
         });
     </script>
-
-    <!-- Supabase library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </body>
 </html>
