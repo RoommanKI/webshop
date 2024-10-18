@@ -72,6 +72,11 @@
                     showCategory(category); // Kategorie anzeigen
                 });
             });
+
+            // Nachricht anzeigen, wenn keine Kategorie ausgewählt ist
+            const container = document.getElementById('products-container');
+            container.innerHTML = '<p>Bitte wählen Sie eine Kategorie aus der Navigation.</p>';
+        });
     </script>
 </head>
 <body>
