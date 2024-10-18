@@ -11,15 +11,20 @@
     <div id="products-container"></div>
 
     <script>
-        // Make sure that everything is loaded before running the script
-        window.addEventListener('load', async () => {
-            // Supabase Initialization after full page load
-            const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        // Wait for the DOM and external scripts to be fully loaded
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Check if Supabase is loaded properly
+                if (typeof supabase === 'undefined') {
+                    throw new Error('Supabase script failed to load');
+                }
 
-            // Fetch Products from the "products" table
-            async function fetchProducts() {
+                // Supabase Initialization
+                const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+                const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+                // Fetch Products from the "products" table
                 const { data, error } = await supabase
                     .from('products')
                     .select('*'); // Fetch all fields
@@ -29,28 +34,29 @@
                     return;
                 }
 
+                // Display products
                 displayProducts(data);
+
+            } catch (error) {
+                console.error('Initialization error:', error);
             }
-
-            // Display Products in HTML
-            function displayProducts(products) {
-                const container = document.getElementById('products-container');
-                container.innerHTML = ''; // Clear previous content
-
-                products.forEach(product => {
-                    const productElement = document.createElement('div');
-                    productElement.innerHTML = `
-                        <h2>${product.name}</h2>
-                        <p>Price: ${product.price}</p>
-                        <p>Description: ${product.description}</p>
-                    `;
-                    container.appendChild(productElement);
-                });
-            }
-
-            // Fetch and display products after full page load
-            await fetchProducts();
         });
+
+        // Display Products in HTML
+        function displayProducts(products) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = ''; // Clear previous content
+
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.innerHTML = `
+                    <h2>${product.name}</h2>
+                    <p>Price: ${product.price}</p>
+                    <p>Description: ${product.description}</p>
+                `;
+                container.appendChild(productElement);
+            });
+        }
     </script>
 </body>
 </html>
