@@ -700,30 +700,31 @@
             }
         };
     </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const profileIcon = document.getElementById('profileIcon');
             const profileDropdown = document.getElementById('profileDropdown');
             const logoutOption = document.getElementById('profile-logout');
 
-            // Toggle dropdown visibility
-            profileIcon.addEventListener('click', function () {
-                profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-            });
+            if (profileIcon && profileDropdown && logoutOption) {
+                // Toggle dropdown visibility
+                profileIcon.addEventListener('click', function () {
+                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+                });
 
-            // Logout option click
-            logoutOption.addEventListener('click', function () {
-                localStorage.removeItem('loggedIn');
-                location.reload();  // Reload the page to reflect logged-out state
-            });
+                // Logout option click
+                logoutOption.addEventListener('click', function () {
+                    localStorage.removeItem('loggedIn');
+                    location.reload();  // Reload the page to reflect logged-out state
+                });
 
-            // Close the dropdown if clicking outside
-            window.addEventListener('click', function (event) {
-                if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
-                    profileDropdown.style.display = 'none';
-                }
-            });
+                // Close the dropdown if clicking outside
+                window.addEventListener('click', function (event) {
+                    if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
+                        profileDropdown.style.display = 'none';
+                    }
+                });
+            }
         });
 
         document.addEventListener('DOMContentLoaded', function() {
