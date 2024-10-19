@@ -619,27 +619,37 @@ async function fetchProductsByCategory(category) {
             displayProducts(products); // Produkte anzeigen
         }
 
-        // Event-Listener für Kategorie-Links hinzufügen
-        document.addEventListener('DOMContentLoaded', () => {
-            const categoryLinks = document.querySelectorAll('nav a');
-            categoryLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
-                    const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
-                    showCategory(category); // Kategorie anzeigen
-                });
-            });
-
-            // Nachricht anzeigen, wenn keine Kategorie ausgewählt ist
-            const container = document.getElementById('products-container');
-            container.innerHTML = '<p>Bitte wählen Sie eine Kategorie aus der Navigation.</p>';
+// Event-Listener für Kategorie-Links hinzufügen
+document.addEventListener('DOMContentLoaded', () => {
+    const categoryLinks = document.querySelectorAll('nav a');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
+            const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
+            showCategory(category); // Kategorie anzeigen
         });
-            if (error) {
-                console.error('Error fetching products:', error);
-                return [];
-            }
-            return data;
-        }
+    });
+
+    // Nachricht anzeigen, wenn keine Kategorie ausgewählt ist
+    const container = document.getElementById('products-container');
+    container.innerHTML = '<p>Bitte wählen Sie eine Kategorie aus der Navigation.</p>';
+});
+
+// Function to fetch products by category
+async function fetchProductsByCategory(category) {
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', category); // Fetch products by category
+
+    if (error) {
+        console.error('Error fetching products:', error);
+        return []; // Return an empty array in case of an error
+    }
+
+    return data; // Return the fetched data
+}
+
         // Produkte in HTML anzeigen
         function displayProducts(products) {
             const container = document.getElementById('products-container');
@@ -722,19 +732,29 @@ async function fetchProductsByCategory(category) {
         document.getElementById('lightbox-caption').innerText = captionText;
     }
 
-    // Lightbox schließen
-    function closeLightbox() {
-        document.getElementById('lightbox').style.display = "none";
+// Lightbox schließen
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox) {
+        lightbox.style.display = "none";
     }
+}
+
 // Verhindere, dass die Lightbox beim Laden geöffnet wird
-document.getElementById('lightbox').style.display = "none";
-    
-    // Alle PNG-Bilder anklickbar machen
-    document.querySelectorAll('.lightbox-image').forEach(function(image) {
+const lightbox = document.getElementById('lightbox');
+if (lightbox) {
+    lightbox.style.display = "none";
+}
+
+// Alle PNG-Bilder anklickbar machen
+const images = document.querySelectorAll('.lightbox-image');
+if (images.length > 0) {
+    images.forEach(function(image) {
         image.addEventListener('click', function() {
             openLightbox(image.src, image.alt);
         });
     });
+}
 
     document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.getElementById('profileIcon');
