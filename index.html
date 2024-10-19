@@ -598,16 +598,20 @@ document.getElementById('login-form').addEventListener('submit', async function(
     }
 });
 
-        // Produkte aus der Tabelle "products" nach Kategorie abrufen
-        async function fetchProductsByCategory(category) {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('category', category); // Filtern nach Kategorie
-                `;
-                container.appendChild(productElement);
-            });
-        }
+async function fetchProductsByCategory(category) {
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', category);
+
+    if (error) {
+        console.error('Error fetching products:', error);
+        return [];
+    }
+
+    return data;
+}
+
 
         // Kategorie-basierte Produkte anzeigen
         async function showCategory(category) {
