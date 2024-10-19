@@ -370,14 +370,16 @@ nav a:hover {
 
 <!-- Navigation -->
 <nav>
-    <a href="#trauerkarten" onclick="showCategory('trauer')">Trauerkarten</a>
-    <a href="#hochzeitskarten" onclick="showCategory('hochzeit')">Hochzeitskarten</a>
-    <a href="#glueckwunschkarten" onclick="showCategory('glueckwunsch')">Glückwunschkarten</a>
-    <a href="#weihnachtskarten" onclick="showCategory('weihnachten')">Weihnachtskarten</a>
-    <a href="#eventkarten" onclick="showCategory('events')">Eventkarten</a>
+    <a href="#" data-category="trauer">Trauerkarten</a>
+    <a href="#" data-category="hochzeit">Hochzeitskarten</a>
+    <a href="#" data-category="glueckwunsch">Glückwunschkarten</a>
+    <a href="#" data-category="weihnachten">Weihnachtskarten</a>
+    <a href="#" data-category="events">Eventkarten</a>
 </nav>
-<!-- Hauptinhalt -->
-<div id="main-content">
+
+<!-- Produktliste -->
+<div id="products-container" class="product-list"></div>
+
     <!-- Startseite Abschnitt -->
     <section id="startseite" style="padding: 20px; text-align: center;">
         <h2>Willkommen in unserem Grußkarten-Shop!</h2>
@@ -719,7 +721,65 @@ document.getElementById('login-form').addEventListener('submit', async function(
     }
 });
 
+        // Produkte aus der Tabelle "products" nach Kategorie abrufen
+        async function fetchProductsByCategory(category) {
+            const { data, error } = await supabase
+                .from('products')
+                .select('*')
+                .eq('category', category); // Filtern nach Kategorie
+                `;
+                container.appendChild(productElement);
+            });
+        }
 
+        // Kategorie-basierte Produkte anzeigen
+        async function showCategory(category) {
+            const products = await fetchProductsByCategory(category); // Produkte nach Kategorie abrufen
+            displayProducts(products); // Produkte anzeigen
+        }
+
+        // Event-Listener für Kategorie-Links hinzufügen
+        document.addEventListener('DOMContentLoaded', () => {
+            const categoryLinks = document.querySelectorAll('nav a');
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
+                    const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
+                    showCategory(category); // Kategorie anzeigen
+                });
+            });
+
+            // Nachricht anzeigen, wenn keine Kategorie ausgewählt ist
+            const container = document.getElementById('products-container');
+            container.innerHTML = '<p>Bitte wählen Sie eine Kategorie aus der Navigation.</p>';
+        });
+            if (error) {
+                console.error('Error fetching products:', error);
+                return [];
+            }
+            return data;
+        }
+        // Produkte in HTML anzeigen
+        function displayProducts(products) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = ''; // Alte Inhalte löschen
+
+            if (products.length === 0) {
+                container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+                return;
+            }
+
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'product';
+                productElement.innerHTML = `
+                    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                        <h2>${product.name}</h2>
+                        <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
+                        <p><strong>Price:</strong> $${product.price}</p>
+                        <p><strong>Description:</strong> ${product.description}</p>
+                        <p><strong>Category:</strong> ${product.category}</p>
+                    </div>
 
     
 </script>
