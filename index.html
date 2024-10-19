@@ -532,7 +532,7 @@ document.getElementById('cart-icon').addEventListener('click', function() {
             // Weiterleitung zur Bestellübersichtsseite
     window.location.href = 'order-summary.html';
     }
-
+</script>
 
 <!-- Supabase SDK and Scripts -->
 <script type="module">
@@ -645,24 +645,22 @@ async function fetchProductsByCategory(category) {
                 return;
             }
 
-products.forEach(product => {
-    const productElement = document.createElement('div');
-    productElement.className = 'product';
-
-    // Check if user is logged in
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-
-    productElement.innerHTML = `
-        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-            <h2>${product.name}</h2>
-            <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-            ${isLoggedIn ? `<p><strong>Preis:</strong> $${product.price}</p>` : ''}
-            <p><strong>Beschreibung:</strong> ${product.description}</p>
-        </div>
-    `;
-
-    container.appendChild(productElement); // Append product to container
-});
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'product';
+                productElement.innerHTML = `
+                    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                        <h2>${product.name}</h2>
+                        <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
+                        <p><strong>Preis:</strong> $${product.price}</p>
+                        <p><strong>Beschreibung:</strong> ${product.description}</p>
+                    </div>
+  `; // Closing the template literal properly
+        container.appendChild(productElement); // Append product to container
+    });
+} // Closing the displayProducts function properly
+    
+</script>
 
 <!-- Modal Script Logic -->
 <script>
@@ -705,7 +703,8 @@ products.forEach(product => {
             loginModal.style.display = "none";
         }
     };
-
+</script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
     const profileIcon = document.getElementById('profileIcon');
     const profileDropdown = document.getElementById('profileDropdown');
