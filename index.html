@@ -595,7 +595,7 @@
             }
         });
 
-        // Kategorie-basierte Produkte anzeigen
+         // Kategorie-basierte Produkte anzeigen
         async function showCategory(category) {
             const products = await fetchProductsByCategory(category); // Produkte nach Kategorie abrufen
             displayProducts(products); // Produkte anzeigen
@@ -605,11 +605,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             const categoryLinks = document.querySelectorAll('nav a');
             categoryLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
-                    const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
-                    showCategory(category); // Kategorie anzeigen
-                });
+            link.addEventListener('click', (event) => {
+                event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
+                const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
+                showCategory(category); // Kategorie anzeigen
+            });
             });
 
             // Nachricht anzeigen, wenn keine Kategorie ausgewählt ist
@@ -620,39 +620,42 @@
         // Function to fetch products by category
         async function fetchProductsByCategory(category) {
             const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('category', category); // Fetch products by category
+            .from('products')
+            .select('*')
+            .eq('category', category); // Fetch products by category
 
             if (error) {
-                console.error('Error fetching products:', error);
-                return []; // Return an empty array in case of an error
+            console.error('Error fetching products:', error);
+            return []; // Return an empty array in case of an error
             }
 
             return data; // Return the fetched data
         }
+
         // Produkte in HTML anzeigen
         function displayProducts(products) {
             const container = document.getElementById('products-container');
             container.innerHTML = ''; // Alte Inhalte löschen
 
+            const loggedIn = localStorage.getItem('loggedIn'); // Retrieve loggedIn status
+
             if (products.length === 0) {
-                container.innerHTML = '<p>Keine Produkte gefunden.</p>';
-                return;
+            container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+            return;
             }
 
             products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.className = 'product';
-                productElement.innerHTML = `
-                    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-                        <h2>${product.name}</h2>
-                        <img src="${product.image_url}" alt="width: 100%; max-height: 300px;">
-                        <p class="price ${loggedIn === 'true' ? '' : 'hidden'}"><strong>Preis:</strong> $${product.price}</p>
-                        <p><strong>Beschreibung:</strong> ${product.description}</p>
-                    </div>
-                `; // Closing the template literal properly
-                container.appendChild(productElement); // Append product to container
+            const productElement = document.createElement('div');
+            productElement.className = 'product';
+            productElement.innerHTML = `
+                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                <h2>${product.name}</h2>
+                <img src="${product.image_url}" alt="width: 100%; max-height: 300px;">
+                <p class="price ${loggedIn === 'true' ? '' : 'hidden'}"><strong>Preis:</strong> $${product.price}</p>
+                <p><strong>Beschreibung:</strong> ${product.description}</p>
+                </div>
+            `; // Closing the template literal properly
+            container.appendChild(productElement); // Append product to container
             });
         }
     </script>
