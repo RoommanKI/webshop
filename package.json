@@ -1,0 +1,7 @@
+{
+  "name": "webshop",
+  "version": "1.0.0",
+  "dependencies": {
+    "@supabase/supabase-js": "^1.35.0"
+  }
+}
