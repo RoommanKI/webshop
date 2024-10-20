@@ -110,7 +110,7 @@ function finalizeOrder() {
 }
 
 // Supabase SDK and Scripts
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+const { createClient } = window.supabase;
 
 // Supabase Initialization
 const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
