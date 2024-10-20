@@ -43,11 +43,6 @@ function showCategory(category) {
     document.getElementById(category).style.display = 'flex';
 }
 
-// Warenkorb Icon Klickbar machen
-document.getElementById('cart-icon').addEventListener('click', function() {
-    toggleCart(); // Show or hide the cart popup
-});
-
 // Warenkorb-Logik
 let cart = [];
 
