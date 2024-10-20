@@ -166,12 +166,6 @@ document.getElementById('login-form').addEventListener('submit', async function(
     }
 });
 
-// Kategorie-basierte Produkte anzeigen
-async function showCategory(category) {
-    const products = await fetchProductsByCategory(category); // Produkte nach Kategorie abrufen
-    displayProducts(products); // Produkte anzeigen
-}
-
 // Event-Listener für Kategorie-Links hinzufügen
 document.addEventListener('DOMContentLoaded', () => {
     const categoryLinks = document.querySelectorAll('nav a');
