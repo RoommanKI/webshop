@@ -26,7 +26,7 @@
 </header>
 
 <!-- Registration Modal -->
-<div id="registerModal" class="modal">
+<div id="registerModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close" id="closeRegister">&times;</span>
         <h2>Registrieren</h2>
@@ -46,7 +46,7 @@
 </div>
 
 <!-- Login Modal -->
-<div id="loginModal" class="modal">
+<div id="loginModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close" id="closeLogin">&times;</span>
         <h2>Anmelden</h2>
@@ -115,7 +115,35 @@
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
 </div>
 
-    <!-- Your HTML content here -->
-    <script type="module" src="scripts.js"></script>
+<!-- Your HTML content here -->
+<script type="module" src="scripts.js"></script>
+<script>
+    // JavaScript to handle modal functionality
+    document.getElementById('registerBtn').addEventListener('click', function() {
+        document.getElementById('registerModal').style.display = 'block';
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', function() {
+        document.getElementById('loginModal').style.display = 'block';
+    });
+
+    document.getElementById('closeRegister').addEventListener('click', function() {
+        document.getElementById('registerModal').style.display = 'none';
+    });
+
+    document.getElementById('closeLogin').addEventListener('click', function() {
+        document.getElementById('loginModal').style.display = 'none';
+    });
+
+    // Close modals when clicking outside of them
+    window.addEventListener('click', function(event) {
+        if (event.target == document.getElementById('registerModal')) {
+            document.getElementById('registerModal').style.display = 'none';
+        }
+        if (event.target == document.getElementById('loginModal')) {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
