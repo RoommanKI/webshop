@@ -2,7 +2,8 @@
 // Run this command in your terminal:
 // npm install @supabase/supabase-js
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
 
 
     const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
