@@ -1,3 +1,7 @@
+// Ensure the module is installed
+// Run this command in your terminal:
+// npm install @supabase/supabase-js
+
 import { createClient } from '@supabase/supabase-js';
 require('dotenv').config(); // Load environment variables from .env file if running locally
 
@@ -22,15 +26,20 @@ function showProfileIcon() {
         // Attach event listener to the profile icon to toggle the menu
         const profileIcon = document.getElementById('profileIcon');
         const profileMenu = document.getElementById('profileMenu');
-        profileIcon.addEventListener('click', function () {
-            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-        });
+        if (profileIcon && profileMenu) {
+            profileIcon.addEventListener('click', function () {
+                profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+            });
+        }
 
         // Add logout functionality
-        document.getElementById('logoutLink').addEventListener('click', function () {
-            localStorage.removeItem('loggedIn');
-            location.reload(); // Reload to show the login/register buttons
-        });
+        const logoutLink = document.getElementById('logoutLink');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function () {
+                localStorage.removeItem('loggedIn');
+                location.reload(); // Reload to show the login/register buttons
+            });
+        }
     }
 }
 
