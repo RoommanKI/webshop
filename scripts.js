@@ -1,58 +1,62 @@
-// Ensure the module is installed
-// Run this command in your terminal:
-// npm install @supabase/supabase-js
-
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
+document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('profileIcon');
+    const profileMenu = document.getElementById('profileMenu');
 
-    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Event listener for profile icon click
+    if (profileIcon && profileMenu) {
+        profileIcon.addEventListener('click', function () {
+            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+        });
+    }
 
+    // Attach logout functionality
+    const logoutLink = document.getElementById('logoutLink');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function () {
+            localStorage.removeItem('loggedIn');
+            location.reload();
+        });
+    }
+
+    // Add category event listeners
+    const categoryLinks = document.querySelectorAll('nav a');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const category = link.getAttribute('data-category');
+            showCategory(category);
+        });
+    });
+
+    const loggedIn = localStorage.getItem('loggedIn');
+    if (loggedIn === 'true') {
+        showProfileIcon();
+    }
+});
+
+// Function to display profile icon
 function showProfileIcon() {
     const headerButtons = document.querySelector('.header-buttons');
     if (headerButtons) {
         headerButtons.innerHTML = `
             <div class="profile-container" style="position: relative;">
                 <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
                     <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
                     <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
                     <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
                 </div>
             </div>
         `;
-        
-        // Attach event listener to the profile icon to toggle the menu
-        const profileIcon = document.getElementById('profileIcon');
-        const profileMenu = document.getElementById('profileMenu');
-        if (profileIcon && profileMenu) {
-            profileIcon.addEventListener('click', function () {
-                profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-            });
-        }
-
-        // Add logout functionality
-        const logoutLink = document.getElementById('logoutLink');
-        if (logoutLink) {
-            logoutLink.addEventListener('click', function () {
-                localStorage.removeItem('loggedIn');
-                location.reload(); // Reload to show the login/register buttons
-            });
-        }
     }
 }
 
-// Kategorien anzeigen/verstecken
-function showCategory(category) {
-    // Alle Kategorien verstecken
-    const categories = document.querySelectorAll('.category');
-    categories.forEach(cat => cat.style.display = 'none');
-
-    // Die ausgewählte Kategorie anzeigen
-    document.getElementById(category).style.display = 'flex';
-}
 
 // Warenkorb-Logik
 let cart = [];
