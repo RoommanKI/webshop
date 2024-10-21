@@ -6,403 +6,379 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
 
-    <!-- Font Awesome für Icons -->
+   <!-- Font Awesome für Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        .header-buttons {
-            display: none; /* Hidden by default */
-        }
-        .hidden {
-            display: none;
-        }
-        .profile-dropdown {
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 40px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            width: 150px;
-            z-index: 1000;
-        }
-        .profile-dropdown ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .profile-dropdown ul li {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #ccc;
-        }
-        .profile-dropdown ul li:hover {
-            background-color: #f0f0f0;
-        }
-        .profile-container {
-            position: relative;
-            display: inline-block;
-        }
-        .profile-icon {
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-        }
-        .profile-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .lightbox-content {
-            max-width: 80%;
-            max-height: 80%;
-            margin: auto;
-            display: block;
-            border-radius: 8px;
-            object-fit: contain;
-        }
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .lightbox-caption {
-            display: none;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #ff4081;
-            color: white;
-            padding: 20px;
-        }
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            width: 300px;
-        }
-        .close {
-            float: right;
-            cursor: pointer;
-            color: red;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: white;
-            color: #ff4081;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #ff4081;
-            color: white;
-        }
-        nav {
-            margin-top: 50px;
-            text-align: center;
-        }
-        nav a {
-            margin: 0 10px;
-            padding: 10px 20px;
-            background-color: #ff4081;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        nav a:hover {
-            background-color: #e73370;
-        }
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-top: 20px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            gap: 20px;
-        }
-        .product {
-            background-color: white;
-            padding: 15px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: calc(20% - 20px);
-            box-sizing: border-box;
-        }
-        .product img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .product h2 {
-            font-size: 1.2em;
-            margin: 10px 0;
-        }
-        .product .price {
-            font-weight: bold;
-            color: #ff4081;
-        }
-        .product button {
-            padding: 10px;
-            background-color: #ff4081;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .product button:hover {
-            background-color: #e73370;
-        }
-        @media (max-width: 1000px) {
-            .product {
-                width: calc(33.33% - 20px);
-            }
-        }
-        @media (max-width: 768px) {
-            .product {
-                width: calc(50% - 20px);
-            }
-        }
-        @media (max-width: 500px) {
-            .product {
-                width: 100%;
-            }
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
-        header {
-            background-color: #ff4081;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        nav {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        nav a {
-            margin: 0 10px;
-            padding: 10px 20px;
-            background-color: #ff4081;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        nav a:hover {
-            background-color: #e73370;
-        }
-        .product-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-        .product {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            width: 300px;
-            transition: transform 0.3s ease;
-        }
-        .product img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        .product:hover img {
-            transform: scale(1.1);
-        }
-        .product:hover {
-            transform: scale(1.05);
-        }
-        .price {
-            font-size: 1.2rem;
-            color: #ff4081;
-            margin: 10px 0;
-        }
-        .quantity {
-            margin: 10px 0;
-            width: 60px;
-            text-align: center;
-        }
-        .btn {
-            background-color: #ff4081;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .cart {
-            position: relative;
-            display: inline-block;
-        }
-        #cart-popup {
-            display: none;
-            position: absolute;
-            top: 50px;
-            right: 10px;
-            width: 300px;
-            background: white;
-            border: 1px solid #ccc;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
-        .product img {
-            width: 100%;
-            height: auto;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-        .cart {
-            position: relative;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        .cart i {
-            font-size: 24px;
-            color: white;
-        }
-        #cart-count {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: red;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 50%;
-            font-size: 14px;
-        }
-    </style>
+<style>
+   .header-buttons {
+    display: none; /* Hidden by default */
+}
+    .hidden {
+    display: none;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 40px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 150px;
+    z-index: 1000;
+}
+
+.profile-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-dropdown ul li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+}
+
+.profile-dropdown ul li:hover {
+    background-color: #f0f0f0;
+}
+
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+    
+    .profile-icon {
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Lightbox-Container */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex; /* Flexbox für Zentrierung */
+    justify-content: center; /* Horizontal zentrieren */
+    align-items: center; /* Vertikal zentrieren */
+}
+
+/* Lightbox-Inhalt */
+.lightbox-content {
+    max-width: 80%;
+    max-height: 80%;
+    margin: auto;
+    display: block;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+
+/* Lightbox schließen */
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Bildunterschrift entfernen */
+.lightbox-caption {
+    display: none;
+}
+
+/* Basic Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Flexbox header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ff4081;
+    color: white;
+    padding: 20px;
+}
+
+/* Header buttons for login and registration */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    color: red;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: white;
+    color: #ff4081;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff4081;
+    color: white;
+}
+
+nav {
+    margin-top: 50px;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #ff4081;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: #e73370;
+}
+
+/* Flexbox layout for product cards */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 20px; /* Abstand zwischen den Produkten */
+}
+
+/* Style for each product card */
+.product {
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: calc(20% - 20px); /* Fünf Karten pro Reihe */
+    box-sizing: border-box;
+}
+
+/* Image inside the product card */
+.product img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* Style for product titles and price */
+.product h2 {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.product .price {
+    font-weight: bold;
+    color: #ff4081;
+}
+
+/* Buttons */
+.product button {
+    padding: 10px;
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.product button:hover {
+    background-color: #e73370;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 1000px) {
+    .product {
+        width: calc(33.33% - 20px); /* 3 Spalten für mittlere Bildschirme */
+    }
+}
+
+@media (max-width: 768px) {
+    .product {
+        width: calc(50% - 20px); /* 2 Spalten für kleine Bildschirme */
+    }
+}
+
+@media (max-width: 500px) {
+    .product {
+        width: 100%; /* 1 Spalte für sehr kleine Bildschirme */
+    }
+}
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
+        header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
+        nav { margin-bottom: 20px; text-align: center; }
+        nav a { margin: 0 10px; padding: 10px 20px; background-color: #ff4081; color: white; text-decoration: none; border-radius: 5px; }
+        nav a:hover { background-color: #e73370; }
+        .product-list { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px; justify-content: center; }
+        .product { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; width: 300px; transition: transform 0.3s ease; }
+        .product img { max-width: 100%; height: auto; border-radius: 8px; transition: transform 0.3s ease; cursor: pointer; }
+        .product:hover img { transform: scale(1.1); }
+        .product:hover { transform: scale(1.05); }
+        .price { font-size: 1.2rem; color: #ff4081; margin: 10px 0; }
+        .quantity { margin: 10px 0; width: 60px; text-align: center; }
+        .btn { background-color: #ff4081; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        .cart { position: relative; display: inline-block; }
+        #cart-popup { display: none; position: absolute; top: 50px; right: 10px; width: 300px; background: white; border: 1px solid #ccc; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        footer { background-color: #333; color: #fff; text-align: center; padding: 10px; margin-top: 20px; }
+       .product img {
+    width: 100%; /* Passt die Breite an den Container an */
+    height: auto; /* Höhe passt sich automatisch dem Seitenverhältnis an */
+    max-height: 300px; /* Beschränke die maximale Höhe */
+    object-fit: contain; /* Verhindert, dass das Bild abgeschnitten wird */
+    border-radius: 8px;
+}
+/* Cart icon styling */
+.cart {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.cart i {
+    font-size: 24px;
+    color: white;
+}
+
+#cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+    font-size: 14px;
+}
+
+</style>
+
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <!-- Cart icon with counter -->
+
+<!-- Header -->
+<header>
+         <!-- Cart icon with counter -->
         <div id="cart-icon" class="cart">
             <i class="fas fa-shopping-cart"></i>
             <span id="cart-count">0</span> <!-- Cart item count -->
         </div>
-        <h1 style="margin: 0;">Webshop - Grußkarten</h1>
-        <!-- Buttons for opening modals -->
-        <div class="header-buttons">
-            <button id="registerBtn">Registrieren</button>
-            <button id="loginBtn">Anmelden</button>
-        </div>
-    </header>
-    <!-- Registration Modal -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeRegister">&times;</span>
-            <h2>Registrieren</h2>
-            <form id="register-form">
-                <div class="form-group">
-                    <label for="register-email">E-Mail:</label>
-                    <input type="email" id="register-email" placeholder="E-Mail eingeben" autocomplete="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-password">Passwort:</label>
-                    <input type="password" id="register-password" placeholder="Passwort eingeben" autocomplete="new-password" required>
-                </div>
-                <button type="submit">Registrieren</button>
-                <p id="register-error" class="error-message"></p>
-            </form>
-        </div>
+    <h1 style="margin: 0;">Webshop - Grußkarten</h1>
+
+    <!-- Buttons for opening modals -->
+    <div class="header-buttons">
+        <button id="registerBtn">Registrieren</button>
+        <button id="loginBtn">Anmelden</button>
     </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeLogin">&times;</span>
-            <h2>Anmelden</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="login-email">E-Mail:</label>
-                    <input type="email" id="login-email" placeholder="E-Mail eingeben" autocomplete="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Passwort:</label>
-                    <input type="password" id="login-password" placeholder="Passwort eingeben" autocomplete="current-password" required>
-                </div>
-                <button type="submit">Anmelden</button>
-                <p id="login-error" class="error-message"></p>
-            </form>
-        </div>
+</header>
+
+<!-- Registration Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeRegister">&times;</span>
+        <h2>Registrieren</h2>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="register-email">E-Mail:</label>
+                <input type="email" id="register-email" placeholder="E-Mail eingeben" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Passwort:</label>
+                <input type="password" id="register-password" placeholder="Passwort eingeben" autocomplete="new-password" required>
+            </div>
+            <button type="submit">Registrieren</button>
+            <p id="register-error" class="error-message"></p>
+        </form>
     </div>
+</div>
 
-    <!-- Navigation -->
-    <nav>
-        <a href="#" data-category="trauer">Trauerkarten</a>
-        <a href="#" data-category="hochzeit">Hochzeitskarten</a>
-        <a href="#" data-category="glueckwunsch">Glückwunschkarten</a>
-        <a href="#" data-category="weihnachten">Weihnachtskarten</a>
-        <a href="#" data-category="events">Eventkarten</a>
-    </nav>
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeLogin">&times;</span>
+        <h2>Anmelden</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="login-email">E-Mail:</label>
+                <input type="email" id="login-email" placeholder="E-Mail eingeben" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Passwort:</label>
+                <input type="password" id="login-password" placeholder="Passwort eingeben" autocomplete="current-password" required>
+            </div>
+            <button type="submit">Anmelden</button>
+            <p id="login-error" class="error-message"></p>
+        </form>
+    </div>
+</div>
 
-    <!-- Produktliste -->
-    <div id="products-container" class="product-list"></div>
+<!-- Navigation -->
+<nav>
+    <a href="#" data-category="trauer">Trauerkarten</a>
+    <a href="#" data-category="hochzeit">Hochzeitskarten</a>
+    <a href="#" data-category="glueckwunsch">Glückwunschkarten</a>
+    <a href="#" data-category="weihnachten">Weihnachtskarten</a>
+    <a href="#" data-category="events">Eventkarten</a>
+</nav>
+
+<!-- Produktliste -->
+<div id="products-container" class="product-list"></div>
 
     <!-- Startseite Abschnitt -->
     <section id="startseite" style="padding: 20px; text-align: center;">
@@ -410,190 +386,217 @@
         <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
     </section>
 
-    <section id="trauer" class="product-list category" style="display: none;"></section>
+           <section id="trauer" class="product-list category"style="display: none;">
+    
+
+    </section>
+
     <section id="hochzeit" class="product-list category" style="display: none;">
         <h3>Hochzeitskarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
     </section>
+
     <section id="glueckwunsch" class="product-list category" style="display: none;">
         <h3>Glückwunschkarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
     </section>
+
     <section id="weihnachten" class="product-list category" style="display: none;">
         <h3>Weihnachtskarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
     </section>
+
     <section id="events" class="product-list category" style="display: none;">
         <h3>Eventkarten</h3>
+        <!-- Hier könnten Produkte hinzugefügt werden -->
     </section>
+</div>
 
-    <!-- Warenkorb-Popup -->
-    <div id="cart-popup" style="display: none;">
-        <h3>Ihr Warenkorb</h3>
-        <div id="cart-content">
-            <p>Ihr Warenkorb ist leer.</p>
-        </div>
-        <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+<!-- Warenkorb-Popup -->
+<div id="cart-popup" style="display: none;">
+    <h3>Ihr Warenkorb</h3>
+    <div id="cart-content">
+        <p>Ihr Warenkorb ist leer.</p>
     </div>
-
-    <!-- Skripte -->
-    <script>
-        function showProfileIcon() {
-            const headerButtons = document.querySelector('.header-buttons');
-            if (headerButtons) {
-                headerButtons.innerHTML = `
-                    <div class="profile-container" style="position: relative;">
-                        <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                        <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                            <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
-                            <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
-                            <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
-                        </div>
+    <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+</div>
+<!-- Skripte -->
+<script>
+    function showProfileIcon() {
+        const headerButtons = document.querySelector('.header-buttons');
+        if (headerButtons) {
+            headerButtons.innerHTML = `
+                <div class="profile-container" style="position: relative;">
+                    <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                    <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
+                        <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
+                        <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
                     </div>
-                `;
-                
-                const profileIcon = document.getElementById('profileIcon');
-                const profileMenu = document.getElementById('profileMenu');
-                profileIcon.addEventListener('click', function () {
-                    profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-                });
+                </div>
+            `;
+            
+            // Attach event listener to the profile icon to toggle the menu
+            const profileIcon = document.getElementById('profileIcon');
+            const profileMenu = document.getElementById('profileMenu');
+            profileIcon.addEventListener('click', function () {
+                profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+            });
 
-                document.getElementById('logoutLink').addEventListener('click', function () {
-                    localStorage.removeItem('loggedIn');
-                    location.reload();
-                });
-            }
+            // Add logout functionality
+            document.getElementById('logoutLink').addEventListener('click', function () {
+                localStorage.removeItem('loggedIn');
+                location.reload(); // Reload to show the login/register buttons
+            });
         }
+    }
 
-        function showCategory(category) {
-            const categories = document.querySelectorAll('.category');
-            categories.forEach(cat => cat.style.display = 'none');
-            document.getElementById(category).style.display = 'flex';
-        }
 
-        document.getElementById('cart-icon').addEventListener('click', function() {
-            toggleCart();
-        });
+    // Kategorien anzeigen/verstecken
+    function showCategory(category) {
+        // Alle Kategorien verstecken
+        const categories = document.querySelectorAll('.category');
+        categories.forEach(cat => cat.style.display = 'none');
 
-        let cart = [];
+        // Die ausgewählte Kategorie anzeigen
+        document.getElementById(category).style.display = 'flex';
+    }
+// Warenkorb Icon Klickbar machen
+document.getElementById('cart-icon').addEventListener('click', function() {
+    toggleCart(); // Show or hide the cart popup
+});
 
-        function toggleCart() {
-            const cartPopup = document.getElementById('cart-popup');
-            cartPopup.style.display = (cartPopup.style.display === 'none' || cartPopup.style.display === '') ? 'block' : 'none';
-        }
+    // Warenkorb-Logik
+    let cart = [];
 
-        function addToCart(productName, quantityId, price) {
-            const quantity = parseInt(document.getElementById(quantityId).value);
-            if (quantity > 0) {
-                const item = cart.find(item => item.product === productName);
-                if (item) {
-                    item.quantity += quantity;
-                } else {
-                    cart.push({ product: productName, quantity, price });
-                }
-                updateCart();
-                alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+    // Warenkorb-Popup ein-/ausblenden
+    function toggleCart() {
+        const cartPopup = document.getElementById('cart-popup');
+        cartPopup.style.display = (cartPopup.style.display === 'none' || cartPopup.style.display === '') ? 'block' : 'none';
+    }
+
+    // Produkt zum Warenkorb hinzufügen
+    function addToCart(productName, quantityId, price) {
+        const quantity = parseInt(document.getElementById(quantityId).value);
+        if (quantity > 0) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += quantity;
             } else {
-                alert("Bitte eine gültige Anzahl eingeben.");
+                cart.push({ product: productName, quantity, price });
             }
+            updateCart();  // Warenkorb aktualisieren
+            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+        } else {
+            alert("Bitte eine gültige Anzahl eingeben.");
+        }
+    }
+
+    // Warenkorb-Inhalt und Zähler aktualisieren
+    function updateCart() {
+        const cartContent = document.getElementById('cart-content');
+        const cartCount = document.getElementById('cart-count');
+        cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+        if (cart.length === 0) {
+            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+            return;
         }
 
-        function updateCart() {
-            const cartContent = document.getElementById('cart-content');
-            const cartCount = document.getElementById('cart-count');
-            cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
+        let cartHTML = '<ul>';
+        cart.forEach(item => {
+            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        });
+        cartHTML += '</ul>';
+        cartContent.innerHTML = cartHTML;
+    }
 
-            if (cart.length === 0) {
-                cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-                return;
-            }
+    // Bestellung abschließen
+    function finalizeOrder() {
+        if (cart.length === 0) {
+            alert('Ihr Warenkorb ist leer.');
+            return;
+        }
 
-            let cartHTML = '<ul>';
-            cart.forEach(item => {
-                cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        // Bestellübersicht aufrufen
+        let orderSummary = 'Bestellung:\n';
+        cart.forEach(item => {
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+        });
+        alert(`Ihre Bestellung:\n${orderSummary}`);
+
+        // Warenkorb zurücksetzen
+        cart = [];
+        updateCart();
+        toggleCart();  // Warenkorb-Popup schließen
+            // Weiterleitung zur Bestellübersichtsseite
+    window.location.href = 'order-summary.html';
+    }
+</script>
+
+<!-- Supabase SDK and Scripts -->
+<script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    // Supabase Initialization
+    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Registration Logic
+    document.getElementById('register-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const errorMessage = document.getElementById('register-error');
+
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
             });
-            cartHTML += '</ul>';
-            cartContent.innerHTML = cartHTML;
-        }
 
-        function finalizeOrder() {
-            if (cart.length === 0) {
-                alert('Ihr Warenkorb ist leer.');
-                return;
+            if (error) {
+                errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+            } else {
+                alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails.');
             }
-
-            let orderSummary = 'Bestellung:\n';
-            cart.forEach(item => {
-                orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-            });
-            alert(`Ihre Bestellung:\n${orderSummary}`);
-
-            cart = [];
-            updateCart();
-            toggleCart();
-            window.location.href = 'order-summary.html';
+        } catch (err) {
+            errorMessage.textContent = `Fehler: ${err.message}`;
         }
-    </script>
-    <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    });
+// Login Logic
+document.getElementById('login-form').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent page reload
 
-        // Supabase Initialization
-        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-        const supabase = createClient(supabaseUrl, supabaseKey);
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const loginErrorMessage = document.getElementById('login-error');
 
-        // Registration Logic
-        document.getElementById('register-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const errorMessage = document.getElementById('register-error');
-
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) {
-                    errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-                } else {
-                    alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails.');
-                }
-            } catch (err) {
-                errorMessage.textContent = `Fehler: ${err.message}`;
-            }
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
         });
 
-        // Login Logic
-        document.getElementById('login-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Prevent page reload
+        if (error) {
+            loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+        } else {
+            localStorage.setItem('userEmail', email);  // Store email in localStorage
+            alert('Anmeldung erfolgreich!');
+            localStorage.setItem('loggedIn', 'true');  // Store login state
+            showProfileIcon();  // Display the profile icon
 
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const loginErrorMessage = document.getElementById('login-error');
-
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
-
-                if (error) {
-                    loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-                } else {
-                    localStorage.setItem('userEmail', email);  // Store email in localStorage
-                    alert('Anmeldung erfolgreich!');
-                    localStorage.setItem('loggedIn', 'true');  // Store login state
-                    showProfileIcon();  // Display the profile icon
-
-                    // Close the login modal
-                    document.getElementById('loginModal').style.display = 'none';
-                    // Automatically reload the page after login
-                    location.reload();
-                }
-            } catch (err) {
-                loginErrorMessage.textContent = `Fehler: ${err.message}`;
-            }
-        });
+                        // Close the login modal
+            document.getElementById('loginModal').style.display = 'none';
+            // Automatically reload the page after login
+            location.reload();
+        }
+    } catch (err) {
+        loginErrorMessage.textContent = `Fehler: ${err.message}`;
+    }
+});
 
         // Kategorie-basierte Produkte anzeigen
         async function showCategory(category) {
@@ -601,36 +604,36 @@
             displayProducts(products); // Produkte anzeigen
         }
 
-        // Event-Listener für Kategorie-Links hinzufügen
-        document.addEventListener('DOMContentLoaded', () => {
-            const categoryLinks = document.querySelectorAll('nav a');
-            categoryLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
-                    const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
-                    showCategory(category); // Kategorie anzeigen
-                });
-            });
-
-            // Nachricht anzeigen, wenn keine Kategorie ausgewählt ist
-            const container = document.getElementById('products-container');
-            container.innerHTML = '<p>Bitte wählen Sie eine Kategorie aus der Navigation.</p>';
+// Event-Listener für Kategorie-Links hinzufügen
+document.addEventListener('DOMContentLoaded', () => {
+    const categoryLinks = document.querySelectorAll('nav a');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
+            const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
+            showCategory(category); // Kategorie anzeigen
         });
+    });
 
-        // Function to fetch products by category
-        async function fetchProductsByCategory(category) {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('category', category); // Fetch products by category
+    // Nachricht anzeigen, wenn keine Kategorie ausgewählt ist
+    const container = document.getElementById('products-container');
+    container.innerHTML = '<p>Bitte wählen Sie eine Kategorie aus der Navigation.</p>';
+});
 
-            if (error) {
-                console.error('Error fetching products:', error);
-                return []; // Return an empty array in case of an error
-            }
+// Function to fetch products by category
+async function fetchProductsByCategory(category) {
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', category); // Fetch products by category
 
-            return data; // Return the fetched data
-        }
+    if (error) {
+        console.error('Error fetching products:', error);
+        return []; // Return an empty array in case of an error
+    }
+
+    return data; // Return the fetched data
+}
 
         // Produkte in HTML anzeigen
         function displayProducts(products) {
@@ -641,129 +644,128 @@
                 container.innerHTML = '<p>Keine Produkte gefunden.</p>';
                 return;
             }
-products.forEach(product => {
-    const productElement = document.createElement('div');
-    productElement.className = 'product';
-    productElement.innerHTML = `
-        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-            <h2>${product.name}</h2>
-            <img src="${product.image_url}" alt="width: 100%; max-height: 300px;">
-            <p class="price ${loggedIn === 'true' ? '' : 'hidden'}"><strong>Preis:</strong> $${product.price}</p>
-            <p><strong>Beschreibung:</strong> ${product.description}</p>
-        </div>
-    `; // Closing the template literal properly
-    container.appendChild(productElement); // Append product to container
-});
-    </script>
 
-    <!-- Modal Script Logic -->
-    <script>
-        // Modal control logic
-        const registerModal = document.getElementById("registerModal");
-        const loginModal = document.getElementById("loginModal");
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'product';
+                productElement.innerHTML = `
+                    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                        <h2>${product.name}</h2>
+                        <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
+                        <p><strong>Preis:</strong> $${product.price}</p>
+                        <p><strong>Beschreibung:</strong> ${product.description}</p>
+                    </div>
+  `; // Closing the template literal properly
+        container.appendChild(productElement); // Append product to container
+    });
+} // Closing the displayProducts function properly
+    
+</script>
 
-        // Get buttons and close elements
-        const registerBtn = document.getElementById("registerBtn");
-        const loginBtn = document.getElementById("loginBtn");
-        const closeRegister = document.getElementById("closeRegister");
-        const closeLogin = document.getElementById("closeLogin");
+<!-- Modal Script Logic -->
+<script>
+    // Modal control logic
+    const registerModal = document.getElementById("registerModal");
+    const loginModal = document.getElementById("loginModal");
 
-        // Show registration modal
-        registerBtn.onclick = function() {
-            registerModal.style.display = "flex";
-        };
+    // Get buttons and close elements
+    const registerBtn = document.getElementById("registerBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const closeRegister = document.getElementById("closeRegister");
+    const closeLogin = document.getElementById("closeLogin");
 
-        // Show login modal
-        loginBtn.onclick = function() {
-            loginModal.style.display = "flex";
-        };
+    // Show registration modal
+    registerBtn.onclick = function() {
+        registerModal.style.display = "flex";
+    };
 
-        // Close registration modal
-        closeRegister.onclick = function() {
+    // Show login modal
+    loginBtn.onclick = function() {
+        loginModal.style.display = "flex";
+    };
+
+    // Close registration modal
+    closeRegister.onclick = function() {
+        registerModal.style.display = "none";
+    };
+
+    // Close login modal
+    closeLogin.onclick = function() {
+        loginModal.style.display = "none";
+    };
+
+    // Close modal if user clicks outside the modal content
+    window.onclick = function(event) {
+        if (event.target == registerModal) {
             registerModal.style.display = "none";
-        };
-
-        // Close login modal
-        closeLogin.onclick = function() {
-            loginModal.style.display = "none";
-        };
-
-        // Close modal if user clicks outside the modal content
-        window.onclick = function(event) {
-            if (event.target == registerModal) {
-                registerModal.style.display = "none";
-            }
-            if (event.target == loginModal) {
-                loginModal.style.display = "none";
-            }
-        };
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const profileIcon = document.getElementById('profileIcon');
-            const profileDropdown = document.getElementById('profileDropdown');
-            const logoutOption = document.getElementById('profile-logout');
-
-            if (profileIcon && profileDropdown && logoutOption) {
-                // Toggle dropdown visibility
-                profileIcon.addEventListener('click', function () {
-                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-                });
-
-                // Logout option click
-                logoutOption.addEventListener('click', function () {
-                    localStorage.removeItem('loggedIn');
-                    location.reload();  // Reload the page to reflect logged-out state
-                });
-
-                // Close the dropdown if clicking outside
-                window.addEventListener('click', function (event) {
-                    if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
-                        profileDropdown.style.display = 'none';
-                    }
-                });
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const loggedIn = localStorage.getItem('loggedIn');
-            const headerButtons = document.querySelector('.header-buttons');
-            const prices = document.querySelectorAll('.price');
-            const quantities = document.querySelectorAll('.quantity');
-            const cartButtons = document.querySelectorAll('.btn');
-
-            if (loggedIn === 'true') {
-                showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
-
-                // Show prices, quantities, and buttons if logged in
-                prices.forEach(function(price) {
-                    price.classList.remove('hidden');
-                });
-                quantities.forEach(function(quantity) {
-                    quantity.classList.remove('hidden');
-                });
-                cartButtons.forEach(function(button) {
-                    button.classList.remove('hidden');
-                });
-            } else {
-                headerButtons.style.display = 'flex';
-
-                // Hide prices, quantities, and buttons if not logged in
-                prices.forEach(function(price) {
-                    price.classList.add('hidden');
-                });
-                quantities.forEach(function(quantity) {
-                    quantity.classList.add('hidden');
-                });
-                cartButtons.forEach(function(button) {
-                    button.classList.add('hidden');
-                });
-            }
-        });
-
-        function showProfileIcon() {
-            // Define the function to show the profile icon
         }
-    </script>
+        if (event.target == loginModal) {
+            loginModal.style.display = "none";
+        }
+    };
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('profileIcon');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const logoutOption = document.getElementById('profile-logout');
+
+    // Toggle dropdown visibility
+    profileIcon.addEventListener('click', function () {
+        profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Logout option click
+    logoutOption.addEventListener('click', function () {
+        localStorage.removeItem('loggedIn');
+        location.reload();  // Reload the page to reflect logged-out state
+    });
+
+    // Close the dropdown if clicking outside
+    window.addEventListener('click', function (event) {
+        if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
+            profileDropdown.style.display = 'none';
+        }
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const loggedIn = localStorage.getItem('loggedIn');
+    const headerButtons = document.querySelector('.header-buttons');
+    const prices = document.querySelectorAll('.price');
+    const quantities = document.querySelectorAll('.quantity');
+    const cartButtons = document.querySelectorAll('.btn');
+
+    if (loggedIn === 'true') {
+        showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
+
+        // Show prices, quantities, and buttons if logged in
+        prices.forEach(function(price) {
+            price.classList.remove('hidden');
+        });
+        quantities.forEach(function(quantity) {
+            quantity.classList.remove('hidden');
+        });
+        cartButtons.forEach(function(button) {
+            button.classList.remove('hidden');
+        });
+    } else {
+        headerButtons.style.display = 'flex';
+
+        // Hide prices, quantities, and buttons if not logged in
+        prices.forEach(function(price) {
+            price.classList.add('hidden');
+        });
+        quantities.forEach(function(quantity) {
+            quantity.classList.add('hidden');
+        });
+        cartButtons.forEach(function(button) {
+            button.classList.add('hidden');
+        });
+    }
+});
+
+
+
+</script>
 </body>
 </html>
