@@ -351,17 +351,6 @@
             <button id="registerBtn">Registrieren</button>
             <button id="loginBtn">Anmelden</button>
         </div>
-        <div class="profile-container" style="position: relative;">
-    <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-    <div id="profileDropdown" class="profile-dropdown">
-        <ul>
-            <li><a href="profile.html">Profil</a></li>
-            <li><a href="#">Bestellungen</a></li>
-            <li id="profile-logout">Logout</li>
-        </ul>
-    </div>
-</div>
-
     </header>
     <!-- Registration Modal -->
     <div id="registerModal" class="modal">
@@ -714,31 +703,31 @@
         };
     </script>
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const profileIcon = document.getElementById('profileIcon');
-    const profileDropdown = document.getElementById('profileDropdown');
-    const logoutOption = document.getElementById('profile-logout');
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileIcon = document.getElementById('profileIcon');
+            const profileDropdown = document.getElementById('profileDropdown');
+            const logoutOption = document.getElementById('profile-logout');
 
-    if (profileIcon && profileDropdown && logoutOption) {
-        // Toggle dropdown visibility
-        profileIcon.addEventListener('click', function () {
-            profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-        });
+            if (profileIcon && profileDropdown && logoutOption) {
+                // Toggle dropdown visibility
+                profileIcon.addEventListener('click', function () {
+                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+                });
 
-        // Logout option click
-        logoutOption.addEventListener('click', function () {
-            localStorage.removeItem('loggedIn');
-            location.reload();  // Reload the page to reflect logged-out state
-        });
+                // Logout option click
+                logoutOption.addEventListener('click', function () {
+                    localStorage.removeItem('loggedIn');
+                    location.reload();  // Reload the page to reflect logged-out state
+                });
 
-        // Close the dropdown if clicking outside
-        window.addEventListener('click', function (event) {
-            if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
-                profileDropdown.style.display = 'none';
+                // Close the dropdown if clicking outside
+                window.addEventListener('click', function (event) {
+                    if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
+                        profileDropdown.style.display = 'none';
+                    }
+                });
             }
         });
-    }
-});
 
         document.addEventListener('DOMContentLoaded', function() {
             const loggedIn = localStorage.getItem('loggedIn');
