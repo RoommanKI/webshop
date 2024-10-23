@@ -265,9 +265,9 @@ document.getElementById('cart-icon').addEventListener('click', function() {
             errorMessage.textContent = `Fehler: ${err.message}`;
         }
     });
-// Login Logic
+// Login event listener
 document.getElementById('login-form').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Prevent page reload
+    event.preventDefault();
 
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
@@ -282,20 +282,21 @@ document.getElementById('login-form').addEventListener('submit', async function(
         if (error) {
             loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
         } else {
-            localStorage.setItem('userEmail', email);  // Store email in localStorage
+            localStorage.setItem('loggedIn', 'true');
             alert('Anmeldung erfolgreich!');
-            localStorage.setItem('loggedIn', 'true');  // Store login state
-            showProfileIcon();  // Display the profile icon
-
-                        // Close the login modal
-            document.getElementById('loginModal').style.display = 'none';
-            // Automatically reload the page after login
-            location.reload();
+            location.reload(); // Reload to apply the logged-in view
         }
     } catch (err) {
         loginErrorMessage.textContent = `Fehler: ${err.message}`;
     }
 });
+
+// Logout event listener
+document.getElementById('logoutLink').addEventListener('click', function () {
+    localStorage.removeItem('loggedIn');
+    location.reload(); // Reload to show the logged-out view
+});
+
 
         // Kategorie-basierte Produkte anzeigen
         async function showCategory(category) {
@@ -331,7 +332,6 @@ async function fetchProductsByCategory(category) {
     return data; // Return the fetched data
 }
 
-        // Produkte in HTML anzeigen
 function displayProducts(products) {
     const container = document.getElementById('products-container');
     container.innerHTML = ''; // Clear old content
@@ -350,16 +350,17 @@ function displayProducts(products) {
             <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
                 <h2>${product.name}</h2>
                 <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-                <p><strong>Preis:</strong> $${product.price}</p>
+                <p class="price"><strong>Preis:</strong> $${product.price}</p>
                 <p><strong>Beschreibung:</strong> ${product.description}</p>
-                <label for="quantity-${productId}">Menge:</label>
-                <input type="number" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                <button onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
+                <label for="quantity-${productId}" class="quantity-label">Menge:</label>
+                <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
+                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
             </div>
         `;
         container.appendChild(productElement);
     });
 }
+
 
     
 </script>
@@ -431,38 +432,25 @@ function displayProducts(products) {
     });
 });
 document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn');
-    const headerButtons = document.querySelector('.header-buttons');
+    const loggedIn = localStorage.getItem('loggedIn') === 'true'; // Check if the user is logged in
     const prices = document.querySelectorAll('.price');
     const quantities = document.querySelectorAll('.quantity');
-    const cartButtons = document.querySelectorAll('.btn');
+    const buttons = document.querySelectorAll('.btn');
+    const quantityLabels = document.querySelectorAll('.quantity-label');
 
-    if (loggedIn === 'true') {
-        showProfileIcon(); // Call showProfileIcon to ensure the profile icon appears after login
+    // If the user is logged in, show elements; otherwise, hide them
+    if (loggedIn) {
+        showProfileIcon(); // Show the profile icon when logged in
 
-        // Show prices, quantities, and buttons if logged in
-        prices.forEach(function(price) {
-            price.classList.remove('hidden');
-        });
-        quantities.forEach(function(quantity) {
-            quantity.classList.remove('hidden');
-        });
-        cartButtons.forEach(function(button) {
-            button.classList.remove('hidden');
-        });
+        prices.forEach(price => price.classList.remove('hidden'));
+        quantities.forEach(quantity => quantity.classList.remove('hidden'));
+        quantityLabels.forEach(label => label.classList.remove('hidden'));
+        buttons.forEach(button => button.classList.remove('hidden'));
     } else {
-        headerButtons.style.display = 'flex';
-
-        // Hide prices, quantities, and buttons if not logged in
-        prices.forEach(function(price) {
-            price.classList.add('hidden');
-        });
-        quantities.forEach(function(quantity) {
-            quantity.classList.add('hidden');
-        });
-        cartButtons.forEach(function(button) {
-            button.classList.add('hidden');
-        });
+        prices.forEach(price => price.classList.add('hidden'));
+        quantities.forEach(quantity => quantity.classList.add('hidden'));
+        quantityLabels.forEach(label => label.classList.add('hidden'));
+        buttons.forEach(button => button.classList.add('hidden'));
     }
 });
 
