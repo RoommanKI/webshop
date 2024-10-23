@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="styles.css">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -99,6 +99,7 @@
     </div>
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
 </div>
+
 <script>
 // Function to toggle the cart popup visibility
 function toggleCart() {
@@ -162,58 +163,21 @@ function finalizeOrder() {
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
-
-// Modal control logic (open/close modals)
-const registerModal = document.getElementById("registerModal");
-const loginModal = document.getElementById("loginModal");
-const registerBtn = document.getElementById("registerBtn");
-const loginBtn = document.getElementById("loginBtn");
-const closeRegister = document.getElementById("closeRegister");
-const closeLogin = document.getElementById("closeLogin");
-
-// Show registration modal
-registerBtn.onclick = function() {
-    registerModal.style.display = "flex";
-};
-
-// Show login modal
-loginBtn.onclick = function() {
-    loginModal.style.display = "flex";
-};
-
-// Close registration modal
-closeRegister.onclick = function() {
-    registerModal.style.display = "none";
-};
-
-// Close login modal
-closeLogin.onclick = function() {
-    loginModal.style.display = "none";
-};
-
-// Close modals if user clicks outside the modal content
-window.onclick = function(event) {
-    if (event.target == registerModal) {
-        registerModal.style.display = "none";
-    }
-    if (event.target == loginModal) {
-        loginModal.style.display = "none";
-    }
-};
 </script>
-<!-- Supabase SDK and Scripts -->
-<!-- Supabase SDK and Initialization -->
+<script>
+// Supabase SDK and Initialization
 <script type="module">
     // Import the Supabase client library
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // Initialize Supabase client globally so it can be accessed in other scripts
+    // Initialize Supabase client globally
     const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';  // Your Supabase URL
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';  // Your Supabase API Key
-    window.supabase = createClient(supabaseUrl, supabaseKey);  // Make supabase globally accessible
+    window.supabase = createClient(supabaseUrl, supabaseKey);  // Make Supabase globally accessible
 </script>
-<script>
 
+<!-- Handling User Authentication and Registration -->
+<script>
     // Registration Logic
     document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -255,98 +219,80 @@ window.onclick = function(event) {
             if (error) {
                 loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
             } else {
-                localStorage.setItem('loggedIn', 'true');
+                localStorage.setItem('loggedIn', 'true');  // Save login status
                 alert('Anmeldung erfolgreich!');
-                location.reload(); // Reload to apply the logged-in view
+                location.reload(); // Reload the page to apply the logged-in view
             }
         } catch (err) {
             loginErrorMessage.textContent = `Fehler: ${err.message}`;
         }
     });
 
-    // Logout event listener will be added after login, when the profile icon is shown
+    // Logout Logic
+    function showProfileIcon() {
+        const headerButtons = document.querySelector('.header-buttons');
+        if (headerButtons) {
+            headerButtons.innerHTML = `
+                <div class="profile-container" style="position: relative;">
+                    <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                    <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
+                        <a href="profile.html">Profil</a>
+                        <a href="#">Bestellungen</a>
+                        <a href="#" id="logoutLink">Logout</a>
+                    </div>
+                </div>
+            `;
+
+            const profileIcon = document.getElementById('profileIcon');
+            const profileMenu = document.getElementById('profileMenu');
+            const logoutLink = document.getElementById('logoutLink');
+
+            profileIcon.addEventListener('click', function () {
+                profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+            });
+
+            logoutLink.addEventListener('click', function () {
+                localStorage.removeItem('loggedIn');  // Clear login state
+                location.reload();  // Reload to reflect logged-out state
+            });
+        }
+    }
 </script>
 
 <!-- Handling Product Display Based on Login Status -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn') === 'true';  // Check login state
+document.addEventListener('DOMContentLoaded', async function() {
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';  // Check login state
 
-    const prices = document.querySelectorAll('.price');
-    const quantities = document.querySelectorAll('.quantity');
-    const buttons = document.querySelectorAll('.btn');
-    const quantityLabels = document.querySelectorAll('.quantity-label');
+    // Fetch products based on login status
+    const products = await fetchProducts(isLoggedIn);
 
-    if (loggedIn) {
-        // Show elements when logged in
-        prices.forEach(price => price.classList.remove('hidden'));
-        quantities.forEach(quantity => quantity.classList.remove('hidden'));
-        buttons.forEach(button => button.classList.remove('hidden'));
-        quantityLabels.forEach(label => label.classList.remove('hidden'));
-    } else {
-        // Hide elements when logged out
-        prices.forEach(price => price.classList.add('hidden'));
-        quantities.forEach(quantity => quantity.classList.add('hidden'));
-        buttons.forEach(button => button.classList.add('hidden'));
-        quantityLabels.forEach(label => label.classList.add('hidden'));
-    }
+    // Display products
+    displayProducts(products, isLoggedIn);
 });
 
-
-// Function to display the profile icon and handle logout
-function showProfileIcon() {
-    const headerButtons = document.querySelector('.header-buttons');
-    if (headerButtons) {
-        headerButtons.innerHTML = `
-            <div class="profile-container" style="position: relative;">
-                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
-                    <a href="profile.html">Profil</a>
-                    <a href="#">Bestellungen</a>
-                    <a href="#" id="logoutLink">Logout</a>
-                </div>
-            </div>
-        `;
-
-        // Event listeners after elements are dynamically created
-        const profileIcon = document.getElementById('profileIcon');
-        const profileMenu = document.getElementById('profileMenu');
-        const logoutLink = document.getElementById('logoutLink');
-
-        profileIcon.addEventListener('click', function () {
-            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-        });
-
-        logoutLink.addEventListener('click', function () {
-            localStorage.removeItem('loggedIn');
-            location.reload(); // Reload to reflect logged-out state
-        });
+// Fetch products, but include prices only if logged in
+async function fetchProducts(isLoggedIn) {
+    let query = supabase.from('products').select('id, name, description, image_url');
+    
+    if (isLoggedIn) {
+        query = query.select('id, name, description, price, image_url');  // Include price if logged in
     }
-}
-</script>
 
-<!-- Handling Product Categories and Fetching from Supabase -->
-<script>
-// Fetch products by category from Supabase (supabase is now globally available)
-async function fetchProductsByCategory(category) {
-    // Make sure the supabase instance is available globally
-    const { data, error } = await window.supabase
-        .from('products')
-        .select('*')
-        .eq('category', category);  // Fetch products by selected category
+    const { data, error } = await query;
 
     if (error) {
         console.error('Error fetching products:', error);
-        return [];  // Return empty array in case of error
+        return [];
     }
 
-    return data;  // Return fetched products
+    return data;
 }
 
-// Function to dynamically display fetched products in the product list
-function displayProducts(products) {
+// Display products dynamically based on login status
+function displayProducts(products, isLoggedIn) {
     const container = document.getElementById('products-container');
-    container.innerHTML = ''; // Clear any previously displayed products
+    container.innerHTML = ''; // Clear existing products
 
     if (products.length === 0) {
         container.innerHTML = '<p>Keine Produkte gefunden.</p>';
@@ -356,101 +302,166 @@ function displayProducts(products) {
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.className = 'product';
-        const productId = product.id;  // Assuming each product has a unique ID
+        const productId = product.id;
 
-        productElement.innerHTML = `
+        let productHTML = `
             <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
                 <h2>${product.name}</h2>
                 <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-                <p class="price"><strong>Preis:</strong> $${product.price}</p>
                 <p><strong>Beschreibung:</strong> ${product.description}</p>
+        `;
+
+        // Only show price if logged in
+        if (isLoggedIn && product.price) {
+            productHTML += `<p class="price"><strong>Preis:</strong> $${product.price}</p>`;
+        }
+
+        productHTML += `
                 <label for="quantity-${productId}" class="quantity-label">Menge:</label>
                 <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
+                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
             </div>
         `;
-        container.appendChild(productElement);  // Add the product to the container
+
+        productElement.innerHTML = productHTML;
+        container.appendChild(productElement);
     });
 }
-
-// Attach event listeners to category buttons once DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    const categoryLinks = document.querySelectorAll('nav a');  // Get all category links
-
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', async (event) => {
-            event.preventDefault();  // Prevent default behavior of link
-            const category = link.getAttribute('data-category');  // Get category from data attribute
-            const products = await fetchProductsByCategory(category);  // Fetch products for this category
-            displayProducts(products);  // Render the fetched products
-        });
-    });
-});
 </script>
-
+<!-- Handling Product Categories and Fetching from Supabase -->
 <script>
+// Event listeners for category buttons
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle category filtering by adding event listeners to all category links
     const categoryLinks = document.querySelectorAll('nav a'); // Select all category links
 
     categoryLinks.forEach(link => {
         link.addEventListener('click', async (event) => {
-            event.preventDefault(); // Prevent page reload when clicking category links
+            event.preventDefault(); // Prevent default link behavior
 
             const category = link.getAttribute('data-category'); // Get the category from data-category attribute
-            const products = await fetchProductsByCategory(category); // Fetch products by category from Supabase
+            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';  // Check if logged in
 
-            displayProducts(products); // Display the fetched products
+            // Fetch products for the selected category
+            const products = await fetchProductsByCategory(category, isLoggedIn);
+
+            // Display the fetched products
+            displayProducts(products, isLoggedIn);
         });
     });
 });
 
-// Fetch products by category from Supabase (replace with your Supabase API details)
-async function fetchProductsByCategory(category) {
-    // Assuming Supabase setup is correctly initialized
-    const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('category', category);  // Fetch products based on selected category
+// Fetch products by category from Supabase, including prices only if logged in
+async function fetchProductsByCategory(category, isLoggedIn) {
+    let query = supabase.from('products').select('id, name, description, image_url').eq('category', category);
+
+    if (isLoggedIn) {
+        query = query.select('id, name, description, price, image_url').eq('category', category); // Include price if logged in
+    }
+
+    const { data, error } = await query;
 
     if (error) {
         console.error('Error fetching products:', error);
-        return [];  // Return empty array in case of error
+        return [];
     }
 
-    return data;  // Return the fetched products
+    return data;
 }
 
 // Function to dynamically display fetched products in the product list
-function displayProducts(products) {
+function displayProducts(products, isLoggedIn) {
     const container = document.getElementById('products-container');
-    container.innerHTML = ''; // Clear any previously displayed products
+    container.innerHTML = ''; // Clear previously displayed products
 
     if (products.length === 0) {
         container.innerHTML = '<p>Keine Produkte gefunden.</p>';
         return;
     }
 
+    // Loop through each product and generate HTML
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.className = 'product';
-        const productId = product.id;  // Assuming each product has a unique ID
+        const productId = product.id;
 
-        productElement.innerHTML = `
+        let productHTML = `
             <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
                 <h2>${product.name}</h2>
                 <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-                <p class="price"><strong>Preis:</strong> $${product.price}</p>
                 <p><strong>Beschreibung:</strong> ${product.description}</p>
+        `;
+
+        // Show price only if the user is logged in
+        if (isLoggedIn && product.price) {
+            productHTML += `<p class="price"><strong>Preis:</strong> $${product.price}</p>`;
+        }
+
+        productHTML += `
                 <label for="quantity-${productId}" class="quantity-label">Menge:</label>
                 <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
+                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
             </div>
         `;
-        container.appendChild(productElement);  // Add the product to the container
+
+        productElement.innerHTML = productHTML;
+        container.appendChild(productElement);  // Add product to the container
     });
 }
-</script>
 
+// Cart logic: add products to the cart and update cart display
+function addToCart(productName, quantityId, price) {
+    const quantity = parseInt(document.getElementById(quantityId).value);
+    if (quantity > 0) {
+        const item = cart.find(item => item.product === productName);
+        if (item) {
+            item.quantity += quantity; // Update quantity if item already in cart
+        } else {
+            cart.push({ product: productName, quantity, price }); // Add new item to cart
+        }
+        updateCart();
+        alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+    } else {
+        alert("Bitte eine gültige Anzahl eingeben.");
+    }
+}
+
+// Update the cart display and item count
+function updateCart() {
+    const cartContent = document.getElementById('cart-content');
+    const cartCount = document.getElementById('cart-count');
+    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0); // Update item count
+
+    if (cart.length === 0) {
+        cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+        return;
+    }
+
+    let cartHTML = '<ul>';
+    cart.forEach(item => {
+        cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+    });
+    cartHTML += '</ul>';
+    cartContent.innerHTML = cartHTML;
+}
+
+// Finalize the order and clear the cart
+function finalizeOrder() {
+    if (cart.length === 0) {
+        alert('Ihr Warenkorb ist leer.');
+        return;
+    }
+
+    let orderSummary = 'Bestellung:\n';
+    cart.forEach(item => {
+        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+    });
+    alert(`Ihre Bestellung:\n${orderSummary}`);
+
+    cart = []; // Clear the cart after the order
+    updateCart();
+    toggleCart();  // Close the cart popup
+    window.location.href = 'order-summary.html'; // Redirect to order summary page
+}
+</script>
 </body>
 </html>
