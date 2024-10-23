@@ -99,47 +99,14 @@
     </div>
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
 </div>
-
-<!-- Skripte -->
 <script>
-// Show or hide profile icon after login
-function showProfileIcon() {
-    const headerButtons = document.querySelector('.header-buttons');
-    if (headerButtons) {
-        headerButtons.innerHTML = `
-            <div class="profile-container" style="position: relative;">
-                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
-                    <a href="profile.html">Profil</a>
-                    <a href="#">Bestellungen</a>
-                    <a href="#" id="logoutLink">Logout</a>
-                </div>
-            </div>
-        `;
-
-        // Add event listeners after the elements are dynamically created
-        const profileIcon = document.getElementById('profileIcon');
-        const profileMenu = document.getElementById('profileMenu');
-        const logoutLink = document.getElementById('logoutLink');
-
-        profileIcon.addEventListener('click', function () {
-            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-        });
-
-        logoutLink.addEventListener('click', function () {
-            localStorage.removeItem('loggedIn');
-            location.reload(); // Reload to reflect logged-out state
-        });
-    }
-}
-
-// Toggle Cart popup
+// Function to toggle the cart popup visibility
 function toggleCart() {
     const cartPopup = document.getElementById('cart-popup');
     cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
 }
 
-// Warenkorb Logic
+// Cart logic: add products to cart, update cart display
 let cart = [];
 
 function addToCart(productName, quantityId, price) {
@@ -147,9 +114,9 @@ function addToCart(productName, quantityId, price) {
     if (quantity > 0) {
         const item = cart.find(item => item.product === productName);
         if (item) {
-            item.quantity += quantity;
+            item.quantity += quantity; // If the product is already in the cart, update quantity
         } else {
-            cart.push({ product: productName, quantity, price });
+            cart.push({ product: productName, quantity, price }); // Add new item to cart
         }
         updateCart();
         alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
@@ -158,10 +125,11 @@ function addToCart(productName, quantityId, price) {
     }
 }
 
+// Update the cart display and counter
 function updateCart() {
     const cartContent = document.getElementById('cart-content');
     const cartCount = document.getElementById('cart-count');
-    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0); // Update item count
 
     if (cart.length === 0) {
         cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
@@ -176,6 +144,7 @@ function updateCart() {
     cartContent.innerHTML = cartHTML;
 }
 
+// Finalize the order and clear the cart
 function finalizeOrder() {
     if (cart.length === 0) {
         alert('Ihr Warenkorb ist leer.');
@@ -188,19 +157,57 @@ function finalizeOrder() {
     });
     alert(`Ihre Bestellung:\n${orderSummary}`);
 
-    cart = [];
+    cart = []; // Clear the cart after the order
     updateCart();
     toggleCart();  // Close the cart popup
-    window.location.href = 'order-summary.html'; // Redirect to order summary
+    window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
+
+// Modal control logic (open/close modals)
+const registerModal = document.getElementById("registerModal");
+const loginModal = document.getElementById("loginModal");
+const registerBtn = document.getElementById("registerBtn");
+const loginBtn = document.getElementById("loginBtn");
+const closeRegister = document.getElementById("closeRegister");
+const closeLogin = document.getElementById("closeLogin");
+
+// Show registration modal
+registerBtn.onclick = function() {
+    registerModal.style.display = "flex";
+};
+
+// Show login modal
+loginBtn.onclick = function() {
+    loginModal.style.display = "flex";
+};
+
+// Close registration modal
+closeRegister.onclick = function() {
+    registerModal.style.display = "none";
+};
+
+// Close login modal
+closeLogin.onclick = function() {
+    loginModal.style.display = "none";
+};
+
+// Close modals if user clicks outside the modal content
+window.onclick = function(event) {
+    if (event.target == registerModal) {
+        registerModal.style.display = "none";
+    }
+    if (event.target == loginModal) {
+        loginModal.style.display = "none";
+    }
+};
 </script>
 <!-- Supabase SDK and Scripts -->
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     // Supabase Initialization
-    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Replace this with your Supabase key
+    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';  // Replace with your actual Supabase URL
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Replace with your actual Supabase key
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Registration Logic
@@ -253,98 +260,130 @@ function finalizeOrder() {
         }
     });
 
-    // Logout event listener is dynamically added when profile icon is shown.
+    // Logout event listener will be added after login, when the profile icon is shown
 </script>
 
-<!-- Script to Handle Product Categories and Fetch from Supabase -->
+<!-- Handling Product Display Based on Login Status -->
 <script>
-    // Fetch products by category
-    async function fetchProductsByCategory(category) {
-        const { data, error } = await supabase
-            .from('products')
-            .select('*')
-            .eq('category', category);  // Fetch products by selected category
+// Display product prices and add-to-cart buttons based on login status
+document.addEventListener('DOMContentLoaded', function() {
+    const loggedIn = localStorage.getItem('loggedIn') === 'true';  // Check if user is logged in
 
-        if (error) {
-            console.error('Error fetching products:', error);
-            return [];
-        }
-
-        return data; // Return fetched products
+    if (loggedIn) {
+        showProfileIcon();  // Show the profile icon if logged in
     }
 
-    // Display products in the HTML
-    function displayProducts(products) {
-        const container = document.getElementById('products-container');
-        container.innerHTML = ''; // Clear old content
+    const prices = document.querySelectorAll('.price');
+    const quantities = document.querySelectorAll('.quantity');
+    const buttons = document.querySelectorAll('.btn');
+    const quantityLabels = document.querySelectorAll('.quantity-label');
 
-        if (products.length === 0) {
-            container.innerHTML = '<p>Keine Produkte gefunden.</p>';
-            return;
-        }
+    // Show or hide prices, quantity inputs, and buttons based on login state
+    if (loggedIn) {
+        prices.forEach(price => price.classList.remove('hidden'));
+        quantities.forEach(quantity => quantity.classList.remove('hidden'));
+        quantityLabels.forEach(label => label.classList.remove('hidden'));
+        buttons.forEach(button => button.classList.remove('hidden'));
+    } else {
+        prices.forEach(price => price.classList.add('hidden'));
+        quantities.forEach(quantity => quantity.classList.add('hidden'));
+        quantityLabels.forEach(label => label.classList.add('hidden'));
+        buttons.forEach(button => button.classList.add('hidden'));
+    }
+});
 
-        products.forEach(product => {
-            const productElement = document.createElement('div');
-            productElement.className = 'product';
-            const productId = product.id;  // Assuming each product has a unique ID
-
-            productElement.innerHTML = `
-                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-                    <h2>${product.name}</h2>
-                    <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-                    <p class="price"><strong>Preis:</strong> $${product.price}</p>
-                    <p><strong>Beschreibung:</strong> ${product.description}</p>
-                    <label for="quantity-${productId}" class="quantity-label">Menge:</label>
-                    <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                    <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
+// Function to display the profile icon and handle logout
+function showProfileIcon() {
+    const headerButtons = document.querySelector('.header-buttons');
+    if (headerButtons) {
+        headerButtons.innerHTML = `
+            <div class="profile-container" style="position: relative;">
+                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
+                    <a href="profile.html">Profil</a>
+                    <a href="#">Bestellungen</a>
+                    <a href="#" id="logoutLink">Logout</a>
                 </div>
-            `;
-            container.appendChild(productElement);
+            </div>
+        `;
+
+        // Event listeners after elements are dynamically created
+        const profileIcon = document.getElementById('profileIcon');
+        const profileMenu = document.getElementById('profileMenu');
+        const logoutLink = document.getElementById('logoutLink');
+
+        profileIcon.addEventListener('click', function () {
+            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+        });
+
+        logoutLink.addEventListener('click', function () {
+            localStorage.removeItem('loggedIn');
+            location.reload(); // Reload to reflect logged-out state
         });
     }
+}
+</script>
 
-    // Handle category filtering
-    document.addEventListener('DOMContentLoaded', function() {
-        const categoryLinks = document.querySelectorAll('nav a');
-        categoryLinks.forEach(link => {
-            link.addEventListener('click', async (event) => {
-                event.preventDefault(); // Prevent page reload
-                const category = link.getAttribute('data-category'); // Get category from data attribute
-                const products = await fetchProductsByCategory(category); // Fetch products
-                displayProducts(products);  // Display products on page
-            });
+<!-- Handling Product Categories and Fetching from Supabase -->
+<script>
+// Fetch products by category
+async function fetchProductsByCategory(category) {
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', category);  // Fetch products by selected category
+
+    if (error) {
+        console.error('Error fetching products:', error);
+        return [];
+    }
+
+    return data; // Return fetched products
+}
+
+// Display products in the HTML
+function displayProducts(products) {
+    const container = document.getElementById('products-container');
+    container.innerHTML = ''; // Clear old content
+
+    if (products.length === 0) {
+        container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+        return;
+    }
+
+    products.forEach(product => {
+        const productElement = document.createElement('div');
+        productElement.className = 'product';
+        const productId = product.id;  // Assuming each product has a unique ID
+
+        productElement.innerHTML = `
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                <h2>${product.name}</h2>
+                <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
+                <p class="price"><strong>Preis:</strong> $${product.price}</p>
+                <p><strong>Beschreibung:</strong> ${product.description}</p>
+                <label for="quantity-${productId}" class="quantity-label">Menge:</label>
+                <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
+                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
+            </div>
+        `;
+        container.appendChild(productElement);
+    });
+}
+
+// Handle category filtering
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryLinks = document.querySelectorAll('nav a');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', async (event) => {
+            event.preventDefault(); // Prevent page reload
+            const category = link.getAttribute('data-category'); // Get category from data attribute
+            const products = await fetchProductsByCategory(category); // Fetch products by category
+            displayProducts(products);  // Display products on page
         });
     });
+});
 </script>
 
-<!-- Handling Login State and Hiding/Showing Elements -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const loggedIn = localStorage.getItem('loggedIn') === 'true';  // Check if user is logged in
-
-        if (loggedIn) {
-            showProfileIcon();  // Show the profile icon if logged in
-        }
-
-        const prices = document.querySelectorAll('.price');
-        const quantities = document.querySelectorAll('.quantity');
-        const buttons = document.querySelectorAll('.btn');
-        const quantityLabels = document.querySelectorAll('.quantity-label');
-
-        if (loggedIn) {
-            // Show price, quantity, and add-to-cart button
-            prices.forEach(price => price.classList.remove('hidden'));
-            quantities.forEach(quantity => quantity.classList.remove('hidden'));
-            quantityLabels.forEach(label => label.classList.remove('hidden'));
-            buttons.forEach(button => button.classList.remove('hidden'));
-        } else {
-            // Hide price, quantity, and add-to-cart button if not logged in
-            prices.forEach(price => price.classList.add('hidden'));
-            quantities.forEach(quantity => quantity.classList.add('hidden'));
-            quantityLabels.forEach(label => label.classList.add('hidden'));
-            buttons.forEach(button => button.classList.add('hidden'));
-        }
-    });
-</script>
 </body>
 </html>
