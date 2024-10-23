@@ -384,6 +384,69 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle category filtering by adding event listeners to all category links
+    const categoryLinks = document.querySelectorAll('nav a'); // Select all category links
+
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', async (event) => {
+            event.preventDefault(); // Prevent page reload when clicking category links
+
+            const category = link.getAttribute('data-category'); // Get the category from data-category attribute
+            const products = await fetchProductsByCategory(category); // Fetch products by category from Supabase
+
+            displayProducts(products); // Display the fetched products
+        });
+    });
+});
+
+// Fetch products by category from Supabase (replace with your Supabase API details)
+async function fetchProductsByCategory(category) {
+    // Assuming Supabase setup is correctly initialized
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', category);  // Fetch products based on selected category
+
+    if (error) {
+        console.error('Error fetching products:', error);
+        return [];  // Return empty array in case of error
+    }
+
+    return data;  // Return the fetched products
+}
+
+// Function to dynamically display fetched products in the product list
+function displayProducts(products) {
+    const container = document.getElementById('products-container');
+    container.innerHTML = ''; // Clear any previously displayed products
+
+    if (products.length === 0) {
+        container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+        return;
+    }
+
+    products.forEach(product => {
+        const productElement = document.createElement('div');
+        productElement.className = 'product';
+        const productId = product.id;  // Assuming each product has a unique ID
+
+        productElement.innerHTML = `
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                <h2>${product.name}</h2>
+                <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
+                <p class="price"><strong>Preis:</strong> $${product.price}</p>
+                <p><strong>Beschreibung:</strong> ${product.description}</p>
+                <label for="quantity-${productId}" class="quantity-label">Menge:</label>
+                <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
+                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
+            </div>
+        `;
+        container.appendChild(productElement);  // Add the product to the container
+    });
+}
+</script>
 
 </body>
 </html>
