@@ -261,15 +261,19 @@ function finalizeOrder() {
 
 <!-- Handling Product Display Based on Login Status -->
 <script>
-document.addEventListener('DOMContentLoaded', async function() {
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';  // Check login state
+document.addEventListener('DOMContentLoaded', function() {
+    // Wrap the async code inside a function and call it
+    (async function() {
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';  // Check login state
 
-    // Fetch products based on login status
-    const products = await fetchProducts(isLoggedIn);
+        // Fetch products based on login status
+        const products = await fetchProducts(isLoggedIn);
 
-    // Display products
-    displayProducts(products, isLoggedIn);
+        // Display products
+        displayProducts(products, isLoggedIn);
+    })();  // Immediately invoke the async function
 });
+
 
 // Fetch products, but include prices only if logged in
 async function fetchProducts(isLoggedIn) {
