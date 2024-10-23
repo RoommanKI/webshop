@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
-<link rel="stylesheet" href="styles.css"> 
-   <!-- Font Awesome für Icons -->
+    <link rel="stylesheet" href="styles.css"> 
+    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
 <!-- Header -->
 <header>
-         <!-- Cart icon with counter -->
-        <div id="cart-icon" class="cart">
-            <i class="fas fa-shopping-cart"></i>
-            <span id="cart-count">0</span> <!-- Cart item count -->
-        </div>
+    <!-- Cart icon with counter -->
+    <div id="cart-icon" class="cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span> <!-- Cart item count -->
+    </div>
     <h1 style="margin: 0;">Webshop - Grußkarten</h1>
 
     <!-- Buttons for opening modals -->
@@ -24,7 +24,6 @@
         <button id="registerBtn">Registrieren</button>
         <button id="loginBtn">Anmelden</button>
     </div>
-
 </header>
 
 <!-- Registration Modal -->
@@ -79,37 +78,18 @@
 <!-- Produktliste -->
 <div id="products-container" class="product-list"></div>
 
-    <!-- Startseite Abschnitt -->
-    <section id="startseite" style="padding: 20px; text-align: center;">
-        <h2>Willkommen in unserem Grußkarten-Shop!</h2>
-        <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
-    </section>
+<!-- Startseite Abschnitt -->
+<section id="startseite" style="padding: 20px; text-align: center;">
+    <h2>Willkommen in unserem Grußkarten-Shop!</h2>
+    <p>Hier finden Sie eine große Auswahl an Karten für alle Anlässe: von Trauerkarten bis hin zu festlichen Hochzeitskarten. Wählen Sie eine Kategorie aus, um unsere Produkte zu entdecken.</p>
+</section>
 
-           <section id="trauer" class="product-list category"style="display: none;">
-    
-
-    </section>
-
-    <section id="hochzeit" class="product-list category" style="display: none;">
-        <h3>Hochzeitskarten</h3>
-        <!-- Hier könnten Produkte hinzugefügt werden -->
-    </section>
-
-    <section id="glueckwunsch" class="product-list category" style="display: none;">
-        <h3>Glückwunschkarten</h3>
-        <!-- Hier könnten Produkte hinzugefügt werden -->
-    </section>
-
-    <section id="weihnachten" class="product-list category" style="display: none;">
-        <h3>Weihnachtskarten</h3>
-        <!-- Hier könnten Produkte hinzugefügt werden -->
-    </section>
-
-    <section id="events" class="product-list category" style="display: none;">
-        <h3>Eventkarten</h3>
-        <!-- Hier könnten Produkte hinzugefügt werden -->
-    </section>
-</div>
+<!-- Category Sections -->
+<section id="trauer" class="product-list category" style="display: none;"></section>
+<section id="hochzeit" class="product-list category" style="display: none;"><h3>Hochzeitskarten</h3></section>
+<section id="glueckwunsch" class="product-list category" style="display: none;"><h3>Glückwunschkarten</h3></section>
+<section id="weihnachten" class="product-list category" style="display: none;"><h3>Weihnachtskarten</h3></section>
+<section id="events" class="product-list category" style="display: none;"><h3>Eventkarten</h3></section>
 
 <!-- Warenkorb-Popup -->
 <div id="cart-popup" style="display: none;">
@@ -119,18 +99,20 @@
     </div>
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
 </div>
+
 <!-- Skripte -->
 <script>
+// Show or hide profile icon after login
 function showProfileIcon() {
     const headerButtons = document.querySelector('.header-buttons');
     if (headerButtons) {
         headerButtons.innerHTML = `
             <div class="profile-container" style="position: relative;">
                 <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
-                    <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
-                    <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
+                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
+                    <a href="profile.html">Profil</a>
+                    <a href="#">Bestellungen</a>
+                    <a href="#" id="logoutLink">Logout</a>
                 </div>
             </div>
         `;
@@ -140,113 +122,85 @@ function showProfileIcon() {
         const profileMenu = document.getElementById('profileMenu');
         const logoutLink = document.getElementById('logoutLink');
 
-        if (profileIcon) {
-            profileIcon.addEventListener('click', function () {
-                profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-            });
-        }
+        profileIcon.addEventListener('click', function () {
+            profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
+        });
 
-        if (logoutLink) {
-            logoutLink.addEventListener('click', function () {
-                localStorage.removeItem('loggedIn');
-                location.reload(); // Reload to show the login/register buttons
-            });
-        }
+        logoutLink.addEventListener('click', function () {
+            localStorage.removeItem('loggedIn');
+            location.reload(); // Reload to reflect logged-out state
+        });
     }
 }
 
+// Toggle Cart popup
+function toggleCart() {
+    const cartPopup = document.getElementById('cart-popup');
+    cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
+}
 
+// Warenkorb Logic
+let cart = [];
 
-
-    // Kategorien anzeigen/verstecken
-    function showCategory(category) {
-        // Alle Kategorien verstecken
-        const categories = document.querySelectorAll('.category');
-        categories.forEach(cat => cat.style.display = 'none');
-
-        // Die ausgewählte Kategorie anzeigen
-        document.getElementById(category).style.display = 'flex';
-    }
-// Warenkorb Icon Klickbar machen
-document.getElementById('cart-icon').addEventListener('click', function() {
-    toggleCart(); // Show or hide the cart popup
-});
-
-    // Warenkorb-Logik
-    let cart = [];
-
-    // Warenkorb-Popup ein-/ausblenden
-    function toggleCart() {
-        const cartPopup = document.getElementById('cart-popup');
-        cartPopup.style.display = (cartPopup.style.display === 'none' || cartPopup.style.display === '') ? 'block' : 'none';
-    }
-
-    // Produkt zum Warenkorb hinzufügen
-    function addToCart(productName, quantityId, price) {
-        const quantity = parseInt(document.getElementById(quantityId).value);
-        if (quantity > 0) {
-            const item = cart.find(item => item.product === productName);
-            if (item) {
-                item.quantity += quantity;
-            } else {
-                cart.push({ product: productName, quantity, price });
-            }
-            updateCart();  // Warenkorb aktualisieren
-            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+function addToCart(productName, quantityId, price) {
+    const quantity = parseInt(document.getElementById(quantityId).value);
+    if (quantity > 0) {
+        const item = cart.find(item => item.product === productName);
+        if (item) {
+            item.quantity += quantity;
         } else {
-            alert("Bitte eine gültige Anzahl eingeben.");
+            cart.push({ product: productName, quantity, price });
         }
-    }
-
-    // Warenkorb-Inhalt und Zähler aktualisieren
-    function updateCart() {
-        const cartContent = document.getElementById('cart-content');
-        const cartCount = document.getElementById('cart-count');
-        cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-        if (cart.length === 0) {
-            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-            return;
-        }
-
-        let cartHTML = '<ul>';
-        cart.forEach(item => {
-            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-        });
-        cartHTML += '</ul>';
-        cartContent.innerHTML = cartHTML;
-    }
-
-    // Bestellung abschließen
-    function finalizeOrder() {
-        if (cart.length === 0) {
-            alert('Ihr Warenkorb ist leer.');
-            return;
-        }
-
-        // Bestellübersicht aufrufen
-        let orderSummary = 'Bestellung:\n';
-        cart.forEach(item => {
-            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-        });
-        alert(`Ihre Bestellung:\n${orderSummary}`);
-
-        // Warenkorb zurücksetzen
-        cart = [];
         updateCart();
-        toggleCart();  // Warenkorb-Popup schließen
-            // Weiterleitung zur Bestellübersichtsseite
-    window.location.href = 'order-summary.html';
+        alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+    } else {
+        alert("Bitte eine gültige Anzahl eingeben.");
     }
-</script>
+}
 
+function updateCart() {
+    const cartContent = document.getElementById('cart-content');
+    const cartCount = document.getElementById('cart-count');
+    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    if (cart.length === 0) {
+        cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+        return;
+    }
+
+    let cartHTML = '<ul>';
+    cart.forEach(item => {
+        cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+    });
+    cartHTML += '</ul>';
+    cartContent.innerHTML = cartHTML;
+}
+
+function finalizeOrder() {
+    if (cart.length === 0) {
+        alert('Ihr Warenkorb ist leer.');
+        return;
+    }
+
+    let orderSummary = 'Bestellung:\n';
+    cart.forEach(item => {
+        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+    });
+    alert(`Ihre Bestellung:\n${orderSummary}`);
+
+    cart = [];
+    updateCart();
+    toggleCart();  // Close the cart popup
+    window.location.href = 'order-summary.html'; // Redirect to order summary
+}
+</script>
 <!-- Supabase SDK and Scripts -->
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     // Supabase Initialization
     const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Replace this with your Supabase key
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Registration Logic
@@ -272,200 +226,125 @@ document.getElementById('cart-icon').addEventListener('click', function() {
             errorMessage.textContent = `Fehler: ${err.message}`;
         }
     });
-// Login event listener
-document.getElementById('login-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
 
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    const loginErrorMessage = document.getElementById('login-error');
+    // Login Logic
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const loginErrorMessage = document.getElementById('login-error');
+
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+            } else {
+                localStorage.setItem('loggedIn', 'true');
+                alert('Anmeldung erfolgreich!');
+                location.reload(); // Reload to apply the logged-in view
+            }
+        } catch (err) {
+            loginErrorMessage.textContent = `Fehler: ${err.message}`;
+        }
+    });
+
+    // Logout event listener is dynamically added when profile icon is shown.
+</script>
+
+<!-- Script to Handle Product Categories and Fetch from Supabase -->
+<script>
+    // Fetch products by category
+    async function fetchProductsByCategory(category) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('category', category);  // Fetch products by selected category
 
         if (error) {
-            loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-        } else {
-            localStorage.setItem('loggedIn', 'true');
-            alert('Anmeldung erfolgreich!');
-            location.reload(); // Reload to apply the logged-in view
+            console.error('Error fetching products:', error);
+            return [];
         }
-    } catch (err) {
-        loginErrorMessage.textContent = `Fehler: ${err.message}`;
+
+        return data; // Return fetched products
     }
-});
 
-// Logout event listener
-document.getElementById('logoutLink').addEventListener('click', function () {
-    localStorage.removeItem('loggedIn');
-    location.reload(); // Reload to show the logged-out view
-});
+    // Display products in the HTML
+    function displayProducts(products) {
+        const container = document.getElementById('products-container');
+        container.innerHTML = ''; // Clear old content
 
-
-        // Kategorie-basierte Produkte anzeigen
-        async function showCategory(category) {
-            const products = await fetchProductsByCategory(category); // Produkte nach Kategorie abrufen
-            displayProducts(products); // Produkte anzeigen
+        if (products.length === 0) {
+            container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+            return;
         }
 
-// Event-Listener für Kategorie-Links hinzufügen
-document.addEventListener('DOMContentLoaded', () => {
-    const categoryLinks = document.querySelectorAll('nav a');
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', (event) => {
-            event.preventDefault(); // Verhindert das Standardverhalten (Seiten-Reload)
-            const category = link.getAttribute('data-category'); // Kategorie aus dem Daten-Attribut
-            showCategory(category); // Kategorie anzeigen
+        products.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.className = 'product';
+            const productId = product.id;  // Assuming each product has a unique ID
+
+            productElement.innerHTML = `
+                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                    <h2>${product.name}</h2>
+                    <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
+                    <p class="price"><strong>Preis:</strong> $${product.price}</p>
+                    <p><strong>Beschreibung:</strong> ${product.description}</p>
+                    <label for="quantity-${productId}" class="quantity-label">Menge:</label>
+                    <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
+                    <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
+                </div>
+            `;
+            container.appendChild(productElement);
+        });
+    }
+
+    // Handle category filtering
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryLinks = document.querySelectorAll('nav a');
+        categoryLinks.forEach(link => {
+            link.addEventListener('click', async (event) => {
+                event.preventDefault(); // Prevent page reload
+                const category = link.getAttribute('data-category'); // Get category from data attribute
+                const products = await fetchProductsByCategory(category); // Fetch products
+                displayProducts(products);  // Display products on page
+            });
         });
     });
-
-});
-
-// Function to fetch products by category
-async function fetchProductsByCategory(category) {
-    const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('category', category); // Fetch products by category
-
-    if (error) {
-        console.error('Error fetching products:', error);
-        return []; // Return an empty array in case of an error
-    }
-
-    return data; // Return the fetched data
-}
-
-function displayProducts(products) {
-    const container = document.getElementById('products-container');
-    container.innerHTML = ''; // Clear old content
-
-    if (products.length === 0) {
-        container.innerHTML = '<p>Keine Produkte gefunden.</p>';
-        return;
-    }
-
-    products.forEach(product => {
-        const productElement = document.createElement('div');
-        productElement.className = 'product';
-        const productId = product.id; // Assuming each product has a unique ID
-
-        productElement.innerHTML = `
-            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-                <h2>${product.name}</h2>
-                <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-                <p class="price"><strong>Preis:</strong> $${product.price}</p>
-                <p><strong>Beschreibung:</strong> ${product.description}</p>
-                <label for="quantity-${productId}" class="quantity-label">Menge:</label>
-                <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price})">In den Warenkorb</button>
-            </div>
-        `;
-        container.appendChild(productElement);
-    });
-}
-
-
-    
 </script>
 
-<!-- Modal Script Logic -->
+<!-- Handling Login State and Hiding/Showing Elements -->
 <script>
-    // Modal control logic
-    const registerModal = document.getElementById("registerModal");
-    const loginModal = document.getElementById("loginModal");
+    document.addEventListener('DOMContentLoaded', function() {
+        const loggedIn = localStorage.getItem('loggedIn') === 'true';  // Check if user is logged in
 
-    // Get buttons and close elements
-    const registerBtn = document.getElementById("registerBtn");
-    const loginBtn = document.getElementById("loginBtn");
-    const closeRegister = document.getElementById("closeRegister");
-    const closeLogin = document.getElementById("closeLogin");
-
-    // Show registration modal
-    registerBtn.onclick = function() {
-        registerModal.style.display = "flex";
-    };
-
-    // Show login modal
-    loginBtn.onclick = function() {
-        loginModal.style.display = "flex";
-    };
-
-    // Close registration modal
-    closeRegister.onclick = function() {
-        registerModal.style.display = "none";
-    };
-
-    // Close login modal
-    closeLogin.onclick = function() {
-        loginModal.style.display = "none";
-    };
-
-    // Close modal if user clicks outside the modal content
-    window.onclick = function(event) {
-        if (event.target == registerModal) {
-            registerModal.style.display = "none";
+        if (loggedIn) {
+            showProfileIcon();  // Show the profile icon if logged in
         }
-        if (event.target == loginModal) {
-            loginModal.style.display = "none";
-        }
-    };
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const profileIcon = document.getElementById('profileIcon');
-    const profileDropdown = document.getElementById('profileDropdown');
-    const logoutOption = document.getElementById('profile-logout');
 
-    // Toggle dropdown visibility
-    profileIcon.addEventListener('click', function () {
-        profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-    });
+        const prices = document.querySelectorAll('.price');
+        const quantities = document.querySelectorAll('.quantity');
+        const buttons = document.querySelectorAll('.btn');
+        const quantityLabels = document.querySelectorAll('.quantity-label');
 
-    // Logout option click
-    logoutOption.addEventListener('click', function () {
-        localStorage.removeItem('loggedIn');
-        location.reload();  // Reload the page to reflect logged-out state
-    });
-
-    // Close the dropdown if clicking outside
-    window.addEventListener('click', function (event) {
-        if (!profileIcon.contains(event.target) && !profileDropdown.contains(event.target)) {
-            profileDropdown.style.display = 'none';
+        if (loggedIn) {
+            // Show price, quantity, and add-to-cart button
+            prices.forEach(price => price.classList.remove('hidden'));
+            quantities.forEach(quantity => quantity.classList.remove('hidden'));
+            quantityLabels.forEach(label => label.classList.remove('hidden'));
+            buttons.forEach(button => button.classList.remove('hidden'));
+        } else {
+            // Hide price, quantity, and add-to-cart button if not logged in
+            prices.forEach(price => price.classList.add('hidden'));
+            quantities.forEach(quantity => quantity.classList.add('hidden'));
+            quantityLabels.forEach(label => label.classList.add('hidden'));
+            buttons.forEach(button => button.classList.add('hidden'));
         }
     });
-});
-document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn') === 'true'; // Check if the user is logged in
-
-    if (loggedIn) {
-        showProfileIcon(); // Ensure the profile icon is rendered when logged in
-    }
-
-    const prices = document.querySelectorAll('.price');
-    const quantities = document.querySelectorAll('.quantity');
-    const buttons = document.querySelectorAll('.btn');
-    const quantityLabels = document.querySelectorAll('.quantity-label');
-
-    if (loggedIn) {
-        prices.forEach(price => price.classList.remove('hidden'));
-        quantities.forEach(quantity => quantity.classList.remove('hidden'));
-        quantityLabels.forEach(label => label.classList.remove('hidden'));
-        buttons.forEach(button => button.classList.remove('hidden'));
-    } else {
-        prices.forEach(price => price.classList.add('hidden'));
-        quantities.forEach(quantity => quantity.classList.add('hidden'));
-        quantityLabels.forEach(label => label.classList.add('hidden'));
-        buttons.forEach(button => button.classList.add('hidden'));
-    }
-});
-
-
-
-
 </script>
 </body>
 </html>
