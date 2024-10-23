@@ -121,34 +121,40 @@
 </div>
 <!-- Skripte -->
 <script>
-    function showProfileIcon() {
-        const headerButtons = document.querySelector('.header-buttons');
-        if (headerButtons) {
-            headerButtons.innerHTML = `
-                <div class="profile-container" style="position: relative;">
-                    <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                    <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                        <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
-                        <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
-                        <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
-                    </div>
+function showProfileIcon() {
+    const headerButtons = document.querySelector('.header-buttons');
+    if (headerButtons) {
+        headerButtons.innerHTML = `
+            <div class="profile-container" style="position: relative;">
+                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <a href="profile.html" style="display: block; padding: 5px;">Profil</a>
+                    <a href="#" style="display: block; padding: 5px;">Bestellungen</a>
+                    <a href="#" id="logoutLink" style="display: block; padding: 5px;">Logout</a>
                 </div>
-            `;
-            
-            // Attach event listener to the profile icon to toggle the menu
-            const profileIcon = document.getElementById('profileIcon');
-            const profileMenu = document.getElementById('profileMenu');
+            </div>
+        `;
+
+        // Add event listeners after the elements are dynamically created
+        const profileIcon = document.getElementById('profileIcon');
+        const profileMenu = document.getElementById('profileMenu');
+        const logoutLink = document.getElementById('logoutLink');
+
+        if (profileIcon) {
             profileIcon.addEventListener('click', function () {
                 profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
             });
+        }
 
-            // Add logout functionality
-            document.getElementById('logoutLink').addEventListener('click', function () {
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function () {
                 localStorage.removeItem('loggedIn');
                 location.reload(); // Reload to show the login/register buttons
             });
         }
     }
+}
+
 
 
     // Kategorien anzeigen/verstecken
@@ -433,15 +439,17 @@ function displayProducts(products) {
 });
 document.addEventListener('DOMContentLoaded', function() {
     const loggedIn = localStorage.getItem('loggedIn') === 'true'; // Check if the user is logged in
+
+    if (loggedIn) {
+        showProfileIcon(); // Ensure the profile icon is rendered when logged in
+    }
+
     const prices = document.querySelectorAll('.price');
     const quantities = document.querySelectorAll('.quantity');
     const buttons = document.querySelectorAll('.btn');
     const quantityLabels = document.querySelectorAll('.quantity-label');
 
-    // If the user is logged in, show elements; otherwise, hide them
     if (loggedIn) {
-        showProfileIcon(); // Show the profile icon when logged in
-
         prices.forEach(price => price.classList.remove('hidden'));
         quantities.forEach(quantity => quantity.classList.remove('hidden'));
         quantityLabels.forEach(label => label.classList.remove('hidden'));
