@@ -269,32 +269,29 @@ window.onclick = function(event) {
 
 <!-- Handling Product Display Based on Login Status -->
 <script>
-// Display product prices and add-to-cart buttons based on login status
 document.addEventListener('DOMContentLoaded', function() {
-    const loggedIn = localStorage.getItem('loggedIn') === 'true';  // Check if user is logged in
-
-    if (loggedIn) {
-        showProfileIcon();  // Show the profile icon if logged in
-    }
+    const loggedIn = localStorage.getItem('loggedIn') === 'true';  // Check login state
 
     const prices = document.querySelectorAll('.price');
     const quantities = document.querySelectorAll('.quantity');
     const buttons = document.querySelectorAll('.btn');
     const quantityLabels = document.querySelectorAll('.quantity-label');
 
-    // Show or hide prices, quantity inputs, and buttons based on login state
     if (loggedIn) {
+        // Show elements when logged in
         prices.forEach(price => price.classList.remove('hidden'));
         quantities.forEach(quantity => quantity.classList.remove('hidden'));
-        quantityLabels.forEach(label => label.classList.remove('hidden'));
         buttons.forEach(button => button.classList.remove('hidden'));
+        quantityLabels.forEach(label => label.classList.remove('hidden'));
     } else {
+        // Hide elements when logged out
         prices.forEach(price => price.classList.add('hidden'));
         quantities.forEach(quantity => quantity.classList.add('hidden'));
-        quantityLabels.forEach(label => label.classList.add('hidden'));
         buttons.forEach(button => button.classList.add('hidden'));
+        quantityLabels.forEach(label => label.classList.add('hidden'));
     }
 });
+
 
 // Function to display the profile icon and handle logout
 function showProfileIcon() {
