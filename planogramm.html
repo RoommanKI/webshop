@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planogramm Ersteller</title>
     <style>
-        /* General Styling */
         body { 
             font-family: Arial, sans-serif; 
             text-align: center; 
@@ -58,7 +57,6 @@
             background-color: #2980b9;
         }
 
-        /* Product Image Gallery */
         .product-images {
             display: flex;
             flex-wrap: wrap;
@@ -81,7 +79,6 @@
             border-color: #3498db;
         }
 
-        /* Grid Container */
         #grid-container {
             margin: 30px auto;
             padding: 10px;
@@ -216,7 +213,6 @@
             event.target.innerHTML = data;
         }
 
-        // Export generatePDF function to global scope
         window.generatePDF = function () {
             const pdfRows = parseInt(document.getElementById('pdf-rows').value);
             const pdfColumns = parseInt(document.getElementById('pdf-columns').value);
@@ -225,36 +221,55 @@
             
             const gridItems = document.querySelectorAll('#grid-container .grid-item img');
             const images = Array.from(gridItems).map(img => img.src);
+
+            const pageWidth = 190; // Approx. width of a standard PDF page in jsPDF
+            const pageHeight = 280; // Approx. height of a standard PDF page
+            const maxImageWidth = pageWidth / pdfColumns;
+            const maxImageHeight = pageHeight / pdfRows;
             
-            const imageWidth = 180 / pdfColumns;
-            const imageHeight = 270 / pdfRows;
             let xPos = 10;
             let yPos = 10;
             let imgCount = 0;
 
             images.forEach((imgSrc, index) => {
                 if (imgSrc) {
-                    pdf.addImage(imgSrc, 'JPEG', xPos, yPos, imageWidth, imageHeight);
-                    xPos += imageWidth;
+                    const img = new Image();
+                    img.src = imgSrc;
 
-                    imgCount++;
-                    if (imgCount % pdfColumns === 0) {
-                        xPos = 10;
-                        yPos += imageHeight;
-                    }
+                    img.onload = function () {
+                        const aspectRatio = img.width / img.height;
+                        let imgWidth, imgHeight;
 
-                    if (imgCount % (pdfRows * pdfColumns) === 0 && index < images.length - 1) {
-                        pdf.addPage();
-                        xPos = 10;
-                        yPos = 10;
-                    }
+                        if (aspectRatio > 1) {
+                            imgWidth = maxImageWidth;
+                            imgHeight = imgWidth / aspectRatio;
+                        } else {
+                            imgHeight = maxImageHeight;
+                            imgWidth = imgHeight * aspectRatio;
+                        }
+
+                        pdf.addImage(imgSrc, 'JPEG', xPos, yPos, imgWidth, imgHeight);
+
+                        xPos += imgWidth + 5;
+
+                        imgCount++;
+                        if (imgCount % pdfColumns === 0) {
+                            xPos = 10;
+                            yPos += maxImageHeight + 5;
+                        }
+
+                        if (imgCount % (pdfRows * pdfColumns) === 0 && index < images.length - 1) {
+                            pdf.addPage();
+                            xPos = 10;
+                            yPos = 10;
+                        }
+                    };
                 }
             });
 
             pdf.save('planogram.pdf');
         };
-        
-        // Default grid creation for 3x3
+
         createGrid(3, 3);
     </script>
 </body>
