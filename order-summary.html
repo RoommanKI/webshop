@@ -86,94 +86,94 @@
     </div>
 
     <script>
-    // Bestellinformationen von localStorage laden
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const orderList = document.getElementById('order-list');
-    const totalPriceElement = document.getElementById('total-price');
-    const vatElement = document.getElementById('vat');
-    const discountElement = document.getElementById('discount');
-    const orderSummaryInput = document.getElementById('order-summary-input');
-    const totalPriceInput = document.getElementById('total-price-input');
-    const discountInput = document.getElementById('discount-input');
-    const discountMessage = document.getElementById('discount-message');
+        // Bestellinformationen von localStorage laden
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const orderList = document.getElementById('order-list');
+        const totalPriceElement = document.getElementById('total-price');
+        const vatElement = document.getElementById('vat');
+        const discountElement = document.getElementById('discount');
+        const orderSummaryInput = document.getElementById('order-summary-input');
+        const totalPriceInput = document.getElementById('total-price-input');
+        const discountInput = document.getElementById('discount-input');
+        const discountMessage = document.getElementById('discount-message');
 
-    let totalPrice = 0;
-    let discount = 0;
-    let orderSummary = 'Bestellung:\n';
+        let totalPrice = 0;
+        let discount = 0;
+        let orderSummary = 'Bestellung:\n';
 
-    // Artikel in der Bestellung durchgehen
-    cart.forEach(item => {
-        const li = document.createElement('li');
-        li.innerHTML = `<img src="${item.image}" alt="${item.product}" style="width:50px;height:50px;vertical-align:middle;margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
-        orderList.appendChild(li);
-        totalPrice += item.quantity * item.price;
+        // Artikel in der Bestellung durchgehen
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
+            orderList.appendChild(li);
+            totalPrice += item.quantity * item.price;
 
-        // Bestellübersicht für das Formular
-        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-    });
+            // Bestellübersicht für das Formular
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+        });
 
-    // Rabattcodes und ihre Prozentsätze
-    const discountCodes = {
-        "RABATT10": 0.10, // 10% Rabatt
-        "RABATT20": 0.20  // 20% Rabatt
-    };
+        // Rabattcodes und ihre Prozentsätze
+        const discountCodes = {
+            "RABATT10": 0.10, // 10% Rabatt
+            "RABATT20": 0.20  // 20% Rabatt
+        };
 
-    // Funktion zum Anwenden des Rabattcodes
-    function applyDiscountCode() {
-        const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
-        
-        if (discountCodes[discountCode]) {
-            const discountRate = discountCodes[discountCode];
-            discount = totalPrice * discountRate;
-            totalPrice -= discount; // Rabatt abziehen
+        // Funktion zum Anwenden des Rabattcodes
+        function applyDiscountCode() {
+            const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
             
-            // Aktualisiere die Anzeige von MwSt und Gesamtpreis
-            const vat = totalPrice * 0.19;
-            const totalPriceWithVat = totalPrice + vat;
+            if (discountCodes[discountCode]) {
+                const discountRate = discountCodes[discountCode];
+                discount = totalPrice * discountRate;
+                totalPrice -= discount; // Rabatt abziehen
+                
+                // Aktualisiere die Anzeige von MwSt und Gesamtpreis
+                const vat = totalPrice * 0.19;
+                const totalPriceWithVat = totalPrice + vat;
 
-            discountElement.textContent = discount.toFixed(2);
-            vatElement.textContent = vat.toFixed(2);
-            totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
-            discountMessage.textContent = `Rabattcode angewendet: ${discountCode}`;
-            discountMessage.style.color = 'green';
+                discountElement.textContent = discount.toFixed(2);
+                vatElement.textContent = vat.toFixed(2);
+                totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
+                discountMessage.textContent = `Rabattcode angewendet: ${discountCode}`;
+                discountMessage.style.color = 'green';
 
-            // Aktualisiere die versteckten Formularfelder
-            totalPriceInput.value = totalPriceWithVat.toFixed(2); // Aktualisierter Gesamtpreis inkl. MwSt
-            discountInput.value = discount.toFixed(2); // Rabattbetrag
-        } else {
-            discountMessage.textContent = 'Ungültiger Rabattcode!';
-            discountMessage.style.color = 'red';
+                // Aktualisiere die versteckten Formularfelder
+                totalPriceInput.value = totalPriceWithVat.toFixed(2); // Aktualisierter Gesamtpreis inkl. MwSt
+                discountInput.value = discount.toFixed(2); // Rabattbetrag
+            } else {
+                discountMessage.textContent = 'Ungültiger Rabattcode!';
+                discountMessage.style.color = 'red';
+            }
         }
-    }
 
-    // MwSt von 19% berechnen
-    const vat = totalPrice * 0.19;
-    const totalPriceWithVat = totalPrice + vat;
+        // MwSt von 19% berechnen
+        const vat = totalPrice * 0.19;
+        const totalPriceWithVat = totalPrice + vat;
 
-    discountElement.textContent = '0.00';  // Angenommen, kein Rabatt vor Anwendung des Codes
-    vatElement.textContent = vat.toFixed(2);
-    totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
+        discountElement.textContent = '0.00';  // Angenommen, kein Rabatt vor Anwendung des Codes
+        vatElement.textContent = vat.toFixed(2);
+        totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
 
-    // Setze die Bestellübersicht, den Gesamtpreis und den Rabatt in die versteckten Formularfelder
-    orderSummaryInput.value = orderSummary;
-    totalPriceInput.value = totalPriceWithVat.toFixed(2); // Anfangspreis ohne Rabatt
-    discountInput.value = discount.toFixed(2);
+        // Setze die Bestellübersicht, den Gesamtpreis und den Rabatt in die versteckten Formularfelder
+        orderSummaryInput.value = orderSummary;
+        totalPriceInput.value = totalPriceWithVat.toFixed(2); // Anfangspreis ohne Rabatt
+        discountInput.value = discount.toFixed(2);
 
-    // Funktion zum Versenden der E-Mail mit EmailJS
-    function sendEmail(e) {
-        e.preventDefault(); // Verhindert das Standard-Submit des Formulars
+        // Funktion zum Versenden der E-Mail mit EmailJS
+        function sendEmail(e) {
+            e.preventDefault(); // Verhindert das Standard-Submit des Formulars
 
-        // EmailJS sendet das Formular
-        emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
-            .then(function(response) {
-                console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
-                alert('Bestellung erfolgreich gesendet!');
-                window.location.href = 'danke.html';  // Weiterleitung zur Dankeseite
-            }, function(error) {
-                console.log('Fehler beim Senden der E-Mail', error);
-                alert('Fehler beim Versenden der Bestellung.');
-            });
-    }
-</script>
+            // EmailJS sendet das Formular
+            emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
+                .then(function(response) {
+                    console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
+                    alert('Bestellung erfolgreich gesendet!');
+                    window.location.href = 'danke.html';  // Weiterleitung zur Dankeseite
+                }, function(error) {
+                    console.log('Fehler beim Senden der E-Mail', error);
+                    alert('Fehler beim Versenden der Bestellung.');
+                });
+        }
+    </script>
 </body>
 </html>
