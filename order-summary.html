@@ -96,9 +96,11 @@ function attachQuantityChangeListeners() {
                 cart[index].quantity = newQuantity;
                 localStorage.setItem('cart', JSON.stringify(cart)); // Save updated quantity
                 updateOrderSummary(); // Recalculate totals and re-render
+            }
         });
-    });
-}
+        });
+    };
+
 
 function deleteProduct(index) {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -194,8 +196,6 @@ async function saveOrderToSupabase(email, cart) {
         return false;
     }
     return true;
-}
-// Function to send the email and save the order
 }
 
 async function sendEmail(e) {
