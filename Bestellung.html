@@ -13,18 +13,26 @@
         .order h3 { color: #ff4081; margin: 0; }
         .order p { margin: 5px 0; }
         .total-price { font-weight: bold; color: #ff4081; 
-                     .webshop-btn {
-            display: inline-block;
-            background-color: #ff4081;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            text-decoration: none;
-            font-size: 1rem;
-        }
+.webshop-btn {
+    display: inline-block;
+    background-color: white;
+    color: #ff4081; /* Pink color for text */
+    padding: 10px 20px;
+    border: 2px solid #ff4081; /* Border to match text color */
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 0; /* Adjust as necessary */
+    text-decoration: none;
+    font-size: 1rem;
+    float: right; /* Aligns the button to the right side of the header */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+
+.webshop-btn:hover {
+    background-color: #ff4081; /* Pink background on hover */
+    color: white; /* White text on hover */
+}
+
     </style>
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
