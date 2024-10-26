@@ -73,9 +73,27 @@
             text-align: center;
             margin-top: 10px;
         }
+        .webshop-btn {
+            display: inline-block;
+            background-color: #ff4081;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        .webshop-btn:hover {
+            background-color: #e73370;
+        }
     </style>
 <body>
-    
+    <div class="container">
+    <!-- Webshop Button to go back to index.html -->
+    <a href="index.html" class="webshop-btn">Webshop</a>
+        
     <form id="profile-form">
         <label for="name">Name:</label>
         <input type="text" id="name" required><br>
