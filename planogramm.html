@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planogramm Ersteller</title>
     <style>
+        /* General Styling */
         body { 
             font-family: Arial, sans-serif; 
             text-align: center; 
@@ -201,7 +202,7 @@
         }
 
         // Export generatePDF function to global scope
-        window.generatePDF = function () {
+        window.generatePDF = async function () {
             const pdfRows = parseInt(document.getElementById('pdf-rows').value);
             const pdfColumns = parseInt(document.getElementById('pdf-columns').value);
             const { jsPDF } = window.jspdf;
@@ -258,7 +259,7 @@
             pdf.save('planogram.pdf');
         };
 
-        createGrid(3, 3);
+        createGrid(3, 3); // Initialize grid with default dimensions
     </script>
 </body>
 </html>
