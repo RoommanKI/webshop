@@ -466,38 +466,40 @@ window.generatePlanogramPDF = function generatePlanogramPDF() {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 10;
-    const cellWidth = (pageWidth - margin * (pdfColumns + 1)) / pdfColumns;
-    const cellHeight = cellWidth; // Keep images square for consistency
+
+    // Calculate cell dimensions based on the specified rows and columns
+    const cellWidth = (pageWidth - (pdfColumns + 1) * margin) / pdfColumns;
+    const cellHeight = (pageHeight - (pdfRows + 1) * margin) / pdfRows;
 
     let x = margin;
     let y = margin;
-    let currentRow = 0;
     let columnCount = 0;
+    let rowCount = 0;
 
     gridItems.forEach((img, index) => {
         const imgData = img.src;
 
-        // Add the image to the PDF
+        // Add the image to the PDF within the calculated cell dimensions
         pdf.addImage(imgData, "PNG", x, y, cellWidth, cellHeight);
 
-        // Update x-coordinate for the next image
+        // Update x-coordinate for the next image in the row
         x += cellWidth + margin;
         columnCount++;
 
-        // Move to next row if columns limit is reached
+        // If the column limit is reached, reset x and move to the next row
         if (columnCount >= pdfColumns) {
             x = margin;
             y += cellHeight + margin;
             columnCount = 0;
-            currentRow++;
+            rowCount++;
         }
 
-        // If the row limit is reached, add a new page
-        if (currentRow >= pdfRows) {
+        // If the row limit is reached, add a new page and reset coordinates
+        if (rowCount >= pdfRows) {
             pdf.addPage();
             x = margin;
             y = margin;
-            currentRow = 0;
+            rowCount = 0;
         }
     });
 
