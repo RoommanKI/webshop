@@ -100,11 +100,19 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s ease;
+            position: relative;
         }
 
         .grid-item img {
             max-width: 90%;
             max-height: 90%;
+        }
+
+        .quantity-input {
+            width: 50px;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
         }
 
         .grid-item:hover {
@@ -137,6 +145,9 @@
     <!-- Grid where images can be dropped -->
     <h2>Planogramm</h2>
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
+
+    <!-- Button to add selected items to the cart -->
+    <button onclick="addToCart()">In den Warenkorb hinzufügen</button>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -242,6 +253,31 @@
             event.preventDefault();
             const data = event.dataTransfer.getData('text/html');
             event.target.innerHTML = data;
+
+            // Add quantity input field
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'quantity-input';
+            input.value = 1;
+            input.min = 1;
+            event.target.appendChild(input);
+        }
+
+        // Collect items and quantities and add to cart
+        function addToCart() {
+            const items = [];
+            document.querySelectorAll('.grid-item').forEach(item => {
+                const img = item.querySelector('img');
+                const quantityInput = item.querySelector('.quantity-input');
+                if (img && quantityInput) {
+                    const product = {
+                        name: img.alt,
+                        quantity: parseInt(quantityInput.value),
+                    };
+                    items.push(product);
+                }
+            });
+            alert(`Produkte zum Warenkorb hinzugefügt: ${JSON.stringify(items)}`);
         }
     </script>
 </body>
