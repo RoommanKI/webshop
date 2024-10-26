@@ -303,17 +303,17 @@ async function fetchProductsByCategory(category, isLoggedIn) {
     return data;
 }
 
-// Function to dynamically display fetched products in the product list
+// Funktion zur dynamischen Anzeige von Produkten je nach Login-Status
 function displayProducts(products, isLoggedIn) {
     const container = document.getElementById('products-container');
-    container.innerHTML = ''; // Clear previously displayed products
+    container.innerHTML = ''; // Vorherige Produkte löschen
 
     if (products.length === 0) {
         container.innerHTML = '<p>Keine Produkte gefunden.</p>';
         return;
     }
 
-    // Loop through each product and generate HTML
+    // Produkte durchlaufen und HTML generieren
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.className = 'product';
@@ -326,22 +326,29 @@ function displayProducts(products, isLoggedIn) {
                 <p><strong>Beschreibung:</strong> ${product.description}</p>
         `;
 
-        // Show price only if the user is logged in
+        // Preis anzeigen, wenn der Nutzer eingeloggt ist
         if (isLoggedIn && product.price) {
-            productHTML += `<p class="price"><strong>Preis:</strong> $${product.price}</p>`;
+            productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
         }
 
-        productHTML += `
+        // Nur wenn eingeloggt: Menge-Eingabefeld und Button anzeigen
+        if (isLoggedIn) {
+            productHTML += `
                 <label for="quantity-${productId}" class="quantity-label">Menge:</label>
                 <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
                 <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
-            </div>
-        `;
+            `;
+        } else {
+            // Meldung anzeigen, wenn nicht eingeloggt
+            productHTML += `<p style="color: red;">Bitte melde dich an, um Produkte in den Warenkorb zu legen.</p>`;
+        }
 
+        productHTML += '</div>';
         productElement.innerHTML = productHTML;
-        container.appendChild(productElement);  // Add product to the container
+        container.appendChild(productElement);  // Produkt in den Container einfügen
     });
 }
+
 
 // Cart logic: add products to the cart and update cart display
 function addToCart(productName, quantityId, price) {
