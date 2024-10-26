@@ -208,6 +208,7 @@
 <!-- Add to Cart Button -->
 <button id="add-all-to-cart" onclick="addAllToCart()">Zum Warenkorb hinzufügen</button>
 
+
     <!-- Warenkorb Icon -->
     <div id="cart-icon">
         <i class="fas fa-shopping-cart"></i>
@@ -328,7 +329,7 @@ function drop(event) {
     const productName = event.dataTransfer.getData('product');
     const imageHTML = event.dataTransfer.getData('text/html');
 
-    // Add product image and a quantity input field
+    // Add product image and a quantity input field to the grid item
     event.target.innerHTML = `
         ${imageHTML}
         <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
@@ -337,6 +338,7 @@ function drop(event) {
     // Store the product name in a data attribute for later use
     event.target.setAttribute('data-product-name', productName);
 }
+
 
 // Assuming this is inside your drop function or wherever you have access to the drop target
 
@@ -364,7 +366,7 @@ targetElement.appendChild(addToCartButton);
 
 
 function addAllToCart() {
-    // Select all grid items with products
+    // Select all grid items that have products with quantity input
     const gridItems = document.querySelectorAll('.grid-item');
 
     gridItems.forEach(gridItem => {
@@ -381,10 +383,10 @@ function addAllToCart() {
         }
     });
 
-    // Optionally, show a message or update the cart display after adding all items
     alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
     updateCart();
 }
+
 
 
         // Warenkorb Management
