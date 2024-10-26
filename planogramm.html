@@ -34,8 +34,7 @@
             color: #555;
         }
 
-        form input[type="number"] {
-            width: 60px;
+        form input[type="number"], select {
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -125,11 +124,15 @@
         <button type="submit">Grid Erstellen</button>
     </form>
 
+    <!-- Category Filter Dropdown -->
+    <label for="category-filter">Kategorie:</label>
+    <select id="category-filter">
+        <option value="">Alle Kategorien</option>
+    </select>
+
     <!-- Product image selection area -->
     <h2>Produkte</h2>
-    <div class="product-images" id="product-images">
-        <!-- Product images will be loaded here from Supabase -->
-    </div>
+    <div class="product-images" id="product-images"></div>
 
     <!-- Grid where images can be dropped -->
     <h2>Planogramm</h2>
@@ -145,12 +148,40 @@
         const form = document.getElementById('grid-form');
         const gridContainer = document.getElementById('grid-container');
         const productImages = document.getElementById('product-images');
+        const categoryFilter = document.getElementById('category-filter');
 
-        // Fetch product images from Supabase
-        async function loadProductImages() {
+        // Fetch product categories from Supabase
+        async function loadCategories() {
             const { data, error } = await supabase
                 .from('products')
-                .select('name, image_url');
+                .select('category')
+                .neq('category', null);
+
+            if (error) {
+                console.error("Error fetching categories:", error);
+                return;
+            }
+
+            const uniqueCategories = [...new Set(data.map(item => item.category))];
+            uniqueCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        // Fetch product images based on category from Supabase
+        async function loadProductImages(category = '') {
+            productImages.innerHTML = ''; // Clear current images
+
+            let query = supabase.from('products').select('name, image_url');
+
+            if (category) {
+                query = query.eq('category', category);
+            }
+
+            const { data, error } = await query;
 
             if (error) {
                 console.error("Error fetching product images:", error);
@@ -168,7 +199,15 @@
             });
         }
 
+        // Load categories and initial product images
+        loadCategories();
         loadProductImages();
+
+        // Event listener for category change to filter products
+        categoryFilter.addEventListener('change', (e) => {
+            const selectedCategory = e.target.value;
+            loadProductImages(selectedCategory);
+        });
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
