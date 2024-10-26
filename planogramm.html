@@ -227,19 +227,41 @@
             const pdf = new jsPDF();
             const gridElement = document.getElementById('grid-container');
 
-            // Capture grid as image
-            const canvas = await html2canvas(gridElement, {
-                allowTaint: true,
-                useCORS: true
-            });
-            const imgData = canvas.toDataURL('image/png');
+            const items = gridElement.querySelectorAll(".grid-item");
+            const canvasItemsPerRow = parseInt(document.getElementById('columns').value);
 
-            // Page layout
-            const imgWidth = 180;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+            let pageRowCounter = 0;
+            let pageColumnCounter = 0;
+            let pageNumber = 1;
 
-            // Save the PDF
+            for (let i = 0; i < items.length; i++) {
+                // Skip empty grid cells
+                if (!items[i].innerHTML.trim()) continue;
+
+                const canvas = await html2canvas(items[i], {
+                    allowTaint: true,
+                    useCORS: true
+                });
+                const imgData = canvas.toDataURL('image/png');
+
+                const posX = 10 + (pageColumnCounter * 60);
+                const posY = 10 + (pageRowCounter * 60);
+
+                pdf.addImage(imgData, 'PNG', posX, posY, 50, 50);
+
+                pageColumnCounter++;
+                if (pageColumnCounter >= pdfColumns) {
+                    pageColumnCounter = 0;
+                    pageRowCounter++;
+                }
+                
+                if (pageRowCounter >= pdfRows) {
+                    pdf.addPage();
+                    pageRowCounter = 0;
+                    pageNumber++;
+                }
+            }
+
             pdf.save('planogram.pdf');
         };
     </script>
