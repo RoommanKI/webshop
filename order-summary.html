@@ -86,6 +86,9 @@
         <button class="btn" onclick="deleteOrder()">Bestellung löschen</button>
     </div>
 <script>
+
+let imageCache = {};
+
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
 });
@@ -116,20 +119,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const { data, error } = await supabase
         .from('products')
         .select('name, image_url')
-        .in('name', productNames); // Retrieve images for all products at once
+        .in('name', productNames);
 
     if (error) {
         console.error('Error fetching product images:', error);
-        return {}; // Return an empty object if there's an error
+        return {};
     }
 
-    const productImages = {};
     data.forEach(item => {
-        productImages[item.name] = item.image_url; // Map image URLs to product names
+        imageCache[item.name] = item.image_url; // Store image URLs in the cache
     });
 
-    return productImages;
+    return imageCache;
 }
+
 
 
 function loadCart() {
@@ -145,6 +148,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         orderList.innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
         return;
     }
+
+    // Populate image cache on the first load
+    await fetchProductImages(cart);
+    renderOrderSummary(cart);
+    attachQuantityChangeListeners();
+});
+
 
     const productImages = await fetchProductImages(cart);
     cart.forEach((item, index) => {
@@ -279,33 +289,32 @@ function sendEmail(e) {
 function updateOrderSummary() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const orderList = document.getElementById('order-list');
-    orderList.innerHTML = '';
+    orderList.innerHTML = ''; // Clear existing items
 
     let totalPrice = 0;
 
-    fetchProductImages(cart).then(productImages => {
-        cart.forEach((item, index) => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
-                <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
-                <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
-                <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
-            `;
-            orderList.appendChild(li);
-            totalPrice += item.quantity * item.price;
-        });
-
-        // Calculate and update VAT and total price display
-        const vat = totalPrice * 0.19;
-        const totalPriceWithVat = totalPrice + vat;
-        document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
-        document.getElementById('vat').textContent = vat.toFixed(2);
+    cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <img src="${imageCache[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
+            <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
+            <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
+            <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
+        `;
+        orderList.appendChild(li);
+        totalPrice += item.quantity * item.price;
     });
+
+    // Calculate and update VAT and total price display
+    const vat = totalPrice * 0.19;
+    const totalPriceWithVat = totalPrice + vat;
+    document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
+    document.getElementById('vat').textContent = vat.toFixed(2);
 
     // Reattach quantity change listeners for new DOM elements
     attachQuantityChangeListeners();
 }
+
 
     </script>
 </body>
