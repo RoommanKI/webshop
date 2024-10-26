@@ -5,28 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop - Grußkarten</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 
 <!-- Header -->
 <header>
-    <!-- Cart icon with counter -->
     <div id="cart-icon" class="cart">
         <i class="fas fa-shopping-cart"></i>
-        <span id="cart-count">0</span> <!-- Cart item count -->
+        <span id="cart-count">0</span>
     </div>
     <h1 style="margin: 0;">Webshop - Grußkarten</h1>
-
-    <!-- Buttons for opening modals -->
     <div class="header-buttons">
         <button id="registerBtn">Registrieren</button>
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
 
-<!-- Registration Modal -->
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeRegister">&times;</span>
@@ -46,7 +41,6 @@
     </div>
 </div>
 
-<!-- Login Modal -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeLogin">&times;</span>
@@ -164,53 +158,74 @@ function finalizeOrder() {
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
 </script>
+<!-- Supabase SDK Import -->
 <script type="module">
-// Import Supabase client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
 const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
 window.supabase = createClient(supabaseUrl, supabaseKey);
 </script>
 
 <script>
-// Registrierung
-document.getElementById('register-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-    const errorMessage = document.getElementById('register-error');
+document.addEventListener('DOMContentLoaded', function() {
+    // Event Listeners for Modals
+    document.getElementById('registerBtn').addEventListener('click', () => {
+        document.getElementById('registerModal').style.display = 'block';
+    });
 
-    try {
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (error) errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-        else alert('Registrierung erfolgreich! Bitte E-Mails überprüfen.');
-    } catch (err) {
-        errorMessage.textContent = `Fehler: ${err.message}`;
-    }
-});
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        document.getElementById('loginModal').style.display = 'block';
+    });
 
-// Login
-document.getElementById('login-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-    const loginErrorMessage = document.getElementById('login-error');
+    document.getElementById('closeRegister').addEventListener('click', () => {
+        document.getElementById('registerModal').style.display = 'none';
+    });
 
-    try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-        else {
-            localStorage.setItem('loggedIn', 'true');
-            alert('Anmeldung erfolgreich!');
-            location.reload();
+    document.getElementById('closeLogin').addEventListener('click', () => {
+        document.getElementById('loginModal').style.display = 'none';
+    });
+
+    // Registrierung
+    document.getElementById('register-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const errorMessage = document.getElementById('register-error');
+
+        try {
+            const { error } = await supabase.auth.signUp({ email, password });
+            if (error) errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+            else alert('Registrierung erfolgreich! Bitte E-Mails überprüfen.');
+        } catch (err) {
+            errorMessage.textContent = `Fehler: ${err.message}`;
         }
-    } catch (err) {
-        loginErrorMessage.textContent = `Fehler: ${err.message}`;
-    }
+    });
+
+    // Login
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const loginErrorMessage = document.getElementById('login-error');
+
+        try {
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+            else {
+                localStorage.setItem('loggedIn', 'true');
+                alert('Anmeldung erfolgreich!');
+                location.reload();
+            }
+        } catch (err) {
+            loginErrorMessage.textContent = `Fehler: ${err.message}`;
+        }
+    });
 });
+</script>
+
 
 // Produktliste laden
+    <script>
 document.addEventListener('DOMContentLoaded', async function() {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
     const products = await fetchProducts(isLoggedIn);
