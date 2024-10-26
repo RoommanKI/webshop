@@ -66,6 +66,24 @@ header {
     display: flex;
     gap: 10px;
 }
+.planogram-btn {
+    display: inline-block;
+    background-color: white;
+    color: #ff4081;
+    padding: 10px 20px;
+    border: 2px solid #ff4081;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-left: 10px; /* Space between profile icon and button */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.planogram-btn:hover {
+    background-color: #ff4081;
+    color: white;
+}
 
 /* Cart icon and notification styling */
 .cart {
