@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planogramm Ersteller</title>
     <style>
-        /* General Styling */
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            background-color: #f9fafb; 
-            color: #333; 
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9fafb;
+            color: #333;
         }
 
         h1 {
@@ -81,7 +80,6 @@
 
         #grid-container {
             margin: 30px auto;
-            padding: 10px;
             display: grid;
             gap: 8px;
             max-width: 90%;
@@ -110,6 +108,17 @@
 
         .grid-item:hover {
             background-color: #f0f8ff;
+        }
+
+        .quantity-input {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: 60px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            text-align: center;
         }
 
         /* Warenkorb Styling */
@@ -217,7 +226,6 @@
         const productImages = document.getElementById('product-images');
         const categoryFilter = document.getElementById('category-filter');
 
-        // Fetch product categories from Supabase
         async function loadCategories() {
             const { data, error } = await supabase
                 .from('products')
@@ -238,9 +246,8 @@
             });
         }
 
-        // Fetch product images based on category from Supabase
         async function loadProductImages(category = '') {
-            productImages.innerHTML = ''; // Clear current images
+            productImages.innerHTML = '';
 
             let query = supabase.from('products').select('name, image_url');
 
@@ -266,11 +273,9 @@
             });
         }
 
-        // Load categories and initial product images
         loadCategories();
         loadProductImages();
 
-        // Event listener for category change to filter products
         categoryFilter.addEventListener('change', (e) => {
             const selectedCategory = e.target.value;
             loadProductImages(selectedCategory);
@@ -299,7 +304,7 @@
 
         function drag(event) {
             event.dataTransfer.setData('text/html', event.target.outerHTML);
-            event.dataTransfer.setData('product', event.target.alt); // Track product name
+            event.dataTransfer.setData('product', event.target.alt);
         }
 
         function allowDrop(event) {
@@ -310,14 +315,14 @@
             event.preventDefault();
             const productName = event.dataTransfer.getData('product');
             const imageHTML = event.dataTransfer.getData('text/html');
-            event.target.innerHTML = imageHTML; // Add image to grid cell
+            event.target.innerHTML = imageHTML;
 
             if (productName) {
                 addToCart(productName);
             }
         }
 
-        // Cart Management
+        // Warenkorb Management
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
         function addToCart(productName) {
