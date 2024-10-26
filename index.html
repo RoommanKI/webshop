@@ -84,7 +84,7 @@
 <section id="events" class="product-list category" style="display: none;"><h3>Eventkarten</h3></section>
 
 <!-- Warenkorb-Popup -->
-<div id="cart-popup" style="display: none;">
+<div id="cart-popup" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1px solid #ccc; border-radius: 4px; padding: 20px; z-index: 1000;">
     <h3>Ihr Warenkorb</h3>
     <div id="cart-content">
         <p>Ihr Warenkorb ist leer.</p>
@@ -241,12 +241,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add this line to bind the click event to the cart icon
     document.getElementById('cart-icon').addEventListener('click', function() {
         console.log("Cart icon clicked");
         toggleCart();
     });
 });
+
+function toggleCart() {
+    console.log("Toggling cart");
+    const cartPopup = document.getElementById('cart-popup');
+    cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
+}
 
 // Function to toggle the cart popup visibility
 function toggleCart() {
