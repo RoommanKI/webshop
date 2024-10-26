@@ -115,7 +115,6 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <h1>Planogramm Ersteller</h1>
@@ -146,7 +145,7 @@
 
     <!-- Grid where images can be dropped -->
     <h2>Planogramm</h2>
-    <div id="grid-container" class="grid"></div>
+    <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -159,7 +158,6 @@
         const gridContainer = document.getElementById('grid-container');
         const productImages = document.getElementById('product-images');
 
-        // Fetch product images from Supabase
         async function loadProductImages() {
             const { data, error } = await supabase
                 .from('products')
@@ -219,51 +217,45 @@
         }
 
         // Export generatePDF function to global scope
-        window.generatePDF = async function generatePDF() {
+        window.generatePDF = function () {
             const pdfRows = parseInt(document.getElementById('pdf-rows').value);
             const pdfColumns = parseInt(document.getElementById('pdf-columns').value);
-
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF();
-            const gridElement = document.getElementById('grid-container');
+            
+            const gridItems = document.querySelectorAll('#grid-container .grid-item img');
+            const images = Array.from(gridItems).map(img => img.src);
+            
+            const imageWidth = 180 / pdfColumns;
+            const imageHeight = 270 / pdfRows;
+            let xPos = 10;
+            let yPos = 10;
+            let imgCount = 0;
 
-            const items = gridElement.querySelectorAll(".grid-item");
-            const canvasItemsPerRow = parseInt(document.getElementById('columns').value);
+            images.forEach((imgSrc, index) => {
+                if (imgSrc) {
+                    pdf.addImage(imgSrc, 'JPEG', xPos, yPos, imageWidth, imageHeight);
+                    xPos += imageWidth;
 
-            let pageRowCounter = 0;
-            let pageColumnCounter = 0;
-            let pageNumber = 1;
+                    imgCount++;
+                    if (imgCount % pdfColumns === 0) {
+                        xPos = 10;
+                        yPos += imageHeight;
+                    }
 
-            for (let i = 0; i < items.length; i++) {
-                // Skip empty grid cells
-                if (!items[i].innerHTML.trim()) continue;
-
-                const canvas = await html2canvas(items[i], {
-                    allowTaint: true,
-                    useCORS: true
-                });
-                const imgData = canvas.toDataURL('image/png');
-
-                const posX = 10 + (pageColumnCounter * 60);
-                const posY = 10 + (pageRowCounter * 60);
-
-                pdf.addImage(imgData, 'PNG', posX, posY, 50, 50);
-
-                pageColumnCounter++;
-                if (pageColumnCounter >= pdfColumns) {
-                    pageColumnCounter = 0;
-                    pageRowCounter++;
+                    if (imgCount % (pdfRows * pdfColumns) === 0 && index < images.length - 1) {
+                        pdf.addPage();
+                        xPos = 10;
+                        yPos = 10;
+                    }
                 }
-                
-                if (pageRowCounter >= pdfRows) {
-                    pdf.addPage();
-                    pageRowCounter = 0;
-                    pageNumber++;
-                }
-            }
+            });
 
             pdf.save('planogram.pdf');
         };
+        
+        // Default grid creation for 3x3
+        createGrid(3, 3);
     </script>
 </body>
 </html>
