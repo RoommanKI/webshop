@@ -100,9 +100,6 @@ function toggleCart() {
 // Cart logic: add products to cart, update cart display
 let cart = [];
 
-// Example usage:
-addToCart('Product Name', 'quantityId', 29.99, 'https://your-supabase-url/storage/v1/object/public/images/product-image.jpg');
-
 // Add to cart function:
 function addToCart(productName, quantityId, price, imageUrl) {
     const quantity = parseInt(document.getElementById(quantityId).value);
