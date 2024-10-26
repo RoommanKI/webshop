@@ -182,11 +182,11 @@
             e.preventDefault();
             const rows = document.getElementById('rows').value;
             const columns = document.getElementById('columns').value;
-            createGrid(rows, columns);
+            createGrid(columns, rows); // Swapped rows and columns here
         });
 
         // Function to create the grid based on user input
-        function createGrid(rows, columns) {
+        function createGrid(columns, rows) {
             gridContainer.innerHTML = ''; // Clear any existing grid
             gridContainer.style.gridTemplateColumns = `repeat(${columns}, 100px)`;
             gridContainer.style.gridTemplateRows = `repeat(${rows}, 100px)`;
