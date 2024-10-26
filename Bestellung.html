@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestellungen</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
+        header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
+        .orders-container { max-width: 800px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .order { border-bottom: 1px solid #ddd; padding: 10px 0; }
+        .order:last-child { border-bottom: none; }
+        .order h3 { color: #ff4081; margin: 0; }
+        .order p { margin: 5px 0; }
+        .total-price { font-weight: bold; color: #ff4081; }
+    </style>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        // Supabase setup
+        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Replace with your actual Supabase anon key
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        // Function to fetch orders from Supabase
+        async function fetchOrders() {
+            const email = localStorage.getItem('userEmail'); // Assuming user's email is stored in local storage
+            if (!email) {
+                alert("Bitte melden Sie sich an, um Ihre Bestellungen zu sehen.");
+                return;
+            }
+
+            // Fetch orders for the user's email
+            const { data: orders, error } = await supabase
+                .from('orders')
+                .select('id, created_at, products, total_price')
+                .eq('email', email)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Fehler beim Abrufen der Bestellungen:", error);
+                alert("Fehler beim Abrufen Ihrer Bestellungen.");
+                return;
+            }
+
+            displayOrders(orders);
+        }
+
+        // Function to display orders on the page
+        function displayOrders(orders) {
+            const ordersContainer = document.getElementById('orders-container');
+            ordersContainer.innerHTML = ''; // Clear existing content
+
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = '<p>Sie haben keine Bestellungen.</p>';
+                return;
+            }
+
+            orders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.classList.add('order');
+                
+                const date = new Date(order.created_at).toLocaleDateString("de-DE");
+
+                orderElement.innerHTML = `
+                    <h3>Bestellung #${order.id}</h3>
+                    <p>Datum: ${date}</p>
+                    <div class="products">
+                        ${order.products.map(product => `
+                            <p>${product.quantity}x Produkt ID: ${product.product_id}</p>
+                        `).join('')}
+                    </div>
+                    <p class="total-price">Gesamtpreis: ${order.total_price.toFixed(2)} €</p>
+                `;
+
+                ordersContainer.appendChild(orderElement);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchOrders);
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Ihre Bestellungen</h1>
+    </header>
+    <div class="orders-container" id="orders-container">
+        <p>Bestellungen werden geladen...</p>
+    </div>
+</body>
+</html>
