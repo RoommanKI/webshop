@@ -443,40 +443,55 @@ window.finalizeOrder = function finalizeOrder() {
             cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
         });
 
-window.generatePlanogramPDF = async function generatePlanogramPDF() {
-    const gridContainer = document.getElementById("grid-container");
-    const rows = Array.from(gridContainer.children);
-
+window.generatePlanogramPDF = function generatePlanogramPDF() {
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4"
-    });
-    const pageWidth = 190;  // Width in mm
-    const pageHeight = 280; // Height in mm
+    const pdf = new jsPDF("portrait", "mm", "a4");
+    const gridContainer = document.getElementById("grid-container");
+    const gridItems = gridContainer.querySelectorAll(".grid-item img"); // Only select images
 
-    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-        const row = rows[rowIndex];
-        row.style.border = "none"; 
+    // Page settings
+    const pageWidth = 190; // Width of the PDF page in mm
+    const margin = 10;
+    const cellWidth = 40; // Width of each image cell in the PDF
+    const cellHeight = 40; // Height of each image cell in the PDF
 
-        const canvas = await html2canvas(row, {
-            scale: 2,
-            backgroundColor: null
-        });
+    let x = margin;
+    let y = margin;
+    let itemsPerRow = 4; // Customize this for the number of images per row
+    let rowCount = 0;
 
-        const imgData = canvas.toDataURL("image/png");
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    // Loop through each image in the grid
+    gridItems.forEach((img, index) => {
+        const imgUrl = img.src;
+        
+        // Load image data and add to PDF
+        const imgData = imgUrl;
 
-        if (rowIndex !== 0) {
-            pdf.addPage();
+        // Add the image to the PDF
+        pdf.addImage(imgData, "PNG", x, y, cellWidth, cellHeight);
+
+        // Update x-coordinate for next image
+        x += cellWidth + margin;
+
+        // Move to next row if items per row is reached
+        if ((index + 1) % itemsPerRow === 0) {
+            x = margin;
+            y += cellHeight + margin;
+            rowCount++;
         }
-        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-    }
 
+        // Add a new page if page limit is reached
+        if (y + cellHeight + margin > pdf.internal.pageSize.getHeight() - margin) {
+            pdf.addPage();
+            x = margin;
+            y = margin;
+            rowCount = 0;
+        }
+    });
+
+    // Save the PDF
     pdf.save("Planogramm.pdf");
-}
+};
 
 
     </script>
