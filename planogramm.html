@@ -20,7 +20,6 @@
             text-transform: uppercase;
         }
 
-        /* Form Styling */
         form {
             display: flex;
             gap: 10px;
@@ -115,6 +114,8 @@
             background-color: #f0f8ff;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <h1>Planogramm Ersteller</h1>
@@ -128,6 +129,15 @@
         <button type="submit">Grid Erstellen</button>
     </form>
 
+    <!-- Form to pick rows and columns for PDF -->
+    <form id="pdf-form">
+        <label for="pdf-rows">PDF Reihen:</label>
+        <input type="number" id="pdf-rows" min="1" value="3" required>
+        <label for="pdf-columns">PDF Spalten:</label>
+        <input type="number" id="pdf-columns" min="1" value="3" required>
+        <button type="button" onclick="generatePDF()">PDF Erstellen</button>
+    </form>
+
     <!-- Product image selection area -->
     <h2>Produkte</h2>
     <div class="product-images" id="product-images">
@@ -138,11 +148,9 @@
     <h2>Planogramm</h2>
     <div id="grid-container" class="grid"></div>
 
-    <!-- Supabase and custom scripts as modules -->
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.18.0/+esm';
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-        // Initialize Supabase client
         const SUPABASE_URL = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -162,32 +170,28 @@
                 return;
             }
 
-            // Display product images in the product selection area
             data.forEach(product => {
                 const img = document.createElement('img');
                 img.src = product.image_url;
                 img.alt = product.name;
-                img.title = product.name; // Show name on hover
+                img.title = product.name;
                 img.draggable = true;
                 img.addEventListener('dragstart', drag);
                 productImages.appendChild(img);
             });
         }
 
-        // Call function to load images from Supabase
         loadProductImages();
 
-        // Form submit to create the grid
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const rows = document.getElementById('rows').value;
             const columns = document.getElementById('columns').value;
-            createGrid(rows, columns); // Swapped rows and columns here
+            createGrid(columns, rows);
         });
 
-        // Function to create the grid based on user input
         function createGrid(columns, rows) {
-            gridContainer.innerHTML = ''; // Clear any existing grid
+            gridContainer.innerHTML = '';
             gridContainer.style.gridTemplateColumns = `repeat(${columns}, 100px)`;
             gridContainer.style.gridTemplateRows = `repeat(${rows}, 100px)`;
 
@@ -200,7 +204,6 @@
             }
         }
 
-        // Drag and drop events for product images
         function drag(event) {
             event.dataTransfer.setData('text/html', event.target.outerHTML);
         }
@@ -213,6 +216,29 @@
             event.preventDefault();
             const data = event.dataTransfer.getData('text/html');
             event.target.innerHTML = data;
+        }
+
+        async function generatePDF() {
+            const pdfRows = parseInt(document.getElementById('pdf-rows').value);
+            const pdfColumns = parseInt(document.getElementById('pdf-columns').value);
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            const gridElement = document.getElementById('grid-container');
+
+            // Capture grid as image
+            const canvas = await html2canvas(gridElement);
+            const imgData = canvas.toDataURL('image/png');
+
+            // Page layout
+            const imgWidth = 180;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            let yPos = 10;
+
+            pdf.addImage(imgData, 'PNG', 10, yPos, imgWidth, imgHeight);
+
+            // Save or open the PDF
+            pdf.save('planogram.pdf');
         }
     </script>
 </body>
