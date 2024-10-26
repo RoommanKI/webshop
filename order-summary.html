@@ -137,20 +137,51 @@ function loadCart() {
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
-    const cart = loadCart();
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const orderList = document.getElementById('order-list');
+    orderList.innerHTML = '';
+
     if (cart.length === 0) {
         orderList.innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
         return;
     }
 
     const productImages = await fetchProductImages(cart);
-    cart.forEach(item => {
+    cart.forEach((item, index) => {
         const li = document.createElement('li');
-        li.innerHTML = `<img src="${productImages[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
+        li.innerHTML = `
+            <img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
+            <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
+            <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
+            <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
+        `;
         orderList.appendChild(li);
     });
+
+    attachQuantityChangeListeners();
 });
+
+function attachQuantityChangeListeners() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const newQuantity = parseInt(this.value);
+            if (newQuantity > 0) {
+                cart[index].quantity = newQuantity;
+                localStorage.setItem('cart', JSON.stringify(cart)); // Save updated quantity
+                updateOrderSummary(); // Recalculate totals and re-render
+            }
+        });
+    });
+}
+
+function deleteProduct(index) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1); // Remove item at the specified index
+    localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+    updateOrderSummary(); // Re-render the order summary
+}
 
 
 
@@ -244,6 +275,36 @@ function sendEmail(e) {
             console.log('Fehler beim Senden der E-Mail', error);
             alert('Fehler beim Versenden der Bestellung.');
         });
+}
+function updateOrderSummary() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const orderList = document.getElementById('order-list');
+    orderList.innerHTML = '';
+
+    let totalPrice = 0;
+
+    fetchProductImages(cart).then(productImages => {
+        cart.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
+                <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
+                <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
+                <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
+            `;
+            orderList.appendChild(li);
+            totalPrice += item.quantity * item.price;
+        });
+
+        // Calculate and update VAT and total price display
+        const vat = totalPrice * 0.19;
+        const totalPriceWithVat = totalPrice + vat;
+        document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
+        document.getElementById('vat').textContent = vat.toFixed(2);
+    });
+
+    // Reattach quantity change listeners for new DOM elements
+    attachQuantityChangeListeners();
 }
 
     </script>
