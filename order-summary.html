@@ -177,7 +177,53 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
 }
+// Function to save the order to Supabase
+async function saveOrderToSupabase(email, cart) {
+    const orderData = cart.map(item => ({
+        email: email,
+        product_id: item.product,   // Assuming 'product' is the product ID
+        quantity: item.quantity,
+        price: item.price
+    }));
 
+    const { error } = await supabase.from('orders').insert(orderData);
+
+    if (error) {
+        console.error('Error saving order to Supabase:', error);
+        alert('Fehler beim Speichern der Bestellung.');
+        return false;
+    }
+    return true;
+}
+
+// Function to send the email and save the order
+async function sendEmail(e) {
+    e.preventDefault();
+
+    const cart = loadCart();
+    const email = document.getElementById('email').value;
+
+    if (cart.length === 0) {
+        alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
+        return;
+    }
+
+    // Save the order to Supabase first
+    const orderSaved = await saveOrderToSupabase(email, cart);
+    if (!orderSaved) return;
+
+    // Send the order form via EmailJS
+    emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
+        .then(response => {
+            console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
+            alert('Bestellung erfolgreich gesendet!');
+            window.location.href = 'danke.html'; // Redirect to a thank-you page
+        })
+        .catch(error => {
+            console.log('Fehler beim Senden der E-Mail', error);
+            alert('Fehler beim Versenden der Bestellung.');
+        });
+}
 document.addEventListener('DOMContentLoaded', async function() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const orderList = document.getElementById('order-list');
