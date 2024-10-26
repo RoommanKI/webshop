@@ -218,7 +218,8 @@
             event.target.innerHTML = data;
         }
 
-        async function generatePDF() {
+        // Export generatePDF function to global scope
+        window.generatePDF = async function generatePDF() {
             const pdfRows = parseInt(document.getElementById('pdf-rows').value);
             const pdfColumns = parseInt(document.getElementById('pdf-columns').value);
 
@@ -239,7 +240,7 @@
 
             // Save or open the PDF
             pdf.save('planogram.pdf');
-        }
+        };
     </script>
 </body>
 </html>
