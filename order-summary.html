@@ -5,184 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bestellübersicht</title>
     <style>
-        /* Your CSS code here remains unchanged */
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
+        header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
+        .order-summary { max-width: 600px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .order-summary h2 { color: #ff4081; }
+        .order-summary ul { list-style: none; padding: 0; }
+        .order-summary li { margin: 10px 0; }
+        .total-price, .vat-price, .discount-price { font-size: 1.2rem; color: #ff4081; margin-top: 10px; }
+        .btn { background-color: #ff4081; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        .discount-section { margin-top: 20px; }
+        .discount-input { width: 100%; padding: 10px; margin-top: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        .error-message { color: red; margin-top: 5px; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-        const supabaseKey = 'YOUR_SUPABASE_KEY';
-        const supabase = createClient(supabaseUrl, supabaseKey);
-
+    <script type="text/javascript">
         (function() {
             emailjs.init("XM0F9TmvuK3-NruDz");  // Dein Public Key
         })();
-
-        let imageCache = {};
-
-        // Load cart from local storage
-        function loadCart() {
-            return JSON.parse(localStorage.getItem('cart')) || [];
-        }
-
-        // Fetch product images from Supabase
-        async function fetchProductImages(products) {
-            const productNames = products.map(product => product.product);
-            const { data, error } = await supabase
-                .from('products')
-                .select('name, image_url')
-                .in('name', productNames);
-
-            if (error) {
-                console.error('Error fetching product images:', error);
-                return {};
-            }
-
-            data.forEach(item => {
-                imageCache[item.name] = item.image_url;
-            });
-
-            return imageCache;
-        }
-
-        // Save order to Supabase
-        async function saveOrderToSupabase(email, cart) {
-            const orderData = cart.map(item => ({
-                email: email,
-                product_id: item.product,
-                quantity: item.quantity,
-                price: item.price
-            }));
-
-            const { error } = await supabase.from('orders').insert(orderData);
-
-            if (error) {
-                console.error('Error saving order to Supabase:', error);
-                alert('Fehler beim Speichern der Bestellung.');
-                return false;
-            }
-            return true;
-        }
-
-        // Send email with EmailJS
-        async function sendEmail(e) {
-            e.preventDefault();
-
-            const cart = loadCart();
-            const email = document.getElementById('email').value;
-
-            if (cart.length === 0) {
-                alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
-                return;
-            }
-
-            const orderSaved = await saveOrderToSupabase(email, cart);
-            if (!orderSaved) return;
-
-            emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
-                .then(response => {
-                    console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
-                    alert('Bestellung erfolgreich gesendet!');
-                    window.location.href = 'danke.html';
-                })
-                .catch(error => {
-                    console.log('Fehler beim Senden der E-Mail', error);
-                    alert('Fehler beim Versenden der Bestellung.');
-                });
-        }
-
-        // Render the order summary
-        function renderOrderSummary(cart) {
-            const orderList = document.getElementById('order-list');
-            orderList.innerHTML = '';
-
-            cart.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <img src="${imageCache[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; margin-right:10px;">
-                    <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
-                    <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
-                    <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
-                `;
-                orderList.appendChild(li);
-            });
-
-            attachQuantityChangeListeners();
-        }
-
-        // Attach quantity change listeners
-        function attachQuantityChangeListeners() {
-            const cart = loadCart();
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    const newQuantity = parseInt(this.value);
-                    if (newQuantity > 0) {
-                        cart[index].quantity = newQuantity;
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        updateOrderSummary();
-                    }
-                });
-            });
-        }
-
-        // Delete a product from the cart
-        function deleteProduct(index) {
-            const cart = loadCart();
-            cart.splice(index, 1);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateOrderSummary();
-        }
-
-        // Update order summary totals
-        function updateOrderSummary() {
-            const cart = loadCart();
-            renderOrderSummary(cart);
-
-            let totalPrice = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
-            const vat = totalPrice * 0.19;
-            const totalPriceWithVat = totalPrice + vat;
-
-            document.getElementById('vat').textContent = vat.toFixed(2);
-            document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
-        }
-
-        // Apply discount code
-        function applyDiscountCode() {
-            const cart = loadCart();
-            let totalPrice = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
-            const discountCodes = {
-                "RABATT10": 0.10,
-                "RABATT20": 0.20
-            };
-            const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
-            const discountRate = discountCodes[discountCode] || 0;
-            const discount = totalPrice * discountRate;
-
-            totalPrice -= discount;
-            const vat = totalPrice * 0.19;
-            const totalPriceWithVat = totalPrice + vat;
-
-            document.getElementById('discount').textContent = discount.toFixed(2);
-            document.getElementById('vat').textContent = vat.toFixed(2);
-            document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
-            document.getElementById('discount-message').textContent = discountRate ? `Rabattcode angewendet: ${discountCode}` : 'Ungültiger Rabattcode!';
-        }
-
-        // Initial load
-        document.addEventListener('DOMContentLoaded', async function() {
-            const cart = loadCart();
-            const savedEmail = localStorage.getItem('userEmail');
-            if (savedEmail) document.getElementById('email').value = savedEmail;
-
-            if (cart.length > 0) {
-                await fetchProductImages(cart);
-                renderOrderSummary(cart);
-            } else {
-                document.getElementById('order-list').innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
-            }
-        });
-    </script>
+    function loadCart() {
+        return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+</script>
 </head>
 <body>
     <header>
