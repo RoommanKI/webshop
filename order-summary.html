@@ -86,6 +86,21 @@
         <button class="btn" onclick="deleteOrder()">Bestellung löschen</button>
     </div>
 <script>
+function attachQuantityChangeListeners() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const newQuantity = parseInt(this.value);
+            if (newQuantity > 0) {
+                cart[index].quantity = newQuantity;
+                localStorage.setItem('cart', JSON.stringify(cart)); // Save updated quantity
+                updateOrderSummary(); // Recalculate totals and re-render
+            }
+        });
+    });
+}
+
 function renderOrderSummary(cart) {
     const orderList = document.getElementById('order-list');
     orderList.innerHTML = ''; // Clear existing items
