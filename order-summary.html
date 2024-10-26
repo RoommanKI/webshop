@@ -57,10 +57,11 @@
                 <input type="text" id="name" name="Name" required>
             </div>
 
-            <div class="form-group">
-                <label for="email">E-Mail *</label>
-                <input type="email" id="email" name="E-Mail" required>
-            </div>
+<div class="form-group" style="display: none;"> <!-- Hide this field -->
+    <label for="email">E-Mail *</label>
+    <input type="email" id="email" name="E-Mail" required>
+</div>
+
 
             <div class="form-group">
                 <label for="address">Adresse</label>
@@ -94,6 +95,13 @@ function deleteOrder() {
     alert("Ihre Bestellung wurde gelöscht.");
     window.location.href = 'index.html';
 }
+document.addEventListener('DOMContentLoaded', function() {
+    // Other DOMContentLoaded actions
+    const savedEmail = localStorage.getItem('userEmail');
+    if (savedEmail) {
+        document.getElementById('email').value = savedEmail; // Autofill the hidden email field
+    }
+});
 
 </script>
 <!-- Supabase SDK Import -->
