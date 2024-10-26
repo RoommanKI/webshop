@@ -207,6 +207,7 @@
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
 <!-- Add to Cart Button -->
 <button id="add-all-to-cart" onclick="addAllToCart()">Zum Warenkorb hinzufügen</button>
+<button id="generate-pdf" onclick="generatePlanogramPDF()">Planogramm als PDF speichern</button>
 
 
     <!-- Warenkorb Icon -->
@@ -439,6 +440,48 @@ window.finalizeOrder = function finalizeOrder() {
             const cartPopup = document.getElementById('cart-popup');
             cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
         });
+
+        async function generatePlanogramPDF() {
+    const gridContainer = document.getElementById("grid-container");
+    const rows = Array.from(gridContainer.children);
+
+    // Define PDF dimensions and initialize jsPDF
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+    });
+    const pageWidth = 190;  // Width in mm
+    const pageHeight = 280; // Height in mm
+
+    // Loop through rows and capture each row as an image for each page
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        const row = rows[rowIndex];
+        row.style.border = "none"; // Optional styling for PDF appearance
+
+        // Use html2canvas to capture each row
+        const canvas = await html2canvas(row, {
+            scale: 2, // Scale up for higher resolution
+            backgroundColor: null
+        });
+
+        // Add the canvas image to the PDF
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        // Check if we need a new page
+        if (rowIndex !== 0) {
+            pdf.addPage();
+        }
+        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+    }
+
+    // Save the PDF
+    pdf.save("Planogramm.pdf");
+}
+
     </script>
 </body>
 </html>
