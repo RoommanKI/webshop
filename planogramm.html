@@ -416,19 +416,22 @@ function addToCart(productName, quantity) {
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
-        function clearCart() {
-            cart = [];
-            updateCart();
-            localStorage.removeItem('cart');
-        }
+// Define clearCart in the global scope
+window.clearCart = function clearCart() {
+    cart = [];
+    updateCart();
+    localStorage.removeItem('cart');
+};
 
-        function finalizeOrder() {
-            if (cart.length === 0) {
-                alert("Der Warenkorb ist leer.");
-                return;
-            }
-            window.location.href = 'order-summary.html';
-        }
+// Define finalizeOrder in the global scope
+window.finalizeOrder = function finalizeOrder() {
+    if (cart.length === 0) {
+        alert("Der Warenkorb ist leer.");
+        return;
+    }
+    window.location.href = 'order-summary.html';
+};
+
 
         document.getElementById('cart-icon').addEventListener('click', () => {
             const cartPopup = document.getElementById('cart-popup');
