@@ -107,16 +107,18 @@ function addToCart(productName, quantityId, price) {
     if (quantity > 0) {
         const item = cart.find(item => item.product === productName);
         if (item) {
-            item.quantity += quantity; // If the product is already in the cart, update quantity
+            item.quantity += quantity;
         } else {
-            cart.push({ product: productName, quantity, price }); // Add new item to cart
+            cart.push({ product: productName, quantity, price });
         }
         updateCart();
+        localStorage.setItem('cart', JSON.stringify(cart)); // Save cart to localStorage
         alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
     } else {
         alert("Bitte eine gültige Anzahl eingeben.");
     }
 }
+
 
 // Update the cart display and counter
 function updateCart() {
@@ -137,7 +139,6 @@ function updateCart() {
     cartContent.innerHTML = cartHTML;
 }
 
-// Finalize the order and clear the cart
 function finalizeOrder() {
     if (cart.length === 0) {
         alert('Ihr Warenkorb ist leer.');
@@ -152,9 +153,11 @@ function finalizeOrder() {
 
     cart = []; // Clear the cart after the order
     updateCart();
-    toggleCart();  // Close the cart popup
+    toggleCart();
+    localStorage.removeItem('cart'); // Clear cart from localStorage
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
+
 </script>
 <!-- Supabase SDK Import -->
 <script type="module">
