@@ -93,14 +93,19 @@
 </div>
 
 <script>
+function saveCartToLocalStorage() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+    
+    
 // Function to toggle the cart popup visibility
 function toggleCart() {
     const cartPopup = document.getElementById('cart-popup');
     cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
 }
 
-// Cart logic: add products to cart, update cart display
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
 
 function addToCart(productName, quantityId, price) {
     const quantity = parseInt(document.getElementById(quantityId).value);
@@ -112,7 +117,7 @@ function addToCart(productName, quantityId, price) {
             cart.push({ product: productName, quantity, price });
         }
         updateCart();
-        localStorage.setItem('cart', JSON.stringify(cart)); // Save cart to localStorage
+        saveCartToLocalStorage(); // Save cart to localStorage
         alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
     } else {
         alert("Bitte eine gültige Anzahl eingeben.");
