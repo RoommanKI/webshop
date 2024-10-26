@@ -339,24 +339,28 @@ function drop(event) {
 }
 
 
-    // Create the "Zum Warenkorb hinzufügen" button
-    const addToCartButton = document.createElement('button');
-    addToCartButton.textContent = "Zum Warenkorb hinzufügen";
-    addToCartButton.style.position = "absolute";
-    addToCartButton.style.bottom = "10px";
-    addToCartButton.style.right = "10px";
-    addToCartButton.addEventListener('click', () => {
-        const quantityInput = event.target.querySelector('.quantity-input');
-        const quantity = parseInt(quantityInput.value);
+// Create the "Zum Warenkorb hinzufügen" button
+const addToCartButton = document.createElement('button');
+addToCartButton.textContent = "Zum Warenkorb hinzufügen";
+addToCartButton.style.position = "absolute";
+addToCartButton.style.bottom = "10px";
+addToCartButton.style.right = "10px";
 
-        if (quantity > 0) {
-            addToCart(productName, quantity);
-        } else {
-            alert("Bitte geben Sie eine gültige Menge ein.");
-        }
-    });
+// Add an event listener to the button
+addToCartButton.addEventListener('click', (event) => {
+    const quantityInput = addToCartButton.parentNode.querySelector('.quantity-input');
+    const quantity = parseInt(quantityInput.value);
 
-    event.target.appendChild(addToCartButton);
+    if (quantity > 0) {
+        addToCart(productName, quantity);
+    } else {
+        alert("Bitte geben Sie eine gültige Menge ein.");
+    }
+});
+
+// Append the button to the target element
+event.target.appendChild(addToCartButton);
+
 
 function addAllToCart() {
     // Select all grid items with products
