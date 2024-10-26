@@ -103,10 +103,20 @@ function deleteOrder() {
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    async function fetchProductImages(products) {
+   async function fetchProductImages(products) {
     const productImages = {};
+    
     for (const product of products) {
-        productImages[product.product] = 'https://via.placeholder.com/50'; // Placeholder image for testing
+        const { data, error } = await supabase
+            .from('products')
+            .select('image_url')
+            .eq('name', product.product);
+        
+        if (error) {
+            console.error('Error fetching product image:', error);
+        } else if (data && data.length > 0) {
+            productImages[product.product] = data[0].image_url; // Use the Supabase image URL
+        }
     }
     return productImages;
 }
