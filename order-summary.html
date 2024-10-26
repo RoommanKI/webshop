@@ -165,15 +165,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         let orderSummary = 'Bestellung:\n';
 
         // Artikel in der Bestellung durchgehen
-        cart.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
-            orderList.appendChild(li);
-            totalPrice += item.quantity * item.price;
-
-            // Bestellübersicht für das Formular
-            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-        });
+       // Only calculate totals and update hidden fields without appending items to orderList
+cart.forEach(item => {
+    totalPrice += item.quantity * item.price;
+    orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+});
 
         // Rabattcodes und ihre Prozentsätze
         const discountCodes = {
