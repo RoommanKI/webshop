@@ -25,11 +25,9 @@
         (function() {
             emailjs.init("XM0F9TmvuK3-NruDz");  // Dein Public Key
         })();
-    </script>
-    <script>
         function loadCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
-            </script>
+</script>
 </head>
 <body>
     <header>
@@ -178,8 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 
-}
-// Function to save the order to Supabase
 async function saveOrderToSupabase(email, cart) {
     const orderData = cart.map(item => ({
         email: email,
