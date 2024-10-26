@@ -118,6 +118,54 @@
         .grid-item:hover {
             background-color: #f0f8ff;
         }
+
+        /* Warenkorb Styling */
+        #cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #3498db;
+        }
+
+        #cart-popup {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            width: 250px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #cart-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #cart-content li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
@@ -146,8 +194,23 @@
     <h2>Planogramm</h2>
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
 
-    <!-- Button to add selected items to the cart -->
-    <button onclick="addToCart()">In den Warenkorb hinzufügen</button>
+    <!-- Warenkorb Icon -->
+    <div id="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span>
+    </div>
+
+    <!-- Warenkorb Popup -->
+    <div id="cart-popup">
+        <h3>Ihr Warenkorb</h3>
+        <div id="cart-content">
+            <ul id="cart-list">
+                <p>Ihr Warenkorb ist leer.</p>
+            </ul>
+        </div>
+        <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+        <button class="btn" onclick="clearCart()">Warenkorb löschen</button>
+    </div>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -243,6 +306,7 @@
 
         function drag(event) {
             event.dataTransfer.setData('text/html', event.target.outerHTML);
+            event.dataTransfer.setData('product', event.target.alt); // Track product name
         }
 
         function allowDrop(event) {
@@ -251,34 +315,59 @@
 
         function drop(event) {
             event.preventDefault();
-            const data = event.dataTransfer.getData('text/html');
-            event.target.innerHTML = data;
-
-            // Add quantity input field
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.className = 'quantity-input';
-            input.value = 1;
-            input.min = 1;
-            event.target.appendChild(input);
+            const productName = event.dataTransfer.getData('product');
+            if (productName) {
+                addToCart(productName);
+            }
         }
 
-        // Export addToCart function to global scope
-        window.addToCart = function() {
-            const items = [];
-            document.querySelectorAll('.grid-item').forEach(item => {
-                const img = item.querySelector('img');
-                const quantityInput = item.querySelector('.quantity-input');
-                if (img && quantityInput) {
-                    const product = {
-                        name: img.alt,
-                        quantity: parseInt(quantityInput.value),
-                    };
-                    items.push(product);
-                }
+        // Cart Management
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function addToCart(productName) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += 1;
+            } else {
+                cart.push({ product: productName, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartContent = document.getElementById('cart-list');
+            const cartCount = document.getElementById('cart-count');
+            cartContent.innerHTML = '';
+
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+            cart.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${item.quantity}x ${item.product}`;
+                cartContent.appendChild(listItem);
             });
-            alert(`Produkte zum Warenkorb hinzugefügt: ${JSON.stringify(items)}`);
-        };
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCart();
+            localStorage.removeItem('cart');
+        }
+
+        function finalizeOrder() {
+            if (cart.length === 0) {
+                alert("Der Warenkorb ist leer.");
+                return;
+            }
+            window.location.href = 'order-summary.html';
+        }
+
+        document.getElementById('cart-icon').addEventListener('click', () => {
+            const cartPopup = document.getElementById('cart-popup');
+            cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
+        });
     </script>
 </body>
 </html>
