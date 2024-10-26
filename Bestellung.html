@@ -12,7 +12,19 @@
         .order:last-child { border-bottom: none; }
         .order h3 { color: #ff4081; margin: 0; }
         .order p { margin: 5px 0; }
-        .total-price { font-weight: bold; color: #ff4081; }
+        .total-price { font-weight: bold; color: #ff4081; 
+                     .webshop-btn {
+            display: inline-block;
+            background-color: #ff4081;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: none;
+            font-size: 1rem;
+        }
     </style>
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -94,6 +106,7 @@
 <body>
     <header>
         <h1>Meine Bestellungen</h1>
+        <a href="index.html" class="webshop-btn">Webshop</a>
     </header>
     <div class="orders-container" id="orders-container">
         <p>Bestellungen werden geladen...</p>
