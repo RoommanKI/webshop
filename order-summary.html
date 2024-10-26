@@ -84,7 +84,18 @@
         <!-- Button to delete the order and redirect to index.html -->
         <button class="btn" onclick="deleteOrder()">Bestellung löschen</button>
     </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
+});
 
+function deleteOrder() {
+    localStorage.removeItem('cart');
+    alert("Ihre Bestellung wurde gelöscht.");
+    window.location.href = 'index.html';
+}
+
+</script>
 <!-- Supabase SDK Import -->
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -121,11 +132,7 @@
         });
     });
 
-    function deleteOrder() {
-        localStorage.removeItem('cart'); // Clear the cart from localStorage
-        alert("Ihre Bestellung wurde gelöscht.");
-        window.location.href = 'index.html'; // Redirect to index.html
-    }
+
 </script>
     
     <script>
