@@ -191,7 +191,7 @@ async function saveOrderToSupabase(orderData) {
     }
 }
 
-// Form submission event listener to gather and submit order data
+// Function to prepare order data and submit it to Supabase
 document.getElementById('order-form').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the form from submitting normally
 
@@ -203,25 +203,27 @@ document.getElementById('order-form').addEventListener('submit', async (event) =
         return;
     }
 
-    // Get the calculated total price from the order summary (including VAT, discount, etc.)
-    const total_price = parseFloat(document.getElementById('total-price').textContent);
+    // Calculate the total price and structure the products data
+    let total_price = 0;
+    const products = cart.map(item => {
+        total_price += item.price * item.quantity;
+        return {
+            name: item.name, // Use product name instead of product_id
+            quantity: item.quantity
+        };
+    });
 
-    // Structure the products array to match the Supabase schema
-    const products = cart.map(item => ({
-        product_id: item.product_id, // assuming `product_id` is in the cart data
-        quantity: item.quantity
-    }));
-
-    // Structure the order data with email, products, and the final calculated price
+    // Structure the order data to match the new schema
     const orderData = {
         email: email,
-        products: products, // JSON array of products with their quantities
-        total_price: total_price // Reuse the calculated total price from order summary
+        products: products, // JSON array of products with names and quantities
+        total_price: total_price // Total order price
     };
 
     // Call the function to save the order data to Supabase
     await saveOrderToSupabase(orderData);
 });
+
 
 
 function loadCart() {
