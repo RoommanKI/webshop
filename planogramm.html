@@ -207,6 +207,14 @@
     <!-- Grid where images can be dropped -->
     <h2>Planogramm</h2>
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
+    <label for="pdf-rows">PDF Reihen pro Seite:</label>
+<input type="number" id="pdf-rows" min="1" value="1" style="width: 50px;">
+
+<label for="pdf-columns">PDF Spalten pro Seite:</label>
+<input type="number" id="pdf-columns" min="1" value="4" style="width: 50px;">
+
+<button onclick="generatePlanogramPDF()">Planogramm als PDF speichern</button>
+
 <!-- Add to Cart Button -->
 <button id="add-all-to-cart" onclick="addAllToCart()">Zum Warenkorb hinzufügen</button>
 <button id="generate-pdf" onclick="generatePlanogramPDF()">Planogramm als PDF speichern</button>
@@ -446,46 +454,50 @@ window.finalizeOrder = function finalizeOrder() {
 window.generatePlanogramPDF = function generatePlanogramPDF() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF("portrait", "mm", "a4");
-    const gridContainer = document.getElementById("grid-container");
-    const gridItems = gridContainer.querySelectorAll(".grid-item img"); // Only select images
 
-    // Page settings
-    const pageWidth = 190; // Width of the PDF page in mm
+    const gridContainer = document.getElementById("grid-container");
+    const gridItems = gridContainer.querySelectorAll(".grid-item img");
+
+    // Get user-defined rows and columns per PDF page
+    const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 1;
+    const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 4;
+
+    // PDF page settings
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 10;
-    const cellWidth = 40; // Width of each image cell in the PDF
-    const cellHeight = 40; // Height of each image cell in the PDF
+    const cellWidth = (pageWidth - margin * (pdfColumns + 1)) / pdfColumns;
+    const cellHeight = cellWidth; // Keep images square for consistency
 
     let x = margin;
     let y = margin;
-    let itemsPerRow = 4; // Customize this for the number of images per row
-    let rowCount = 0;
+    let currentRow = 0;
+    let columnCount = 0;
 
-    // Loop through each image in the grid
     gridItems.forEach((img, index) => {
-        const imgUrl = img.src;
-        
-        // Load image data and add to PDF
-        const imgData = imgUrl;
+        const imgData = img.src;
 
         // Add the image to the PDF
         pdf.addImage(imgData, "PNG", x, y, cellWidth, cellHeight);
 
-        // Update x-coordinate for next image
+        // Update x-coordinate for the next image
         x += cellWidth + margin;
+        columnCount++;
 
-        // Move to next row if items per row is reached
-        if ((index + 1) % itemsPerRow === 0) {
+        // Move to next row if columns limit is reached
+        if (columnCount >= pdfColumns) {
             x = margin;
             y += cellHeight + margin;
-            rowCount++;
+            columnCount = 0;
+            currentRow++;
         }
 
-        // Add a new page if page limit is reached
-        if (y + cellHeight + margin > pdf.internal.pageSize.getHeight() - margin) {
+        // If the row limit is reached, add a new page
+        if (currentRow >= pdfRows) {
             pdf.addPage();
             x = margin;
             y = margin;
-            rowCount = 0;
+            currentRow = 0;
         }
     });
 
