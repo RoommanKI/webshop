@@ -59,7 +59,6 @@
         </form>
     </div>
 </div>
-
 <!-- Navigation -->
 <nav>
     <a href="#" data-category="trauer">Trauerkarten</a>
@@ -69,7 +68,6 @@
     <a href="#" data-category="events">Eventkarten</a>
 </nav>
 
-<!-- Produktliste -->
 <div id="products-container" class="product-list"></div>
 
 <!-- Startseite Abschnitt -->
@@ -168,24 +166,47 @@ window.supabase = createClient(supabaseUrl, supabaseKey);
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Event Listeners for Modals
-    document.getElementById('registerBtn').addEventListener('click', () => {
-        document.getElementById('registerModal').style.display = 'block';
-    });
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        document.getElementById('loginModal').style.display = 'block';
-    });
+    function toggleProfileIcon() {
+        const headerButtons = document.querySelector('.header-buttons');
+        headerButtons.innerHTML = `
+            <div class="profile-container" style="position: relative;">
+                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+                <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
+                    <a href="profile.html">Profil</a>
+                    <a href="#" id="logoutLink">Logout</a>
+                </div>
+            </div>
+        `;
+        document.getElementById('profileIcon').addEventListener('click', () => {
+            const profileMenu = document.getElementById('profileMenu');
+            profileMenu.style.display = profileMenu.style.display === 'none' ? 'block' : 'none';
+        });
+        document.getElementById('logoutLink').addEventListener('click', () => {
+            localStorage.removeItem('loggedIn');
+            location.reload();
+        });
+    }
 
-    document.getElementById('closeRegister').addEventListener('click', () => {
-        document.getElementById('registerModal').style.display = 'none';
-    });
+    // Anzeigen oder Verbergen der Buttons/Profile-Icons basierend auf Login-Status
+    if (isLoggedIn) {
+        toggleProfileIcon();
+    } else {
+        document.getElementById('registerBtn').addEventListener('click', () => {
+            document.getElementById('registerModal').style.display = 'block';
+        });
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            document.getElementById('loginModal').style.display = 'block';
+        });
+        document.getElementById('closeRegister').addEventListener('click', () => {
+            document.getElementById('registerModal').style.display = 'none';
+        });
+        document.getElementById('closeLogin').addEventListener('click', () => {
+            document.getElementById('loginModal').style.display = 'none';
+        });
+    }
 
-    document.getElementById('closeLogin').addEventListener('click', () => {
-        document.getElementById('loginModal').style.display = 'none';
-    });
-
-    // Registrierung
     document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const email = document.getElementById('register-email').value;
@@ -201,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Login
     document.getElementById('login-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const email = document.getElementById('login-email').value;
@@ -221,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-</script>
 
 
 // Produktliste laden
