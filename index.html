@@ -397,9 +397,10 @@ function updateCart() {
     }
 
     let cartHTML = '<ul>';
-    cart.forEach(item => {
-        cartHTML += `<li><img src="${item.image}" alt="${item.product}" style="width:50px;height:50px;vertical-align:middle;margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-    });
+cart.forEach(item => {
+    console.log(item.image); // Check if the image URL is correct
+    cartHTML += `<li><img src="${item.image}" alt="${item.product}" style="width:50px;height:50px;vertical-align:middle;margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+});
     cartHTML += '</ul>';
     cartContent.innerHTML = cartHTML;
 }
