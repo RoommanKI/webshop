@@ -12,12 +12,14 @@
             background-color: #f9fafb; 
             color: #333; 
         }
+
         h1 {
             color: #2c3e50;
             font-size: 2em;
             margin: 20px;
             text-transform: uppercase;
         }
+
         form {
             display: flex;
             gap: 10px;
@@ -25,11 +27,13 @@
             align-items: center;
             margin: 20px;
         }
+
         form label {
             font-weight: bold;
             font-size: 1rem;
             color: #555;
         }
+
         form input[type="number"] {
             width: 60px;
             padding: 5px;
@@ -37,6 +41,7 @@
             border-radius: 4px;
             text-align: center;
         }
+
         form button {
             padding: 10px 20px;
             font-size: 1rem;
@@ -48,9 +53,11 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         form button:hover {
             background-color: #2980b9;
         }
+
         .product-images {
             display: flex;
             flex-wrap: wrap;
@@ -58,6 +65,7 @@
             justify-content: center;
             margin-top: 20px;
         }
+
         .product-images img {
             width: 80px;
             height: 80px;
@@ -66,10 +74,12 @@
             border-radius: 8px;
             transition: transform 0.2s ease, border-color 0.2s ease;
         }
+
         .product-images img:hover {
             transform: scale(1.1);
             border-color: #3498db;
         }
+
         #grid-container {
             margin: 30px auto;
             padding: 10px;
@@ -80,6 +90,7 @@
             border-radius: 10px;
             padding: 20px;
         }
+
         .grid-item {
             background-color: #fff;
             border: 2px dashed #bdc3c7;
@@ -91,15 +102,16 @@
             justify-content: center;
             transition: background-color 0.3s ease;
         }
+
         .grid-item img {
             max-width: 90%;
             max-height: 90%;
         }
+
         .grid-item:hover {
             background-color: #f0f8ff;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <h1>Planogramm Ersteller</h1>
@@ -111,15 +123,6 @@
         <label for="columns">Spalten:</label>
         <input type="number" id="columns" min="1" value="3" required>
         <button type="submit">Grid Erstellen</button>
-    </form>
-
-    <!-- Form to pick rows and columns for PDF -->
-    <form id="pdf-form">
-        <label for="pdf-rows">PDF Reihen:</label>
-        <input type="number" id="pdf-rows" min="1" value="3" required>
-        <label for="pdf-columns">PDF Spalten:</label>
-        <input type="number" id="pdf-columns" min="1" value="3" required>
-        <button type="button" onclick="generatePDF()">PDF Erstellen</button>
     </form>
 
     <!-- Product image selection area -->
@@ -136,13 +139,14 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
         const SUPABASE_URL = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const form = document.getElementById('grid-form');
         const gridContainer = document.getElementById('grid-container');
         const productImages = document.getElementById('product-images');
 
+        // Fetch product images from Supabase
         async function loadProductImages() {
             const { data, error } = await supabase
                 .from('products')
@@ -200,66 +204,6 @@
             const data = event.dataTransfer.getData('text/html');
             event.target.innerHTML = data;
         }
-
-        // Export generatePDF function to global scope
-        window.generatePDF = async function () {
-            const pdfRows = parseInt(document.getElementById('pdf-rows').value);
-            const pdfColumns = parseInt(document.getElementById('pdf-columns').value);
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF();
-            
-            const gridItems = document.querySelectorAll('#grid-container .grid-item img');
-            const images = Array.from(gridItems).map(img => img.src);
-
-            const pageWidth = 190; // Approx. width of a standard PDF page in jsPDF
-            const pageHeight = 280; // Approx. height of a standard PDF page
-            const maxImageWidth = pageWidth / pdfColumns;
-            const maxImageHeight = pageHeight / pdfRows;
-            
-            let xPos = 10;
-            let yPos = 10;
-            let imgCount = 0;
-
-            images.forEach((imgSrc, index) => {
-                if (imgSrc) {
-                    const img = new Image();
-                    img.src = imgSrc;
-
-                    img.onload = function () {
-                        const aspectRatio = img.width / img.height;
-                        let imgWidth, imgHeight;
-
-                        if (aspectRatio > 1) {
-                            imgWidth = maxImageWidth;
-                            imgHeight = imgWidth / aspectRatio;
-                        } else {
-                            imgHeight = maxImageHeight;
-                            imgWidth = imgHeight * aspectRatio;
-                        }
-
-                        pdf.addImage(imgSrc, 'JPEG', xPos, yPos, imgWidth, imgHeight);
-
-                        xPos += imgWidth + 5;
-
-                        imgCount++;
-                        if (imgCount % pdfColumns === 0) {
-                            xPos = 10;
-                            yPos += maxImageHeight + 5;
-                        }
-
-                        if (imgCount % (pdfRows * pdfColumns) === 0 && index < images.length - 1) {
-                            pdf.addPage();
-                            xPos = 10;
-                            yPos = 10;
-                        }
-                    };
-                }
-            });
-
-            pdf.save('planogram.pdf');
-        };
-
-        createGrid(3, 3); // Initialize grid with default dimensions
     </script>
 </body>
 </html>
