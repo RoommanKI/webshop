@@ -149,28 +149,73 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Supabase SDK Import -->
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    
+    // Supabase client initialization
     const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-  async function fetchProductImages(products) {
-    const productNames = products.map(product => product.product);
-    const { data, error } = await supabase
-        .from('products')
-        .select('name, image_url')
-        .in('name', productNames);
+    // Function to fetch product images (already in your code)
+    async function fetchProductImages(products) {
+        const productNames = products.map(product => product.product);
+        const { data, error } = await supabase
+            .from('products')
+            .select('name, image_url')
+            .in('name', productNames);
 
-    if (error) {
-        console.error('Error fetching product images:', error);
-        return {};
+        if (error) {
+            console.error('Error fetching product images:', error);
+            return {};
+        }
+
+        data.forEach(item => {
+            imageCache[item.name] = item.image_url; // Store image URLs in the cache
+        });
+
+        return imageCache;
     }
 
-    data.forEach(item => {
-        imageCache[item.name] = item.image_url; // Store image URLs in the cache
+    // Function to save the order to Supabase
+    async function saveOrderToSupabase(orderData) {
+        const { data, error } = await supabase
+            .from('orders')
+            .insert(orderData);
+
+        if (error) {
+            console.error("Error saving order:", error);
+            alert("There was an error saving your order. Please try again.");
+        } else {
+            console.log("Order saved successfully:", data);
+            alert("Order placed successfully!");
+            window.location.href = 'danke.html';  // Redirect to thank you page
+        }
+    }
+
+    // Form submission event listener to gather and submit order data
+    document.getElementById('order-form').addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || []; // Retrieve cart data from localStorage
+        const email = document.getElementById('email').value; // Get email from the form
+
+        if (cart.length === 0) {
+            alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
+            return;
+        }
+
+        // Format order data to match the structure of the Supabase `orders` table
+        const orderData = cart.map(item => ({
+            email: email,
+            product_id: item.product_id, // assuming `product_id` is in the cart data
+            quantity: item.quantity,
+            price: item.price * item.quantity // total price for each item
+        }));
+
+        // Call the function to save the order data to Supabase
+        await saveOrderToSupabase(orderData);
     });
 
-    return imageCache;
-}
+
 
 
 
