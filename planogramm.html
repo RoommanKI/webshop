@@ -262,7 +262,7 @@
         async function loadProductImages(category = '') {
             productImages.innerHTML = '';
 
-            let query = supabase.from('products').select('name, image_url');
+let query = supabase.from('products').select('name, image_url, price'); // Add 'price' here
 
             if (category) {
                 query = query.eq('category', category);
@@ -329,15 +329,23 @@ function drop(event) {
     const productName = event.dataTransfer.getData('product');
     const imageHTML = event.dataTransfer.getData('text/html');
 
+    // Retrieve price from the data attributes in product images
+    const productElement = Array.from(document.querySelectorAll('.product-images img')).find(
+        img => img.alt === productName
+    );
+    const productPrice = productElement ? productElement.getAttribute('data-price') : 0;
+
     // Add product image and a quantity input field to the grid item
     event.target.innerHTML = `
         ${imageHTML}
         <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
     `;
 
-    // Store the product name in a data attribute for later use
+    // Store the product name and price in the grid item for later use
     event.target.setAttribute('data-product-name', productName);
+    event.target.setAttribute('data-product-price', productPrice);
 }
+
 
 
 // Assuming this is inside your drop function or wherever you have access to the drop target
@@ -363,22 +371,24 @@ addToCartButton.addEventListener('click', () => {
 
 // Define addAllToCart in the global scope
 window.addAllToCart = function addAllToCart() {
-    // Select all grid items with products
     const gridItems = document.querySelectorAll('.grid-item');
 
     gridItems.forEach(gridItem => {
         const productName = gridItem.getAttribute('data-product-name');
+        const productPrice = parseFloat(gridItem.getAttribute('data-product-price')) || 0;
         const quantityInput = gridItem.querySelector('.quantity-input');
 
-        // Ensure both product and quantity are valid
         if (productName && quantityInput) {
             const quantity = parseInt(quantityInput.value);
             if (quantity > 0) {
-                // Add each product with the specified quantity to the cart
-                addToCart(productName, quantity);
+                addToCart(productName, quantity, productPrice); // Include price here
             }
         }
     });
+
+    alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
+    updateCart();
+};
 
     // Optionally, show a message or update the cart display after adding all items
     alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
@@ -389,15 +399,16 @@ window.addAllToCart = function addAllToCart() {
         // Warenkorb Management
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function addToCart(productName, quantity) {
+function addToCart(productName, quantity, price) {
     const item = cart.find(item => item.product === productName);
     if (item) {
         item.quantity += quantity;
     } else {
-        cart.push({ product: productName, quantity });
+        cart.push({ product: productName, quantity, price }); // Store price with each item
     }
     updateCart();
 }
+
 
 
         function updateCart() {
