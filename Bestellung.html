@@ -115,6 +115,38 @@
     <header>
         <h1>Meine Bestellungen</h1>
         <a href="index.html" class="webshop-btn">Webshop</a>
+        header {
+    background-color: #ff4081;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Aligns title on left and button on right */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.webshop-btn {
+    background-color: white;
+    color: #ff4081;
+    padding: 10px 20px;
+    border: 2px solid #ff4081;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.webshop-btn:hover {
+    background-color: #ff4081;
+    color: white;
+}
+
     </header>
     <div class="orders-container" id="orders-container">
         <p>Bestellungen werden geladen...</p>
