@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planogramm Ersteller</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -441,11 +443,10 @@ window.finalizeOrder = function finalizeOrder() {
             cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
         });
 
-        async function generatePlanogramPDF() {
+window.generatePlanogramPDF = async function generatePlanogramPDF() {
     const gridContainer = document.getElementById("grid-container");
     const rows = Array.from(gridContainer.children);
 
-    // Define PDF dimensions and initialize jsPDF
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({
         orientation: "portrait",
@@ -455,32 +456,28 @@ window.finalizeOrder = function finalizeOrder() {
     const pageWidth = 190;  // Width in mm
     const pageHeight = 280; // Height in mm
 
-    // Loop through rows and capture each row as an image for each page
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         const row = rows[rowIndex];
-        row.style.border = "none"; // Optional styling for PDF appearance
+        row.style.border = "none"; 
 
-        // Use html2canvas to capture each row
         const canvas = await html2canvas(row, {
-            scale: 2, // Scale up for higher resolution
+            scale: 2,
             backgroundColor: null
         });
 
-        // Add the canvas image to the PDF
         const imgData = canvas.toDataURL("image/png");
         const imgWidth = pageWidth;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        // Check if we need a new page
         if (rowIndex !== 0) {
             pdf.addPage();
         }
         pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
     }
 
-    // Save the PDF
     pdf.save("Planogramm.pdf");
 }
+
 
     </script>
 </body>
