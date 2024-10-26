@@ -259,32 +259,33 @@
             });
         }
 
-        async function loadProductImages(category = '') {
-            productImages.innerHTML = '';
+async function loadProductImages(category = '') {
+    productImages.innerHTML = '';
 
-let query = supabase.from('products').select('name, image_url, price'); // Add 'price' here
+    let query = supabase.from('products').select('name, image_url, price'); // Include price
 
-            if (category) {
-                query = query.eq('category', category);
-            }
+    if (category) {
+        query = query.eq('category', category);
+    }
 
-            const { data, error } = await query;
+    const { data, error } = await query;
 
-            if (error) {
-                console.error("Error fetching product images:", error);
-                return;
-            }
+    if (error) {
+        console.error("Error fetching product images:", error);
+        return;
+    }
 
-            data.forEach(product => {
-                const img = document.createElement('img');
-                img.src = product.image_url;
-                img.alt = product.name;
-                img.title = product.name;
-                img.draggable = true;
-                img.addEventListener('dragstart', drag);
-                productImages.appendChild(img);
-            });
-        }
+    data.forEach(product => {
+        const img = document.createElement('img');
+        img.src = product.image_url;
+        img.alt = product.name;
+        img.title = product.name;
+        img.draggable = true;
+        img.dataset.price = product.price; // Store price in data attribute
+        img.addEventListener('dragstart', drag);
+        productImages.appendChild(img);
+    });
+}
 
         loadCategories();
         loadProductImages();
@@ -328,23 +329,16 @@ function drop(event) {
     event.preventDefault();
     const productName = event.dataTransfer.getData('product');
     const imageHTML = event.dataTransfer.getData('text/html');
+    const price = parseFloat(event.dataTransfer.getData('price')) || 0; // Parse price
 
-    // Retrieve price from the data attributes in product images
-    const productElement = Array.from(document.querySelectorAll('.product-images img')).find(
-        img => img.alt === productName
-    );
-    const productPrice = productElement ? productElement.getAttribute('data-price') : 0;
-
-    // Add product image and a quantity input field to the grid item
     event.target.innerHTML = `
         ${imageHTML}
         <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
     `;
-
-    // Store the product name and price in the grid item for later use
     event.target.setAttribute('data-product-name', productName);
-    event.target.setAttribute('data-product-price', productPrice);
+    event.target.setAttribute('data-price', price); // Store price for addAllToCart
 }
+
 
 
 
@@ -371,20 +365,24 @@ addToCartButton.addEventListener('click', () => {
 
 // Define addAllToCart in the global scope
 window.addAllToCart = function addAllToCart() {
-    const gridItems = document.querySelectorAll('.grid-item');
+ const gridItems = document.querySelectorAll('.grid-item');
 
     gridItems.forEach(gridItem => {
         const productName = gridItem.getAttribute('data-product-name');
-        const productPrice = parseFloat(gridItem.getAttribute('data-product-price')) || 0;
         const quantityInput = gridItem.querySelector('.quantity-input');
+        const price = parseFloat(gridItem.getAttribute('data-price')) || 0;
 
         if (productName && quantityInput) {
             const quantity = parseInt(quantityInput.value);
             if (quantity > 0) {
-                addToCart(productName, quantity, productPrice); // Include price here
+                addToCart(productName, quantity, price);
             }
         }
     });
+
+    alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
+    updateCart();
+}
 
     alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
     updateCart();
