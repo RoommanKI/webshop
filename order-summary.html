@@ -86,7 +86,24 @@
         <button class="btn" onclick="deleteOrder()">Bestellung löschen</button>
     </div>
 <script>
+function renderOrderSummary(cart) {
+    const orderList = document.getElementById('order-list');
+    orderList.innerHTML = ''; // Clear existing items
 
+    cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <img src="${imageCache[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
+            <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
+            <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
+            <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
+        `;
+        orderList.appendChild(li);
+    });
+
+    attachQuantityChangeListeners(); // Reattach quantity change listeners for new DOM elements
+}
+    
 let imageCache = {};
 
 document.addEventListener('DOMContentLoaded', function() {
