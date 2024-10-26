@@ -86,7 +86,6 @@
         <button class="btn" onclick="deleteOrder()">Bestellung löschen</button>
     </div>
 <script>
-
 function attachQuantityChangeListeners() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     document.querySelectorAll('.quantity-input').forEach(input => {
@@ -371,11 +370,6 @@ function sendEmail(e) {
         .then(response => {
             console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
             alert('Bestellung erfolgreich gesendet!');
-
-            // Clear the cart after successful order submission
-            localStorage.removeItem('cart');
-            window.cart = [];
-
             window.location.href = 'danke.html';  // Redirect to thank you page
         })
         .catch(error => {
@@ -383,7 +377,6 @@ function sendEmail(e) {
             alert('Fehler beim Versenden der Bestellung.');
         });
 }
-
 function updateOrderSummary() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const orderList = document.getElementById('order-list');
