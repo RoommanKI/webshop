@@ -451,61 +451,70 @@ window.finalizeOrder = function finalizeOrder() {
             cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
         });
 
-window.generatePlanogramPDF = function generatePlanogramPDF() {
+async function generatePlanogramPDF() {
+    const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 4;
+    const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 1;
+
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("portrait", "mm", "a4");
+    const pdf = new jsPDF();
 
-    const gridContainer = document.getElementById("grid-container");
-    const gridItems = gridContainer.querySelectorAll(".grid-item img");
-
-    // Get user-defined rows and columns per PDF page
-    const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 1;
-    const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 4;
-
-    // PDF page settings
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 10;
 
-    // Calculate cell dimensions based on the specified rows and columns
-    const cellWidth = (pageWidth - (pdfColumns + 1) * margin) / pdfColumns;
     const cellHeight = (pageHeight - (pdfRows + 1) * margin) / pdfRows;
+    const cellWidth = (pageWidth - (pdfColumns + 1) * margin) / pdfColumns;
 
-    let x = margin;
-    let y = margin;
-    let columnCount = 0;
-    let rowCount = 0;
+    const gridItems = document.querySelectorAll(".grid-item");
 
-    gridItems.forEach((img, index) => {
-        const imgData = img.src;
+    let rowIndex = 0;
+    let columnIndex = 0;
 
-        // Add the image to the PDF within the calculated cell dimensions
-        pdf.addImage(imgData, "PNG", x, y, cellWidth, cellHeight);
+    for (let i = 0; i < gridItems.length; i++) {
+        const gridItem = gridItems[i];
+        const img = gridItem.querySelector("img");
 
-        // Update x-coordinate for the next image in the row
-        x += cellWidth + margin;
-        columnCount++;
+        if (img) {
+            const imgData = img.src;
 
-        // If the column limit is reached, reset x and move to the next row
-        if (columnCount >= pdfColumns) {
-            x = margin;
-            y += cellHeight + margin;
-            columnCount = 0;
-            rowCount++;
+            // Calculate aspect ratio
+            const imgAspectRatio = img.naturalWidth / img.naturalHeight;
+
+            let displayWidth, displayHeight;
+
+            // Determine display width and height based on aspect ratio
+            if (imgAspectRatio > 1) {
+                // Wide image: set width to cellWidth and adjust height
+                displayWidth = cellWidth;
+                displayHeight = cellWidth / imgAspectRatio;
+            } else {
+                // Tall image: set height to cellHeight and adjust width
+                displayHeight = cellHeight;
+                displayWidth = cellHeight * imgAspectRatio;
+            }
+
+            // Positioning for each image in the cell, centering within each cell
+            const xPos = margin + columnIndex * (cellWidth + margin) + (cellWidth - displayWidth) / 2;
+            const yPos = margin + rowIndex * (cellHeight + margin) + (cellHeight - displayHeight) / 2;
+
+            pdf.addImage(imgData, "JPEG", xPos, yPos, displayWidth, displayHeight);
+
+            columnIndex++;
+            if (columnIndex >= pdfColumns) {
+                columnIndex = 0;
+                rowIndex++;
+            }
+
+            if (rowIndex >= pdfRows) {
+                pdf.addPage();
+                rowIndex = 0;
+            }
         }
+    }
 
-        // If the row limit is reached, add a new page and reset coordinates
-        if (rowCount >= pdfRows) {
-            pdf.addPage();
-            x = margin;
-            y = margin;
-            rowCount = 0;
-        }
-    });
+    pdf.save("planogram.pdf");
+}
 
-    // Save the PDF
-    pdf.save("Planogramm.pdf");
-};
 
 
     </script>
