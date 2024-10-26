@@ -101,6 +101,13 @@ function attachQuantityChangeListeners() {
     });
 }
 
+function deleteProduct(index) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1); // Remove item at the specified index
+    localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+    updateOrderSummary(); // Re-render the order summary
+}
+
 function renderOrderSummary(cart) {
     const orderList = document.getElementById('order-list');
     orderList.innerHTML = ''; // Clear existing items
