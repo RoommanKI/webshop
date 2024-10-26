@@ -198,6 +198,11 @@ async function saveOrderToSupabase(email, cart) {
     return true;
 }
 
+// Function to load the cart from localStorage
+function loadCart() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
 async function sendEmail(e) {
     e.preventDefault();
 
