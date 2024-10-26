@@ -338,6 +338,7 @@ function drop(event) {
     event.target.setAttribute('data-product-name', productName);
 }
 
+// Assuming this is inside your drop function or wherever you have access to the drop target
 
 // Create the "Zum Warenkorb hinzufügen" button
 const addToCartButton = document.createElement('button');
@@ -347,7 +348,7 @@ addToCartButton.style.bottom = "10px";
 addToCartButton.style.right = "10px";
 
 // Add an event listener to the button
-addToCartButton.addEventListener('click', (event) => {
+addToCartButton.addEventListener('click', () => {
     const quantityInput = addToCartButton.parentNode.querySelector('.quantity-input');
     const quantity = parseInt(quantityInput.value);
 
@@ -358,8 +359,8 @@ addToCartButton.addEventListener('click', (event) => {
     }
 });
 
-// Append the button to the target element
-event.target.appendChild(addToCartButton);
+// Assuming `targetElement` is the element where you want to append the button
+targetElement.appendChild(addToCartButton);
 
 
 function addAllToCart() {
