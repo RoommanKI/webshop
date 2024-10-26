@@ -158,12 +158,13 @@ function finalizeOrder() {
     });
     alert(`Ihre Bestellung:\n${orderSummary}`);
 
-    cart = []; // Clear the cart after the order
-    updateCart();
-    saveCartToLocalStorage(); // Clear the cart from localStorage
+    cart = []; // Clear the cart in memory
+    saveCartToLocalStorage(); // Clear the cart in localStorage
+    updateCart(); // Update the cart display
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
+
 console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
 
 
