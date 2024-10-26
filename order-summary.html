@@ -197,6 +197,10 @@ async function saveOrderToSupabase(email, cart) {
 }
 
 // Function to send the email and save the order
+function loadCart() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
 async function sendEmail(e) {
     e.preventDefault();
 
