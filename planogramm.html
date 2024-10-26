@@ -258,6 +258,9 @@
                 categoryFilter.appendChild(option);
             });
         }
+function allowDrop(event) {
+    event.preventDefault();
+}
 
 async function loadProductImages(category = '') {
     productImages.innerHTML = '';
