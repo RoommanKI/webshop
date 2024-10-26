@@ -173,8 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
     return imageCache;
 }
 
-
-
 // Function to load the cart from localStorage
 function loadCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
@@ -196,11 +194,6 @@ async function saveOrderToSupabase(email, cart) {
         return false;
     }
     return true;
-}
-
-// Function to load the cart from localStorage
-function loadCart() {
-    return JSON.parse(localStorage.getItem('cart')) || [];
 }
 
 async function sendEmail(e) {
