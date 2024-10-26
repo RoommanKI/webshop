@@ -317,29 +317,27 @@ async function loadProductImages(category = '') {
             }
         }
 
-        function drag(event) {
-            event.dataTransfer.setData('text/html', event.target.outerHTML);
-            event.dataTransfer.setData('product', event.target.alt);
-        }
-
-        function allowDrop(event) {
-            event.preventDefault();
-        }
+function drag(event) {
+    // Set the `product`, `html`, and `price` data on the data transfer object
+    event.dataTransfer.setData('text/html', event.target.outerHTML);
+    event.dataTransfer.setData('product', event.target.alt);
+    event.dataTransfer.setData('price', event.target.dataset.price || '0'); // Include price in the drag data
+}
 
 function drop(event) {
     event.preventDefault();
     const productName = event.dataTransfer.getData('product');
     const imageHTML = event.dataTransfer.getData('text/html');
-    const price = parseFloat(event.target.querySelector('img').dataset.price) || 0; // Retrieve price from data attribute
+    const price = parseFloat(event.dataTransfer.getData('price')) || 0; // Parse price from drag data
 
+    // Add the product image, a quantity input, and store the product's price
     event.target.innerHTML = `
         ${imageHTML}
         <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
     `;
     event.target.setAttribute('data-product-name', productName);
-    event.target.setAttribute('data-price', price); // Store price in the grid item for later
+    event.target.setAttribute('data-price', price); // Store price as a data attribute on the grid item
 }
-
 
 
 
