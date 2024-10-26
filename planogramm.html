@@ -361,8 +361,9 @@ addToCartButton.addEventListener('click', () => {
     }
 });
 
-function addAllToCart() {
-    // Select all grid items that have products with quantity input
+// Define addAllToCart in the global scope
+window.addAllToCart = function addAllToCart() {
+    // Select all grid items with products
     const gridItems = document.querySelectorAll('.grid-item');
 
     gridItems.forEach(gridItem => {
@@ -379,10 +380,10 @@ function addAllToCart() {
         }
     });
 
+    // Optionally, show a message or update the cart display after adding all items
     alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
     updateCart();
-}
-
+};
 
 
         // Warenkorb Management
