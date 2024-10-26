@@ -21,14 +21,14 @@
         .error-message { color: red; margin-top: 5px; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script type="text/javascript">
+    <script>
         (function() {
-            emailjs.init("XM0F9TmvuK3-NruDz");  // Dein Public Key
+            emailjs.init("XM0F9TmvuK3-NruDz");  // Replace with your actual EmailJS public key
         })();
-    function loadCart() {
-        return JSON.parse(localStorage.getItem('cart')) || [];
-    }
-</script>
+        function loadCart() {
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -49,10 +49,9 @@
             <p id="discount-message" style="color: red; margin-top: 10px;"></p>
         </div>
 
-        <p class="discount-price">Rabatt: <span id="discount"></span> €</p>
-        <p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
-        <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
-
+        <p class="discount-price">Rabatt: <span id="discount">0.00</span> €</p>
+        <p class="vat-price">MwSt (19%): <span id="vat">0.00</span> €</p>
+        <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price">0.00</span> €</p>
         <!-- Formularfelder für Name, E-Mail, Adresse und Kommentar -->
         <form id="order-form" onsubmit="sendEmail(event)">
             <div class="form-group">
@@ -60,11 +59,10 @@
                 <input type="text" id="name" name="Name" required>
             </div>
 
-<div class="form-group" style="display: none;"> <!-- Hide this field -->
-    <label for="email">E-Mail *</label>
-    <input type="email" id="email" name="E-Mail" required>
-</div>
-
+            <div class="form-group" style="display: none;">
+                <label for="email">E-Mail *</label>
+                <input type="email" id="email" name="E-Mail" required>
+            </div>
 
             <div class="form-group">
                 <label for="address">Adresse</label>
@@ -84,244 +82,193 @@
             <!-- Ein einfacher Submit-Button -->
             <button type="submit" class="btn">Bestellung bestätigen</button>
         </form>
-        
+
         <!-- Button to delete the order and redirect to index.html -->
         <button class="btn" onclick="deleteOrder()">Bestellung löschen</button>
     </div>
-<script>
-
+    <!-- Supabase SDK Import and Global Initialization -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"></script>
-<script>
-    // Initialize Supabase globally
-    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-</script>
-    
-function attachQuantityChangeListeners() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', function() {
-            const index = parseInt(this.getAttribute('data-index'));
-            const newQuantity = parseInt(this.value);
-            if (newQuantity > 0) {
-                cart[index].quantity = newQuantity;
-                localStorage.setItem('cart', JSON.stringify(cart)); // Save updated quantity
-                updateOrderSummary(); // Recalculate totals and re-render
-            }
-        });
-        });
-    };
-
-
-function deleteProduct(index) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.splice(index, 1); // Remove item at the specified index
-    localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
-    updateOrderSummary(); // Re-render the order summary
-}
-
-function renderOrderSummary(cart) {
-    const orderList = document.getElementById('order-list');
-    orderList.innerHTML = ''; // Clear existing items
-
-    cart.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <img src="${imageCache[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
-            <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
-            <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
-            <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
-        `;
-        orderList.appendChild(li);
-    });
-
-    attachQuantityChangeListeners(); // Reattach quantity change listeners for new DOM elements
-}
-    
-let imageCache = {};
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
-});
-
-function deleteOrder() {
-    localStorage.removeItem('cart');
-    alert("Ihre Bestellung wurde gelöscht.");
-    window.location.href = 'index.html';
-}
-document.addEventListener('DOMContentLoaded', function() {
-    // Other DOMContentLoaded actions
-    const savedEmail = localStorage.getItem('userEmail');
-    if (savedEmail) {
-        document.getElementById('email').value = savedEmail; // Autofill the hidden email field
-    }
-});
-
-</script>
-<script>
-
-  async function fetchProductImages(products) {
-    const productNames = products.map(product => product.product);
-    const { data, error } = await supabase
-        .from('products')
-        .select('name, image_url')
-        .in('name', productNames);
-
-    if (error) {
-        console.error('Error fetching product images:', error);
-        return {};
-    }
-
-    data.forEach(item => {
-        imageCache[item.name] = item.image_url; // Store image URLs in the cache
-    });
-
-    return imageCache;
-}
-
-
-async function saveOrderToSupabase(email, cart) {
-    const orderData = cart.map(item => ({
-        email: email,
-        product_id: item.product,   // Assuming 'product' is the product ID
-        quantity: item.quantity,
-        price: item.price
-    }));
-
-    const { error } = await supabase.from('orders').insert(orderData);
-
-    if (error) {
-        console.error('Error saving order to Supabase:', error);
-        alert('Fehler beim Speichern der Bestellung.');
-        return false;
-    }
-    return true;
-}
-
-async function sendEmail(e) {
-    e.preventDefault();
-
-    const cart = loadCart();
-    const email = document.getElementById('email').value;
-
-    if (cart.length === 0) {
-        alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
-        return;
-    }
-
-    // Save the order to Supabase first
-    const orderSaved = await saveOrderToSupabase(email, cart);
-    if (!orderSaved) return;
-
-    // Send the order form via EmailJS
-    emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
-        .then(response => {
-            console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
-            alert('Bestellung erfolgreich gesendet!');
-            window.location.href = 'danke.html'; // Redirect to a thank-you page
-        })
-        .catch(error => {
-            console.log('Fehler beim Senden der E-Mail', error);
-            alert('Fehler beim Versenden der Bestellung.');
-        });
-}
-document.addEventListener('DOMContentLoaded', async function() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const orderList = document.getElementById('order-list');
-    orderList.innerHTML = '';
-
-    if (cart.length === 0) {
-        orderList.innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
-        return;
-    }
-
-    // Populate image cache on the first load
-    await fetchProductImages(cart);
-    renderOrderSummary(cart);
-    attachQuantityChangeListeners();
-});
-
-
-    const productImages = await fetchProductImages(cart);
-    cart.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
-            <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
-            <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
-            <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
-        `;
-        orderList.appendChild(li);
-    });
-
-    attachQuantityChangeListeners();
-
-function attachQuantityChangeListeners() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', function() {
-            const index = parseInt(this.getAttribute('data-index'));
-            const newQuantity = parseInt(this.value);
-            if (newQuantity > 0) {
-                cart[index].quantity = newQuantity;
-                localStorage.setItem('cart', JSON.stringify(cart)); // Save updated quantity
-                updateOrderSummary(); // Recalculate totals and re-render
-            }
-        });
-    });
-}
-
-function deleteProduct(index) {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.splice(index, 1); // Remove item at the specified index
-    localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
-    updateOrderSummary(); // Re-render the order summary
-}
-
-
-
-</script>
-    
     <script>
-        // Bestellinformationen von localStorage laden
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const orderList = document.getElementById('order-list');
-        const totalPriceElement = document.getElementById('total-price');
-        const vatElement = document.getElementById('vat');
-        const discountElement = document.getElementById('discount');
-        const orderSummaryInput = document.getElementById('order-summary-input');
-        const totalPriceInput = document.getElementById('total-price-input');
-        const discountInput = document.getElementById('discount-input');
-        const discountMessage = document.getElementById('discount-message');
+        // Initialize Supabase globally
+        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+    <script>
+        function attachQuantityChangeListeners() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const newQuantity = parseInt(this.value);
+                    if (newQuantity > 0) {
+                        cart[index].quantity = newQuantity;
+                        localStorage.setItem('cart', JSON.stringify(cart)); // Save updated quantity
+                        updateOrderSummary(); // Recalculate totals and re-render
+                    }
+                });
+            });
+        }
 
-        let totalPrice = 0;
-        let discount = 0;
-        let orderSummary = 'Bestellung:\n';
+        function deleteProduct(index) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1); // Remove item at the specified index
+            localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+            updateOrderSummary(); // Re-render the order summary
+        }
 
-        // Artikel in der Bestellung durchgehen
-       // Only calculate totals and update hidden fields without appending items to orderList
-cart.forEach(item => {
-    totalPrice += item.quantity * item.price;
-    orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-});
+        function renderOrderSummary(cart) {
+            const orderList = document.getElementById('order-list');
+            orderList.innerHTML = ''; // Clear existing items
 
-        // Rabattcodes und ihre Prozentsätze
-        const discountCodes = {
-            "RABATT10": 0.10, // 10% Rabatt
-            "RABATT20": 0.20  // 20% Rabatt
-        };
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${imageCache[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
+                    <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
+                    <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
+                    <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
+                `;
+                orderList.appendChild(li);
+            });
+            attachQuantityChangeListeners(); // Reattach quantity change listeners for new DOM elements
+        }
+    </script>
+    <script>
+        let imageCache = {};
 
-        // Funktion zum Anwenden des Rabattcodes
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
+
+            // Autofill email if stored in localStorage
+            const savedEmail = localStorage.getItem('userEmail');
+            if (savedEmail) {
+                document.getElementById('email').value = savedEmail;
+            }
+        });
+
+        function deleteOrder() {
+            localStorage.removeItem('cart');
+            alert("Ihre Bestellung wurde gelöscht.");
+            window.location.href = 'index.html';
+        }
+    </script>
+    <script>
+        async function fetchProductImages(products) {
+            const productNames = products.map(product => product.product);
+            const { data, error } = await supabase
+                .from('products')
+                .select('name, image_url')
+                .in('name', productNames);
+
+            if (error) {
+                console.error('Error fetching product images:', error);
+                return {};
+            }
+
+            data.forEach(item => {
+                imageCache[item.name] = item.image_url; // Store image URLs in the cache
+            });
+
+            return imageCache;
+        }
+    </script>
+    <script>
+        async function saveOrderToSupabase(email, cart) {
+            // Prepare the order data in a format for Supabase
+            const orderData = cart.map(item => ({
+                email: email,
+                product_id: item.product,   // Assuming 'product' holds an identifier for each item
+                quantity: item.quantity,
+                price: item.price
+            }));
+
+            // Insert order data into the 'orders' table in Supabase
+            const { error } = await supabase.from('orders').insert(orderData);
+
+            if (error) {
+                console.error('Error saving order to Supabase:', error);
+                alert('Fehler beim Speichern der Bestellung.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <script>
+        async function sendEmail(e) {
+            e.preventDefault();
+
+            const cart = loadCart();
+            const email = document.getElementById('email').value;
+
+            if (cart.length === 0) {
+                alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
+                return;
+            }
+
+            // Save the order to Supabase first
+            const orderSaved = await saveOrderToSupabase(email, cart);
+            if (!orderSaved) return;
+
+            // Send the order form via EmailJS
+            emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
+                .then(response => {
+                    console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
+                    alert('Bestellung erfolgreich gesendet!');
+                    window.location.href = 'danke.html'; // Redirect to a thank-you page
+                })
+                .catch(error => {
+                    console.log('Fehler beim Senden der E-Mail', error);
+                    alert('Fehler beim Versenden der Bestellung.');
+                });
+        }
+    </script>
+    <script>
+        function updateOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const orderList = document.getElementById('order-list');
+            orderList.innerHTML = ''; // Clear existing items
+
+            let totalPrice = 0;
+
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <img src="${imageCache[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
+                    <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
+                    <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
+                    <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
+                `;
+                orderList.appendChild(li);
+                totalPrice += item.quantity * item.price;
+            });
+
+            const vat = totalPrice * 0.19;
+            const totalPriceWithVat = totalPrice + vat;
+            document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
+            document.getElementById('vat').textContent = vat.toFixed(2);
+            attachQuantityChangeListeners();
+        }
+
         function applyDiscountCode() {
+            const discountCodes = {
+                "RABATT10": 0.10, // 10% Rabatt
+                "RABATT20": 0.20  // 20% Rabatt
+            };
+
             const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
-            
+            const totalPriceElement = document.getElementById('total-price');
+            const vatElement = document.getElementById('vat');
+            const discountElement = document.getElementById('discount');
+            const discountMessage = document.getElementById('discount-message');
+
+            let totalPrice = parseFloat(totalPriceElement.textContent) || 0;
+            let discount = 0;
+
             if (discountCodes[discountCode]) {
-                const discountRate = discountCodes[discountCode];
-                discount = totalPrice * discountRate;
-                totalPrice -= discount; // Rabatt abziehen
-                
-                // Aktualisiere die Anzeige von MwSt und Gesamtpreis
+                discount = totalPrice * discountCodes[discountCode];
+                totalPrice -= discount;
+
                 const vat = totalPrice * 0.19;
                 const totalPriceWithVat = totalPrice + vat;
 
@@ -331,107 +278,13 @@ cart.forEach(item => {
                 discountMessage.textContent = `Rabattcode angewendet: ${discountCode}`;
                 discountMessage.style.color = 'green';
 
-                // Aktualisiere die versteckten Formularfelder
-                totalPriceInput.value = totalPriceWithVat.toFixed(2); // Aktualisierter Gesamtpreis inkl. MwSt
-                discountInput.value = discount.toFixed(2); // Rabattbetrag
+                document.getElementById('total-price-input').value = totalPriceWithVat.toFixed(2);
+                document.getElementById('discount-input').value = discount.toFixed(2);
             } else {
                 discountMessage.textContent = 'Ungültiger Rabattcode!';
                 discountMessage.style.color = 'red';
             }
         }
-
-        // MwSt von 19% berechnen
-        const vat = totalPrice * 0.19;
-        const totalPriceWithVat = totalPrice + vat;
-
-        discountElement.textContent = '0.00';  // Angenommen, kein Rabatt vor Anwendung des Codes
-        vatElement.textContent = vat.toFixed(2);
-        totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
-
-        // Setze die Bestellübersicht, den Gesamtpreis und den Rabatt in die versteckten Formularfelder
-        orderSummaryInput.value = orderSummary;
-        totalPriceInput.value = totalPriceWithVat.toFixed(2); // Anfangspreis ohne Rabatt
-        discountInput.value = discount.toFixed(2);
-
-async function saveOrderToSupabase(email, cart) {
-    // Prepare the order data in a format for Supabase
-    const orderData = cart.map(item => ({
-        email: email,
-        product_id: item.product,   // Assuming 'product' is the ID
-        quantity: item.quantity,
-        price: item.price
-    }));
-
-    // Insert order data into the 'orders' table in Supabase
-    const { error } = await supabase.from('orders').insert(orderData);
-
-    if (error) {
-        console.error('Error saving order to Supabase:', error);
-        alert('Fehler beim Speichern der Bestellung.');
-        return false;
-    }
-    return true;
-}
-
-async function sendEmail(e) {
-    e.preventDefault();
-
-    const cart = loadCart();
-    const email = document.getElementById('email').value;
-
-    // Prevent sending if cart is empty
-    if (cart.length === 0) {
-        alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
-        return;
-    }
-
-    // Save order to Supabase before sending the email
-    const orderSaved = await saveOrderToSupabase(email, cart);
-    if (!orderSaved) return;
-
-    // Send the order form via EmailJS
-    emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
-        .then(response => {
-            console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
-            alert('Bestellung erfolgreich gesendet!');
-            window.location.href = 'danke.html'; // Redirect to a thank-you page
-        })
-        .catch(error => {
-            console.log('Fehler beim Senden der E-Mail', error);
-            alert('Fehler beim Versenden der Bestellung.');
-        });
-}
-
-function updateOrderSummary() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const orderList = document.getElementById('order-list');
-    orderList.innerHTML = ''; // Clear existing items
-
-    let totalPrice = 0;
-
-    cart.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <img src="${imageCache[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
-            <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
-            <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
-            <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
-        `;
-        orderList.appendChild(li);
-        totalPrice += item.quantity * item.price;
-    });
-
-    // Calculate and update VAT and total price display
-    const vat = totalPrice * 0.19;
-    const totalPriceWithVat = totalPrice + vat;
-    document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
-    document.getElementById('vat').textContent = vat.toFixed(2);
-
-    // Reattach quantity change listeners for new DOM elements
-    attachQuantityChangeListeners();
-}
-
-
     </script>
 </body>
 </html>
