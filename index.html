@@ -242,8 +242,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Add this line to bind the click event to the cart icon
-    document.getElementById('cart-icon').addEventListener('click', toggleCart);
+    document.getElementById('cart-icon').addEventListener('click', function() {
+        console.log("Cart icon clicked");
+        toggleCart();
+    });
 });
+
+// Function to toggle the cart popup visibility
+function toggleCart() {
+    console.log("Toggling cart");
+    const cartPopup = document.getElementById('cart-popup');
+    cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
+}
 </script>
     <script>
 
