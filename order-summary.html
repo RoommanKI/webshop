@@ -84,7 +84,42 @@
         </form>
 
     </div>
+<!-- Supabase SDK Import -->
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+  const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
+  async function fetchProductImages(products) {
+      const productImages = {};
+      for (const product of products) {
+          const { data, error } = await supabase
+              .from('products')
+              .select('image_url')
+              .eq('name', product.product);
+          if (error) {
+              console.error('Error fetching product image:', error);
+          } else if (data && data.length > 0) {
+              productImages[product.product] = data[0].image_url;
+          }
+      }
+      return productImages;
+  }
+
+  document.addEventListener('DOMContentLoaded', async function() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const productImages = await fetchProductImages(cart);
+      const orderList = document.getElementById('order-list');
+      orderList.innerHTML = '';
+
+      cart.forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = `<img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
+          orderList.appendChild(li);
+      });
+  });
+</script>
     <script>
         // Bestellinformationen von localStorage laden
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
