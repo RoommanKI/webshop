@@ -5,148 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meine Bestellungen</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0; padding: 20px; }
-        header { background-color: #ff4081; color: white; padding: 20px; text-align: center; }
-        .orders-container { max-width: 800px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .order { border-bottom: 1px solid #ddd; padding: 10px 0; }
-        .order:last-child { border-bottom: none; }
-        .order h3 { color: #ff4081; margin: 0; }
-        .order p { margin: 5px 0; }
-        .total-price { font-weight: bold; color: #ff4081; 
-.webshop-btn {
-    display: inline-block;
-    background-color: white;
-    color: #ff4081; /* Pink color for text */
-    padding: 10px 20px;
-    border: 2px solid #ff4081; /* Border to match text color */
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 0; /* Adjust as necessary */
-    text-decoration: none;
-    font-size: 1rem;
-    float: right; /* Aligns the button to the right side of the header */
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
-}
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f0f0f0; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        
+        header { 
+            background-color: #ff4081; 
+            color: white; 
+            padding: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
 
-.webshop-btn:hover {
-    background-color: #ff4081; /* Pink background on hover */
-    color: white; /* White text on hover */
-}
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
 
+        .orders-container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background-color: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+
+        .order { 
+            border-bottom: 1px solid #ddd; 
+            padding: 10px 0; 
+        }
+
+        .order:last-child { 
+            border-bottom: none; 
+        }
+
+        .order h3 { 
+            color: #ff4081; 
+            margin: 0; 
+        }
+
+        .order p { 
+            margin: 5px 0; 
+        }
+
+        .total-price { 
+            font-weight: bold; 
+            color: #ff4081; 
+        }
+
+        .webshop-btn {
+            background-color: white;
+            color: #ff4081;
+            padding: 10px 20px;
+            border: 2px solid #ff4081;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .webshop-btn:hover {
+            background-color: #ff4081;
+            color: white;
+        }
     </style>
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // Supabase client setup
-    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Replace with your actual Supabase anon key
-    const supabase = createClient(supabaseUrl, supabaseKey);
+        // Supabase client setup
+        const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE'; // Replace with your actual Supabase anon key
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Function to fetch orders for the logged-in user's email
-    async function fetchOrders() {
-        // Retrieve email from localStorage
-        const email = localStorage.getItem('userEmail'); // Assuming email is stored in localStorage
-        console.log("Retrieved email from localStorage:", email); // Debug: Check email value
-        
-        if (!email) {
-            alert("Bitte melden Sie sich an, um Ihre Bestellungen zu sehen.");
-            return;
+        // Function to fetch orders for the logged-in user's email
+        async function fetchOrders() {
+            const email = localStorage.getItem('userEmail'); // Assuming email is stored in localStorage
+            console.log("Retrieved email from localStorage:", email); // Debug: Check email value
+            
+            if (!email) {
+                alert("Bitte melden Sie sich an, um Ihre Bestellungen zu sehen.");
+                return;
+            }
+
+            // Query Supabase to get orders for this email
+            const { data: orders, error } = await supabase
+                .from('orders')
+                .select('id, created_at, products, total_price')
+                .eq('email', email)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Fehler beim Abrufen der Bestellungen:", error);
+                alert("Fehler beim Abrufen Ihrer Bestellungen.");
+                return;
+            }
+
+            displayOrders(orders);
         }
 
-        // Query Supabase to get orders for this email
-        const { data: orders, error } = await supabase
-            .from('orders')
-            .select('id, created_at, products, total_price')
-            .eq('email', email)
-            .order('created_at', { ascending: false });
+        function displayOrders(orders) {
+            const ordersContainer = document.getElementById('orders-container');
+            ordersContainer.innerHTML = ''; // Clear existing content
 
-        // Debug: Log the response from Supabase
-        console.log("Supabase query result:", orders);
-        if (error) {
-            console.error("Fehler beim Abrufen der Bestellungen:", error);
-            alert("Fehler beim Abrufen Ihrer Bestellungen.");
-            return;
+            if (orders.length === 0) {
+                console.log("No orders found for this email."); // Debug: No orders found
+                ordersContainer.innerHTML = '<p>Sie haben keine Bestellungen.</p>';
+                return;
+            }
+
+            // Loop through each order and display its details
+            orders.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.classList.add('order');
+                
+                const date = new Date(order.created_at).toLocaleDateString("de-DE");
+
+                // Debug: Log the products array for each order to verify structure
+                console.log("Order Products:", order.products);
+
+                orderElement.innerHTML = `
+                    <h3>Bestellung</h3>
+                    <p>Datum: ${date}</p>
+                    <div class="products">
+                        ${order.products.map(product => `
+                            <p>${product.quantity}x ${product.name}</p>
+                        `).join('')}
+                    </div>
+                    <p class="total-price">Gesamtpreis: ${order.total_price.toFixed(2)} €</p>
+                `;
+
+                ordersContainer.appendChild(orderElement);
+            });
         }
 
-        displayOrders(orders);
-    }
-
-   function displayOrders(orders) {
-    const ordersContainer = document.getElementById('orders-container');
-    ordersContainer.innerHTML = ''; // Clear existing content
-
-    if (orders.length === 0) {
-        console.log("No orders found for this email."); // Debug: No orders found
-        ordersContainer.innerHTML = '<p>Sie haben keine Bestellungen.</p>';
-        return;
-    }
-
-    // Loop through each order and display its details
-    orders.forEach(order => {
-        const orderElement = document.createElement('div');
-        orderElement.classList.add('order');
-        
-        const date = new Date(order.created_at).toLocaleDateString("de-DE");
-
-        // Debug: Log the products array for each order to verify structure
-        console.log("Order Products:", order.products);
-
-        orderElement.innerHTML = `
-            <h3>Bestellung #${order.id}</h3>
-            <p>Datum: ${date}</p>
-            <div class="products">
-                ${order.products.map(product => `
-                    <p>${product.quantity}x ${product.name}</p>
-                `).join('')}
-            </div>
-            <p class="total-price">Gesamtpreis: ${order.total_price.toFixed(2)} €</p>
-        `;
-
-        ordersContainer.appendChild(orderElement);
-    });
-}
-
-    // Fetch orders when the page is loaded
-    document.addEventListener('DOMContentLoaded', fetchOrders);
-</script>
-
+        // Fetch orders when the page is loaded
+        document.addEventListener('DOMContentLoaded', fetchOrders);
+    </script>
 </head>
 <body>
     <header>
         <h1>Meine Bestellungen</h1>
         <a href="index.html" class="webshop-btn">Webshop</a>
-        header {
-    background-color: #ff4081;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Aligns title on left and button on right */
-}
-
-header h1 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.webshop-btn {
-    background-color: white;
-    color: #ff4081;
-    padding: 10px 20px;
-    border: 2px solid #ff4081;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.webshop-btn:hover {
-    background-color: #ff4081;
-    color: white;
-}
-
     </header>
     <div class="orders-container" id="orders-container">
         <p>Bestellungen werden geladen...</p>
