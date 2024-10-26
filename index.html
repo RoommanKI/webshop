@@ -96,7 +96,8 @@
 function saveCartToLocalStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
-    
+    console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
+
     
 // Function to toggle the cart popup visibility
 function toggleCart() {
@@ -112,17 +113,18 @@ function addToCart(productName, quantityId, price) {
     if (quantity > 0) {
         const item = cart.find(item => item.product === productName);
         if (item) {
-            item.quantity += quantity;
+            item.quantity += quantity; // Update quantity if item is already in cart
         } else {
-            cart.push({ product: productName, quantity, price });
+            cart.push({ product: productName, quantity, price }); // Add new item to cart
         }
         updateCart();
-        saveCartToLocalStorage(); // Save cart to localStorage
+        saveCartToLocalStorage(); // Save the updated cart to localStorage
         alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
     } else {
         alert("Bitte eine gültige Anzahl eingeben.");
     }
 }
+console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
 
 
 // Update the cart display and counter
@@ -158,10 +160,12 @@ function finalizeOrder() {
 
     cart = []; // Clear the cart after the order
     updateCart();
-    toggleCart();
-    localStorage.removeItem('cart'); // Clear cart from localStorage
+    saveCartToLocalStorage(); // Clear the cart from localStorage
+    toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
+console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
+
 
 </script>
 <!-- Supabase SDK Import -->
@@ -397,7 +401,10 @@ function updateCart() {
     });
     cartHTML += '</ul>';
     cartContent.innerHTML = cartHTML;
+    saveCartToLocalStorage(); // Save the cart to localStorage each time it's updated
 }
+console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
+
 
 // Finalize the order and clear the cart
 function finalizeOrder() {
@@ -417,6 +424,8 @@ function finalizeOrder() {
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
+
+        
 </script>
 </body>
 </html>
