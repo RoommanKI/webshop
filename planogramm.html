@@ -228,17 +228,18 @@
             const gridElement = document.getElementById('grid-container');
 
             // Capture grid as image
-            const canvas = await html2canvas(gridElement);
+            const canvas = await html2canvas(gridElement, {
+                allowTaint: true,
+                useCORS: true
+            });
             const imgData = canvas.toDataURL('image/png');
 
             // Page layout
             const imgWidth = 180;
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let yPos = 10;
+            pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
 
-            pdf.addImage(imgData, 'PNG', 10, yPos, imgWidth, imgHeight);
-
-            // Save or open the PDF
+            // Save the PDF
             pdf.save('planogram.pdf');
         };
     </script>
