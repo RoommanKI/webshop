@@ -121,15 +121,25 @@
             text-align: center;
         }
 
-        /* Warenkorb Styling */
-        #cart-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            cursor: pointer;
-            font-size: 24px;
-            color: #3498db;
-        }
+     /* Warenkorb Styling */
+#cart-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;               /* Cart icon color */
+    background-color: #3498db;   /* Background color to make it stand out */
+    padding: 10px;               /* Space around the icon */
+    border-radius: 50%;          /* Rounded to make it a circular button */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+#cart-icon:hover {
+    background-color: #2980b9;   /* Slightly darker on hover */
+}
+
 
         #cart-popup {
             position: fixed;
@@ -195,6 +205,8 @@
     <!-- Grid where images can be dropped -->
     <h2>Planogramm</h2>
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
+<!-- Add to Cart Button -->
+<button id="add-all-to-cart" onclick="addAllToCart()">Zum Warenkorb hinzufügen</button>
 
     <!-- Warenkorb Icon -->
     <div id="cart-icon">
@@ -315,11 +327,17 @@ function drop(event) {
     event.preventDefault();
     const productName = event.dataTransfer.getData('product');
     const imageHTML = event.dataTransfer.getData('text/html');
-    
+
+    // Add product image and a quantity input field
     event.target.innerHTML = `
         ${imageHTML}
         <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
     `;
+
+    // Store the product name in a data attribute for later use
+    event.target.setAttribute('data-product-name', productName);
+}
+
 
     // Create the "Zum Warenkorb hinzufügen" button
     const addToCartButton = document.createElement('button');
@@ -339,6 +357,28 @@ function drop(event) {
     });
 
     event.target.appendChild(addToCartButton);
+}
+function addAllToCart() {
+    // Select all grid items with products
+    const gridItems = document.querySelectorAll('.grid-item');
+
+    gridItems.forEach(gridItem => {
+        const productName = gridItem.getAttribute('data-product-name');
+        const quantityInput = gridItem.querySelector('.quantity-input');
+
+        // Ensure both product and quantity are valid
+        if (productName && quantityInput) {
+            const quantity = parseInt(quantityInput.value);
+            if (quantity > 0) {
+                // Add each product with the specified quantity to the cart
+                addToCart(productName, quantity);
+            }
+        }
+    });
+
+    // Optionally, show a message or update the cart display after adding all items
+    alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
+    updateCart();
 }
 
 
