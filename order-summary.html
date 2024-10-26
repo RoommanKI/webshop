@@ -208,7 +208,7 @@ document.getElementById('order-form').addEventListener('submit', async (event) =
     const products = cart.map(item => {
         total_price += item.price * item.quantity;
         return {
-            name: item.name, // Use product name instead of product_id
+            name: item.product, // Use the `product` field as `name` for the order data
             quantity: item.quantity
         };
     });
@@ -223,6 +223,7 @@ document.getElementById('order-form').addEventListener('submit', async (event) =
     // Call the function to save the order data to Supabase
     await saveOrderToSupabase(orderData);
 });
+
 
 
 
