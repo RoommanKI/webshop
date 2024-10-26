@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planogramm Ersteller</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .grid { display: grid; gap: 5px; margin: 20px auto; }
+        .grid-item {
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .grid-item img {
+            max-width: 80px;
+            max-height: 80px;
+            pointer-events: none;
+        }
+        .product-images { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .product-images img {
+            width: 80px;
+            height: 80px;
+            cursor: grab;
+        }
+    </style>
+</head>
+<body>
+    <h1>Planogramm Ersteller</h1>
+
+    <!-- Form to input rows and columns -->
+    <form id="grid-form">
+        <label for="rows">Reihen:</label>
+        <input type="number" id="rows" min="1" value="3" required>
+        <label for="columns">Spalten:</label>
+        <input type="number" id="columns" min="1" value="3" required>
+        <button type="submit">Grid Erstellen</button>
+    </form>
+
+    <!-- Product image selection area -->
+    <h2>Produkte</h2>
+    <div class="product-images" id="product-images">
+        <!-- Replace these with actual product images -->
+        <img src="image1.jpg" alt="Produkt 1" draggable="true">
+        <img src="image2.jpg" alt="Produkt 2" draggable="true">
+        <img src="image3.jpg" alt="Produkt 3" draggable="true">
+    </div>
+
+    <!-- Grid where images can be dropped -->
+    <h2>Planogramm</h2>
+    <div id="grid-container" class="grid"></div>
+
+    <script>
+        const form = document.getElementById('grid-form');
+        const gridContainer = document.getElementById('grid-container');
+        const productImages = document.getElementById('product-images');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const rows = document.getElementById('rows').value;
+            const columns = document.getElementById('columns').value;
+            createGrid(rows, columns);
+        });
+
+        // Function to create the grid based on user input
+        function createGrid(rows, columns) {
+            gridContainer.innerHTML = ''; // Clear any existing grid
+            gridContainer.style.gridTemplateColumns = `repeat(${columns}, 100px)`;
+            gridContainer.style.gridTemplateRows = `repeat(${rows}, 100px)`;
+
+            for (let i = 0; i < rows * columns; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.classList.add('grid-item');
+                gridItem.addEventListener('dragover', allowDrop);
+                gridItem.addEventListener('drop', drop);
+                gridContainer.appendChild(gridItem);
+            }
+        }
+
+        // Drag and drop events for product images
+        productImages.querySelectorAll('img').forEach(img => {
+            img.addEventListener('dragstart', drag);
+        });
+
+        function drag(event) {
+            event.dataTransfer.setData('text/html', event.target.outerHTML);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData('text/html');
+            event.target.innerHTML = data;
+        }
+    </script>
+</body>
+</html>
