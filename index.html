@@ -100,14 +100,18 @@ function toggleCart() {
 // Cart logic: add products to cart, update cart display
 let cart = [];
 
-function addToCart(productName, quantityId, price) {
+// Example usage:
+addToCart('Product Name', 'quantityId', 29.99, 'https://your-supabase-url/storage/v1/object/public/images/product-image.jpg');
+
+// Add to cart function:
+function addToCart(productName, quantityId, price, imageUrl) {
     const quantity = parseInt(document.getElementById(quantityId).value);
     if (quantity > 0) {
         const item = cart.find(item => item.product === productName);
         if (item) {
-            item.quantity += quantity; // If the product is already in the cart, update quantity
+            item.quantity += quantity; // Update quantity if item already in cart
         } else {
-            cart.push({ product: productName, quantity, price }); // Add new item to cart
+            cart.push({ product: productName, quantity, price, image: imageUrl }); // Add new item to cart
         }
         updateCart();
         alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
