@@ -103,30 +103,34 @@ function deleteOrder() {
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-   async function fetchProductImages(products) {
-    const productImages = {};
-    
-    for (const product of products) {
-        const { data, error } = await supabase
-            .from('products')
-            .select('image_url')
-            .eq('name', product.product);
-        
-        if (error) {
-            console.error('Error fetching product image:', error);
-        } else if (data && data.length > 0) {
-            productImages[product.product] = data[0].image_url; // Use the Supabase image URL
-        }
+  async function fetchProductImages(products) {
+    const productNames = products.map(product => product.product);
+    const { data, error } = await supabase
+        .from('products')
+        .select('name, image_url')
+        .in('name', productNames); // Retrieve images for all products at once
+
+    if (error) {
+        console.error('Error fetching product images:', error);
+        return {}; // Return an empty object if there's an error
     }
+
+    const productImages = {};
+    data.forEach(item => {
+        productImages[item.name] = item.image_url; // Map image URLs to product names
+    });
+
     return productImages;
 }
 
 
-document.addEventListener('DOMContentLoaded', async function() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const orderList = document.getElementById('order-list');
-    orderList.innerHTML = '';
+function loadCart() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+}
 
+document.addEventListener('DOMContentLoaded', async function() {
+    const cart = loadCart();
+    const orderList = document.getElementById('order-list');
     if (cart.length === 0) {
         orderList.innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
         return;
@@ -135,10 +139,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     const productImages = await fetchProductImages(cart);
     cart.forEach(item => {
         const li = document.createElement('li');
-        li.innerHTML = `<img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
+        li.innerHTML = `<img src="${productImages[item.product] || 'placeholder.jpg'}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
         orderList.appendChild(li);
     });
 });
+
 
 
 </script>
@@ -218,20 +223,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         discountInput.value = discount.toFixed(2);
 
         // Funktion zum Versenden der E-Mail mit EmailJS
-        function sendEmail(e) {
-            e.preventDefault(); // Verhindert das Standard-Submit des Formulars
+function sendEmail(e) {
+    e.preventDefault();
+    if (cart.length === 0) {
+        alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
+        return;
+    }
 
-            // EmailJS sendet das Formular
-            emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
-                .then(function(response) {
-                    console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
-                    alert('Bestellung erfolgreich gesendet!');
-                    window.location.href = 'danke.html';  // Weiterleitung zur Dankeseite
-                }, function(error) {
-                    console.log('Fehler beim Senden der E-Mail', error);
-                    alert('Fehler beim Versenden der Bestellung.');
-                });
-        }
+    emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
+        .then(response => {
+            console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
+            alert('Bestellung erfolgreich gesendet!');
+            window.location.href = 'danke.html';  // Redirect to thank you page
+        })
+        .catch(error => {
+            console.log('Fehler beim Senden der E-Mail', error);
+            alert('Fehler beim Versenden der Bestellung.');
+        });
+}
+
     </script>
 </body>
 </html>
