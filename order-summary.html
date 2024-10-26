@@ -86,13 +86,6 @@
         <button class="btn" onclick="deleteOrder()">Bestellung löschen</button>
     </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // Clear the cart from localStorage and memory
-    localStorage.removeItem('cart'); // Remove from localStorage
-    window.cart = []; // Clear the cart variable if it's used in this context
-
-    console.log('Cart cleared on order-summary.html load'); // Debugging confirmation
-});
 
 function attachQuantityChangeListeners() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
