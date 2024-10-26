@@ -244,7 +244,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     await fetchProductImages(cart);
     renderOrderSummary(cart);
     attachQuantityChangeListeners();
+
+    // Call calculateTotalPrice to display the price as soon as the page loads
+    calculateTotalPrice(cart);
 });
+
 
 
     const productImages = await fetchProductImages(cart);
