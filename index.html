@@ -164,174 +164,72 @@ function finalizeOrder() {
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
 </script>
-<script>
-// Supabase SDK and Initialization
 <script type="module">
-    // Import the Supabase client library
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+// Import Supabase client
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // Initialize Supabase client globally
-    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';  // Your Supabase URL
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';  // Your Supabase API Key
-    window.supabase = createClient(supabaseUrl, supabaseKey);  // Make Supabase globally accessible
+const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+window.supabase = createClient(supabaseUrl, supabaseKey);
 </script>
 
-<!-- Handling User Authentication and Registration -->
 <script>
-    // Registration Logic
-    document.getElementById('register-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
+// Registrierung
+document.getElementById('register-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+    const errorMessage = document.getElementById('register-error');
 
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const errorMessage = document.getElementById('register-error');
-
-        try {
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-            } else {
-                alert('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mails.');
-            }
-        } catch (err) {
-            errorMessage.textContent = `Fehler: ${err.message}`;
-        }
-    });
-
-    // Login Logic
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
-
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const loginErrorMessage = document.getElementById('login-error');
-
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-            } else {
-                localStorage.setItem('loggedIn', 'true');  // Save login status
-                alert('Anmeldung erfolgreich!');
-                location.reload(); // Reload the page to apply the logged-in view
-            }
-        } catch (err) {
-            loginErrorMessage.textContent = `Fehler: ${err.message}`;
-        }
-    });
-
-    // Logout Logic
-    function showProfileIcon() {
-        const headerButtons = document.querySelector('.header-buttons');
-        if (headerButtons) {
-            headerButtons.innerHTML = `
-                <div class="profile-container" style="position: relative;">
-                    <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
-                    <div id="profileMenu" class="profile-menu" style="display: none; position: absolute; top: 40px; right: 0; background: white; border: 1px solid #ccc; border-radius: 4px; padding: 10px;">
-                        <a href="profile.html">Profil</a>
-                        <a href="#">Bestellungen</a>
-                        <a href="#" id="logoutLink">Logout</a>
-                    </div>
-                </div>
-            `;
-
-            const profileIcon = document.getElementById('profileIcon');
-            const profileMenu = document.getElementById('profileMenu');
-            const logoutLink = document.getElementById('logoutLink');
-
-            profileIcon.addEventListener('click', function () {
-                profileMenu.style.display = (profileMenu.style.display === 'none') ? 'block' : 'none';
-            });
-
-            logoutLink.addEventListener('click', function () {
-                localStorage.removeItem('loggedIn');  // Clear login state
-                location.reload();  // Reload to reflect logged-out state
-            });
-        }
+    try {
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+        else alert('Registrierung erfolgreich! Bitte E-Mails überprüfen.');
+    } catch (err) {
+        errorMessage.textContent = `Fehler: ${err.message}`;
     }
-</script>
-
-<!-- Handling Product Display Based on Login Status -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Wrap the async code inside a function and call it
-    (async function() {
-        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';  // Check login state
-
-        // Fetch products based on login status
-        const products = await fetchProducts(isLoggedIn);
-
-        // Display products
-        displayProducts(products, isLoggedIn);
-    })();  // Immediately invoke the async function
 });
 
+// Login
+document.getElementById('login-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const loginErrorMessage = document.getElementById('login-error');
 
-// Fetch products, but include prices only if logged in
+    try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+        else {
+            localStorage.setItem('loggedIn', 'true');
+            alert('Anmeldung erfolgreich!');
+            location.reload();
+        }
+    } catch (err) {
+        loginErrorMessage.textContent = `Fehler: ${err.message}`;
+    }
+});
+
+// Produktliste laden
+document.addEventListener('DOMContentLoaded', async function() {
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+    const products = await fetchProducts(isLoggedIn);
+    displayProducts(products, isLoggedIn);
+});
+
+// Produkte holen und anzeigen
 async function fetchProducts(isLoggedIn) {
     let query = supabase.from('products').select('id, name, description, image_url');
+    if (isLoggedIn) query = query.select('id, name, description, price, image_url');
     
-    if (isLoggedIn) {
-        query = query.select('id, name, description, price, image_url');  // Include price if logged in
-    }
-
     const { data, error } = await query;
-
     if (error) {
         console.error('Error fetching products:', error);
         return [];
     }
-
     return data;
 }
 
-// Display products dynamically based on login status
-function displayProducts(products, isLoggedIn) {
-    const container = document.getElementById('products-container');
-    container.innerHTML = ''; // Clear existing products
-
-    if (products.length === 0) {
-        container.innerHTML = '<p>Keine Produkte gefunden.</p>';
-        return;
-    }
-
-    products.forEach(product => {
-        const productElement = document.createElement('div');
-        productElement.className = 'product';
-        const productId = product.id;
-
-        let productHTML = `
-            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-                <h2>${product.name}</h2>
-                <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-                <p><strong>Beschreibung:</strong> ${product.description}</p>
-        `;
-
-        // Only show price if logged in
-        if (isLoggedIn && product.price) {
-            productHTML += `<p class="price"><strong>Preis:</strong> $${product.price}</p>`;
-        }
-
-        productHTML += `
-                <label for="quantity-${productId}" class="quantity-label">Menge:</label>
-                <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
-            </div>
-        `;
-
-        productElement.innerHTML = productHTML;
-        container.appendChild(productElement);
-    });
-}
-</script>
 <!-- Handling Product Categories and Fetching from Supabase -->
 <script>
 // Event listeners for category buttons
