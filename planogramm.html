@@ -311,29 +311,50 @@
             event.preventDefault();
         }
 
-        function drop(event) {
-            event.preventDefault();
-            const productName = event.dataTransfer.getData('product');
-            const imageHTML = event.dataTransfer.getData('text/html');
-            event.target.innerHTML = imageHTML;
+function drop(event) {
+    event.preventDefault();
+    const productName = event.dataTransfer.getData('product');
+    const imageHTML = event.dataTransfer.getData('text/html');
+    
+    event.target.innerHTML = `
+        ${imageHTML}
+        <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
+    `;
 
-            if (productName) {
-                addToCart(productName);
-            }
+    // Create the "Zum Warenkorb hinzufügen" button
+    const addToCartButton = document.createElement('button');
+    addToCartButton.textContent = "Zum Warenkorb hinzufügen";
+    addToCartButton.style.position = "absolute";
+    addToCartButton.style.bottom = "10px";
+    addToCartButton.style.right = "10px";
+    addToCartButton.addEventListener('click', () => {
+        const quantityInput = event.target.querySelector('.quantity-input');
+        const quantity = parseInt(quantityInput.value);
+
+        if (quantity > 0) {
+            addToCart(productName, quantity);
+        } else {
+            alert("Bitte geben Sie eine gültige Menge ein.");
         }
+    });
+
+    event.target.appendChild(addToCartButton);
+}
+
 
         // Warenkorb Management
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        function addToCart(productName) {
-            const item = cart.find(item => item.product === productName);
-            if (item) {
-                item.quantity += 1;
-            } else {
-                cart.push({ product: productName, quantity: 1 });
-            }
-            updateCart();
-        }
+function addToCart(productName, quantity) {
+    const item = cart.find(item => item.product === productName);
+    if (item) {
+        item.quantity += quantity;
+    } else {
+        cart.push({ product: productName, quantity });
+    }
+    updateCart();
+}
+
 
         function updateCart() {
             const cartContent = document.getElementById('cart-list');
