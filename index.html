@@ -90,9 +90,18 @@
         <p>Ihr Warenkorb ist leer.</p>
     </div>
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+    <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
 </div>
 
 <script>
+    function clearCart() {
+    // Clear the cart from localStorage and reset in-memory cart
+    localStorage.removeItem('cart');
+    cart = [];
+    updateCart();
+    alert("Warenkorb wurde geleert."); // Confirmation message
+}
+
 function saveCartToLocalStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
@@ -131,7 +140,7 @@ console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
 function updateCart() {
     const cartContent = document.getElementById('cart-content');
     const cartCount = document.getElementById('cart-count');
-    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0); // Update item count
+    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     if (cart.length === 0) {
         cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
@@ -144,7 +153,9 @@ function updateCart() {
     });
     cartHTML += '</ul>';
     cartContent.innerHTML = cartHTML;
+    saveCartToLocalStorage();
 }
+
 
 function finalizeOrder() {
     if (cart.length === 0) {
