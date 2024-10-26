@@ -191,7 +191,7 @@ async function saveOrderToSupabase(orderData) {
     }
 }
 
-// Function to prepare order data and submit it to Supabase
+// Prepare order data and submit to Supabase
 document.getElementById('order-form').addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent the form from submitting normally
 
@@ -203,26 +203,25 @@ document.getElementById('order-form').addEventListener('submit', async (event) =
         return;
     }
 
-    // Calculate the total price and structure the products data
-    let total_price = 0;
-    const products = cart.map(item => {
-        total_price += item.price * item.quantity;
-        return {
-            name: item.product, // Use the `product` field as `name` for the order data
-            quantity: item.quantity
-        };
-    });
+    // Calculate total price with VAT
+    const total_price_with_vat = calculateTotalPrice(cart);
 
-    // Structure the order data to match the new schema
+    const products = cart.map(item => ({
+        name: item.product,
+        quantity: item.quantity
+    }));
+
+    // Prepare the data to save in Supabase
     const orderData = {
         email: email,
-        products: products, // JSON array of products with names and quantities
-        total_price: total_price // Total order price
+        products: products,
+        total_price: total_price_with_vat // Save total price including VAT
     };
 
     // Call the function to save the order data to Supabase
     await saveOrderToSupabase(orderData);
 });
+
 
 
 
@@ -311,52 +310,55 @@ cart.forEach(item => {
     orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
 });
 
-        // Rabattcodes und ihre Prozentsätze
-        const discountCodes = {
-            "RABATT10": 0.10, // 10% Rabatt
-            "RABATT20": 0.20  // 20% Rabatt
-        };
+// Rabattcodes und ihre Prozentsätze
+const discountCodes = {
+    "RABATT10": 0.10, // 10% Rabatt
+    "RABATT20": 0.20  // 20% Rabatt
+};
 
-        // Funktion zum Anwenden des Rabattcodes
-        function applyDiscountCode() {
-            const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
-            
-            if (discountCodes[discountCode]) {
-                const discountRate = discountCodes[discountCode];
-                discount = totalPrice * discountRate;
-                totalPrice -= discount; // Rabatt abziehen
-                
-                // Aktualisiere die Anzeige von MwSt und Gesamtpreis
-                const vat = totalPrice * 0.19;
-                const totalPriceWithVat = totalPrice + vat;
+// Step 1: Place `calculateTotalPrice` function here
+function calculateTotalPrice(cart) {
+    let totalPrice = 0;
 
-                discountElement.textContent = discount.toFixed(2);
-                vatElement.textContent = vat.toFixed(2);
-                totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
-                discountMessage.textContent = `Rabattcode angewendet: ${discountCode}`;
-                discountMessage.style.color = 'green';
+    cart.forEach(item => {
+        totalPrice += item.price * item.quantity;
+    });
 
-                // Aktualisiere die versteckten Formularfelder
-                totalPriceInput.value = totalPriceWithVat.toFixed(2); // Aktualisierter Gesamtpreis inkl. MwSt
-                discountInput.value = discount.toFixed(2); // Rabattbetrag
-            } else {
-                discountMessage.textContent = 'Ungültiger Rabattcode!';
-                discountMessage.style.color = 'red';
-            }
-        }
+    // Apply any discount if set
+    const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
+    const discountRate = discountCodes[discountCode] || 0;
+    const discount = totalPrice * discountRate;
+    totalPrice -= discount;
 
-        // MwSt von 19% berechnen
-        const vat = totalPrice * 0.19;
-        const totalPriceWithVat = totalPrice + vat;
+    // Calculate VAT (assuming 19% VAT)
+    const vat = totalPrice * 0.19;
+    const totalPriceWithVat = totalPrice + vat;
 
-        discountElement.textContent = '0.00';  // Angenommen, kein Rabatt vor Anwendung des Codes
-        vatElement.textContent = vat.toFixed(2);
-        totalPriceElement.textContent = totalPriceWithVat.toFixed(2);
+    // Update displayed values
+    document.getElementById('discount').textContent = discount.toFixed(2);
+    document.getElementById('vat').textContent = vat.toFixed(2);
+    document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
 
-        // Setze die Bestellübersicht, den Gesamtpreis und den Rabatt in die versteckten Formularfelder
-        orderSummaryInput.value = orderSummary;
-        totalPriceInput.value = totalPriceWithVat.toFixed(2); // Anfangspreis ohne Rabatt
-        discountInput.value = discount.toFixed(2);
+    // Update hidden fields with calculated values
+    totalPriceInput.value = totalPriceWithVat.toFixed(2);
+    discountInput.value = discount.toFixed(2);
+
+    return totalPriceWithVat;
+}
+
+// Funktion zum Anwenden des Rabattcodes
+function applyDiscountCode() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalPriceWithVat = calculateTotalPrice(cart); // Recalculate with discount applied
+
+    if (totalPriceWithVat) {
+        discountMessage.textContent = 'Rabattcode angewendet!';
+        discountMessage.style.color = 'green';
+    } else {
+        discountMessage.textContent = 'Ungültiger Rabattcode!';
+        discountMessage.style.color = 'red';
+    }
+}
 
         // Funktion zum Versenden der E-Mail mit EmailJS
 function sendEmail(e) {
