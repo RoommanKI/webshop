@@ -46,9 +46,11 @@
             <p id="discount-message" style="color: red; margin-top: 10px;"></p>
         </div>
 
-        <p class="discount-price">Rabatt: <span id="discount"></span> €</p>
-        <p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
-        <p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
+<p class="subtotal-price">Zwischensumme (ohne MwSt und Rabatt): <span id="subtotal-price"></span> €</p>
+<p class="discount-price">Rabatt: <span id="discount"></span> €</p>
+<p class="vat-price">MwSt (19%): <span id="vat"></span> €</p>
+<p class="total-price">Gesamtpreis (inkl. MwSt): <span id="total-price"></span> €</p>
+
 
         <!-- Formularfelder für Name, E-Mail, Adresse und Kommentar -->
         <form id="order-form" onsubmit="sendEmail(event)">
@@ -317,26 +319,28 @@ cart.forEach(item => {
 // Rabattcodes und ihre Prozentsätze
 const discountCodes = {
     "RABATT10": 0.10, // 10% Rabatt
-    "RABATT20": 0.20  // 20% Rabatt
+    "RABATT25": 0.25  // 25% Rabatt
 };
 
-// Step 1: Place `calculateTotalPrice` function here
 function calculateTotalPrice(cart) {
-    let totalPrice = 0;
+    let subtotal = 0; // Calculate subtotal without VAT and discount
 
     cart.forEach(item => {
-        totalPrice += item.price * item.quantity;
+        subtotal += item.price * item.quantity;
     });
+
+    // Display subtotal (price without VAT and discount)
+    document.getElementById('subtotal-price').textContent = subtotal.toFixed(2);
 
     // Apply any discount if set
     const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
     const discountRate = discountCodes[discountCode] || 0;
-    const discount = totalPrice * discountRate;
-    totalPrice -= discount;
+    const discount = subtotal * discountRate;
+    const discountedPrice = subtotal - discount;
 
     // Calculate VAT (assuming 19% VAT)
-    const vat = totalPrice * 0.19;
-    const totalPriceWithVat = totalPrice + vat;
+    const vat = discountedPrice * 0.19;
+    const totalPriceWithVat = discountedPrice + vat;
 
     // Update displayed values
     document.getElementById('discount').textContent = discount.toFixed(2);
@@ -349,6 +353,7 @@ function calculateTotalPrice(cart) {
 
     return totalPriceWithVat;
 }
+
 
 // Funktion zum Anwenden des Rabattcodes
 function applyDiscountCode() {
