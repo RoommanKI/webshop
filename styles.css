@@ -90,7 +90,18 @@ header {
     border-radius: 50%;
     font-size: 14px;
 }
-
+#cart-popup {
+    display: none; /* Ensure it is hidden by default */
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
 /* Modal styling */
 .modal {
     display: none;
