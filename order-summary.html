@@ -175,48 +175,53 @@ document.addEventListener('DOMContentLoaded', function() {
         return imageCache;
     }
 
-    // Function to save the order to Supabase
-    async function saveOrderToSupabase(orderData) {
-        const { data, error } = await supabase
-            .from('orders')
-            .insert(orderData);
+// Function to save the order to Supabase
+async function saveOrderToSupabase(orderData) {
+    const { data, error } = await supabase
+        .from('orders')
+        .insert(orderData);
 
-        if (error) {
-            console.error("Error saving order:", error);
-            alert("There was an error saving your order. Please try again.");
-        } else {
-            console.log("Order saved successfully:", data);
-            alert("Order placed successfully!");
-            window.location.href = 'danke.html';  // Redirect to thank you page
-        }
+    if (error) {
+        console.error("Error saving order:", error);
+        alert("There was an error saving your order. Please try again.");
+    } else {
+        console.log("Order saved successfully:", data);
+        alert("Order placed successfully!");
+        window.location.href = 'danke.html';  // Redirect to thank you page
+    }
+}
+
+// Form submission event listener to gather and submit order data
+document.getElementById('order-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || []; // Retrieve cart data from localStorage
+    const email = document.getElementById('email').value; // Get email from the form
+
+    if (cart.length === 0) {
+        alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
+        return;
     }
 
-    // Form submission event listener to gather and submit order data
-    document.getElementById('order-form').addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevent the form from submitting normally
+    // Get the calculated total price from the order summary (including VAT, discount, etc.)
+    const total_price = parseFloat(document.getElementById('total-price').textContent);
 
-        const cart = JSON.parse(localStorage.getItem('cart')) || []; // Retrieve cart data from localStorage
-        const email = document.getElementById('email').value; // Get email from the form
+    // Structure the products array to match the Supabase schema
+    const products = cart.map(item => ({
+        product_id: item.product_id, // assuming `product_id` is in the cart data
+        quantity: item.quantity
+    }));
 
-        if (cart.length === 0) {
-            alert("Der Warenkorb ist leer. Bitte fügen Sie Artikel hinzu, bevor Sie die Bestellung senden.");
-            return;
-        }
+    // Structure the order data with email, products, and the final calculated price
+    const orderData = {
+        email: email,
+        products: products, // JSON array of products with their quantities
+        total_price: total_price // Reuse the calculated total price from order summary
+    };
 
-        // Format order data to match the structure of the Supabase `orders` table
-        const orderData = cart.map(item => ({
-            email: email,
-            product_id: item.product_id, // assuming `product_id` is in the cart data
-            quantity: item.quantity,
-            price: item.price * item.quantity // total price for each item
-        }));
-
-        // Call the function to save the order data to Supabase
-        await saveOrderToSupabase(orderData);
-    });
-
-
-
+    // Call the function to save the order data to Supabase
+    await saveOrderToSupabase(orderData);
+});
 
 
 function loadCart() {
