@@ -263,8 +263,8 @@
             event.target.appendChild(input);
         }
 
-        // Collect items and quantities and add to cart
-        function addToCart() {
+        // Export addToCart function to global scope
+        window.addToCart = function() {
             const items = [];
             document.querySelectorAll('.grid-item').forEach(item => {
                 const img = item.querySelector('img');
@@ -278,7 +278,7 @@
                 }
             });
             alert(`Produkte zum Warenkorb hinzugefügt: ${JSON.stringify(items)}`);
-        }
+        };
     </script>
 </body>
 </html>
