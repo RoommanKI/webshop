@@ -104,33 +104,31 @@ function deleteOrder() {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     async function fetchProductImages(products) {
-        const productImages = {};
-        for (const product of products) {
-            const { data, error } = await supabase
-                .from('products')
-                .select('image_url')
-                .eq('name', product.product);
-            if (error) {
-                console.error('Error fetching product image:', error);
-            } else if (data && data.length > 0) {
-                productImages[product.product] = data[0].image_url;
-            }
-        }
-        return productImages;
+    const productImages = {};
+    for (const product of products) {
+        productImages[product.product] = 'https://via.placeholder.com/50'; // Placeholder image for testing
+    }
+    return productImages;
+}
+
+
+document.addEventListener('DOMContentLoaded', async function() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const orderList = document.getElementById('order-list');
+    orderList.innerHTML = '';
+
+    if (cart.length === 0) {
+        orderList.innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
+        return;
     }
 
-    document.addEventListener('DOMContentLoaded', async function() {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const productImages = await fetchProductImages(cart);
-        const orderList = document.getElementById('order-list');
-        orderList.innerHTML = '';
-
-        cart.forEach(item => {
-            const li = document.createElement('li');
-            li.innerHTML = `<img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
-            orderList.appendChild(li);
-        });
+    const productImages = await fetchProductImages(cart);
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€`;
+        orderList.appendChild(li);
     });
+});
 
 
 </script>
