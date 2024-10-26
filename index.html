@@ -369,14 +369,14 @@ function displayProducts(products, isLoggedIn) {
 
 
 // Cart logic: add products to the cart and update cart display
-function addToCart(productName, quantityId, price) {
+function addToCart(productName, quantityId, price, imageUrl) {
     const quantity = parseInt(document.getElementById(quantityId).value);
     if (quantity > 0) {
         const item = cart.find(item => item.product === productName);
         if (item) {
             item.quantity += quantity; // Update quantity if item already in cart
         } else {
-            cart.push({ product: productName, quantity, price }); // Add new item to cart
+            cart.push({ product: productName, quantity, price, image: imageUrl }); // Add new item to cart
         }
         updateCart();
         alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
@@ -398,7 +398,7 @@ function updateCart() {
 
     let cartHTML = '<ul>';
     cart.forEach(item => {
-        cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        cartHTML += `<li><img src="${item.image}" alt="${item.product}" style="width:50px;height:50px;vertical-align:middle;margin-right:10px;"> ${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
     });
     cartHTML += '</ul>';
     cartContent.innerHTML = cartHTML;
@@ -417,11 +417,17 @@ function finalizeOrder() {
     });
     alert(`Ihre Bestellung:\n${orderSummary}`);
 
+    localStorage.setItem('cart', JSON.stringify(cart)); // Save cart to localStorage
+
     cart = []; // Clear the cart after the order
     updateCart();
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
+
+// Ensure to pass the image URL when calling addToCart
+// Example usage:
+// addToCart('Product Name', 'quantityId', 29.99, 'https://your-supabase-url/storage/v1/object/public/images/product-image.jpg');
 </script>
 </body>
 </html>
