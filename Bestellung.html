@@ -51,38 +51,40 @@
         displayOrders(orders);
     }
 
-    // Function to display orders on the page
-    function displayOrders(orders) {
-        const ordersContainer = document.getElementById('orders-container');
-        ordersContainer.innerHTML = ''; // Clear existing content
+   function displayOrders(orders) {
+    const ordersContainer = document.getElementById('orders-container');
+    ordersContainer.innerHTML = ''; // Clear existing content
 
-        if (orders.length === 0) {
-            console.log("No orders found for this email."); // Debug: No orders found
-            ordersContainer.innerHTML = '<p>Sie haben keine Bestellungen.</p>';
-            return;
-        }
-
-        // Loop through each order and display its details
-        orders.forEach(order => {
-            const orderElement = document.createElement('div');
-            orderElement.classList.add('order');
-            
-            const date = new Date(order.created_at).toLocaleDateString("de-DE");
-
-            orderElement.innerHTML = `
-                <h3>Bestellung #${order.id}</h3>
-                <p>Datum: ${date}</p>
-                <div class="products">
-                    ${order.products.map(product => `
-                        <p>${product.quantity}x Produkt ID: ${product.product_id}</p>
-                    `).join('')}
-                </div>
-                <p class="total-price">Gesamtpreis: ${order.total_price.toFixed(2)} €</p>
-            `;
-
-            ordersContainer.appendChild(orderElement);
-        });
+    if (orders.length === 0) {
+        console.log("No orders found for this email."); // Debug: No orders found
+        ordersContainer.innerHTML = '<p>Sie haben keine Bestellungen.</p>';
+        return;
     }
+
+    // Loop through each order and display its details
+    orders.forEach(order => {
+        const orderElement = document.createElement('div');
+        orderElement.classList.add('order');
+        
+        const date = new Date(order.created_at).toLocaleDateString("de-DE");
+
+        // Debug: Log the products array for each order to verify structure
+        console.log("Order Products:", order.products);
+
+        orderElement.innerHTML = `
+            <h3>Bestellung #${order.id}</h3>
+            <p>Datum: ${date}</p>
+            <div class="products">
+                ${order.products.map(product => `
+                    <p>${product.quantity}x ${product.name}</p>
+                `).join('')}
+            </div>
+            <p class="total-price">Gesamtpreis: ${order.total_price.toFixed(2)} €</p>
+        `;
+
+        ordersContainer.appendChild(orderElement);
+    });
+}
 
     // Fetch orders when the page is loaded
     document.addEventListener('DOMContentLoaded', fetchOrders);
