@@ -323,31 +323,32 @@ const discountCodes = {
 };
 
 function calculateTotalPrice(cart) {
-    let subtotal = 0; // Calculate subtotal without VAT and discount
+    let subtotal = 0;
 
+    // Calculate subtotal (before VAT and discount)
     cart.forEach(item => {
         subtotal += item.price * item.quantity;
     });
 
-    // Display subtotal (price without VAT and discount)
+    // Update subtotal display
     document.getElementById('subtotal-price').textContent = subtotal.toFixed(2);
 
-    // Apply any discount if set
+    // Apply discount if any
     const discountCode = document.getElementById('discount-code').value.trim().toUpperCase();
     const discountRate = discountCodes[discountCode] || 0;
     const discount = subtotal * discountRate;
     const discountedPrice = subtotal - discount;
 
-    // Calculate VAT (assuming 19% VAT)
+    // Calculate VAT
     const vat = discountedPrice * 0.19;
     const totalPriceWithVat = discountedPrice + vat;
 
-    // Update displayed values
+    // Update displayed values for discount, VAT, and total price
     document.getElementById('discount').textContent = discount.toFixed(2);
     document.getElementById('vat').textContent = vat.toFixed(2);
     document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
 
-    // Update hidden fields with calculated values
+    // Update hidden fields for form submission
     totalPriceInput.value = totalPriceWithVat.toFixed(2);
     discountInput.value = discount.toFixed(2);
 
@@ -393,8 +394,6 @@ function updateOrderSummary() {
     const orderList = document.getElementById('order-list');
     orderList.innerHTML = ''; // Clear existing items
 
-    let totalPrice = 0;
-
     cart.forEach((item, index) => {
         const li = document.createElement('li');
         li.innerHTML = `
@@ -404,18 +403,15 @@ function updateOrderSummary() {
             <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
         `;
         orderList.appendChild(li);
-        totalPrice += item.quantity * item.price;
     });
 
-    // Calculate and update VAT and total price display
-    const vat = totalPrice * 0.19;
-    const totalPriceWithVat = totalPrice + vat;
-    document.getElementById('total-price').textContent = totalPriceWithVat.toFixed(2);
-    document.getElementById('vat').textContent = vat.toFixed(2);
+    // Call calculateTotalPrice to update subtotal, discount, VAT, and total
+    calculateTotalPrice(cart);
 
     // Reattach quantity change listeners for new DOM elements
     attachQuantityChangeListeners();
 }
+
 
 
     </script>
