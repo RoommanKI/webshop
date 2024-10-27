@@ -519,14 +519,16 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
         } : null);
     });
 
-    // Render each column separately on the PDF
-    for (let page = 0; page < Math.ceil(Math.max(...columns.map(col => col.length)) / pdfRows); page++) {
-        if (page > 0) pdf.addPage();
+    // Process each column independently, ensuring row-by-row handling within page limits
+    for (let column = 0; column < pdfColumns; column++) {
+        const images = columns[column];
+        
+        for (let page = 0; page < Math.ceil(images.length / pdfRows); page++) {
+            if (column > 0 || page > 0) pdf.addPage();  // New page for each new column after the first
 
-        columns.forEach((column, columnIndex) => {
             for (let row = 0; row < pdfRows; row++) {
                 const imageIndex = page * pdfRows + row;
-                const image = column[imageIndex];
+                const image = images[imageIndex];
 
                 if (image) {
                     const aspectRatio = image.width / image.height;
@@ -540,13 +542,13 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
                         displayWidth = displayHeight * aspectRatio;
                     }
 
-                    const xPos = margin + columnIndex * (cellWidth + spacing);
+                    const xPos = margin + column * (cellWidth + spacing);
                     const yPos = margin + row * (cellHeight + spacing);
 
                     pdf.addImage(image.src, "JPEG", xPos, yPos, displayWidth, displayHeight);
                 }
             }
-        });
+        }
     }
 
     pdf.save("planogram.pdf");
