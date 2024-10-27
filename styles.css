@@ -1,6 +1,6 @@
 /* Utility class for hidden elements */
 .hidden {
-    display: none; /* Use this class dynamically with JavaScript */
+    display: none;
 }
 
 /* General body and layout styles */
@@ -27,45 +27,12 @@ header {
     align-items: center;
 }
 
-.profile-icon {
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-}
-
-.profile-dropdown {
-    display: none;
-    position: absolute;
-    right: 10px;
-    top: 40px;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    width: 150px;
-    z-index: 1000;
-}
-
-.profile-dropdown ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.profile-dropdown ul li {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #ccc;
-}
-
-.profile-dropdown ul li:hover {
-    background-color: #f0f0f0;
-}
-
 /* Header buttons for login and registration */
 .header-buttons {
     display: flex;
     gap: 10px;
 }
+
 .planogram-btn {
     display: inline-block;
     background-color: white;
@@ -76,7 +43,6 @@ header {
     cursor: pointer;
     text-decoration: none;
     font-size: 1rem;
-    margin-left: 10px; /* Space between profile icon and button */
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -108,18 +74,7 @@ header {
     border-radius: 50%;
     font-size: 14px;
 }
-#cart-popup {
-    display: none; /* Ensure it is hidden by default */
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 20px;
-    z-index: 1000; /* Ensure it appears above other elements */
-}
+
 /* Modal styling */
 .modal {
     display: none;
@@ -146,21 +101,6 @@ header {
     color: red;
 }
 
-/* Basic button styling */
-button {
-    padding: 10px 15px;
-    background-color: white;
-    color: #ff4081;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #ff4081;
-    color: white;
-}
-
 /* Navigation styles */
 nav {
     margin-top: 50px;
@@ -182,34 +122,36 @@ nav a:hover {
 
 /* Product list styling */
 .product-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 products per row */
+    gap: 20px;
     max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    gap: 20px; /* Gap between products */
+    margin: 20px auto;
+    padding: 10px;
 }
 
 /* Styling for individual product cards */
 .product {
     background-color: white;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: calc(20% - 20px); /* Five cards per row */
-    box-sizing: border-box;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.product:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .product img {
     max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    max-height: 300px;
-    object-fit: contain;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 /* Styling for product titles and price */
@@ -221,20 +163,6 @@ nav a:hover {
 .product .price {
     font-weight: bold;
     color: #ff4081;
-}
-
-/* Buttons inside product cards */
-.product button {
-    padding: 10px;
-    background-color: #ff4081;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.product button:hover {
-    background-color: #e73370;
 }
 
 /* Lightbox styling */
@@ -271,20 +199,14 @@ nav a:hover {
 }
 
 /* Responsive adjustments */
-@media (max-width: 1000px) {
-    .product {
-        width: calc(33.33% - 20px); /* 3 columns for medium screens */
-    }
-}
-
 @media (max-width: 768px) {
-    .product {
-        width: calc(50% - 20px); /* 2 columns for smaller screens */
+    .product-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 products per row on smaller screens */
     }
 }
 
 @media (max-width: 500px) {
-    .product {
-        width: 100%; /* 1 column for very small screens */
+    .product-list {
+        grid-template-columns: 1fr; /* 1 product per row on very small screens */
     }
 }
