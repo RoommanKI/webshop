@@ -209,9 +209,6 @@ let selectedOrientation = '';
 document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
-    // Initiale Nachricht, bevor Produkte angezeigt werden
-    document.getElementById('products-container').innerHTML = '<p>Wählen Sie eine Kategorie, um Produkte zu sehen.</p>';
-
     function toggleProfileIcon() {
         const headerButtons = document.querySelector('.header-buttons');
         headerButtons.innerHTML = `
