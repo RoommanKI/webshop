@@ -507,11 +507,11 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
 
     const gridItems = document.querySelectorAll(".grid-item");
 
-    // Organisiere die Bilder in Spalten für das Planogramm
+    // Organize images by column to respect their separate row counts
     const columns = Array.from({ length: pdfColumns }, () => []);
     gridItems.forEach((gridItem, index) => {
         const img = gridItem.querySelector("img");
-        const columnIndex = index % pdfColumns; // Welcher Spalte das Bild angehört
+        const columnIndex = index % pdfColumns; // Assign each item to its column
         if (img) {
             columns[columnIndex].push({
                 src: img.src,
@@ -519,18 +519,19 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
                 height: img.naturalHeight
             });
         } else {
-            columns[columnIndex].push(null);
+            columns[columnIndex].push(null); // Add a null entry if no image
         }
     });
 
-    // Render-Sequenz pro Seite
-    let currentRow = 0;
+    // Process each page, maintaining rows and columns independently
     for (let page = 0; page < Math.ceil(Math.max(...columns.map(col => col.length)) / pdfRows); page++) {
         if (page > 0) pdf.addPage();
 
         for (let row = 0; row < pdfRows; row++) {
             for (let column = 0; column < pdfColumns; column++) {
-                const image = columns[column][currentRow];
+                const imageIndex = page * pdfRows + row;
+                const image = columns[column][imageIndex];
+
                 if (image) {
                     const aspectRatio = image.width / image.height;
                     let displayWidth, displayHeight;
@@ -549,12 +550,12 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
                     pdf.addImage(image.src, "JPEG", xPos, yPos, displayWidth, displayHeight);
                 }
             }
-            currentRow++;
         }
     }
 
     pdf.save("planogram.pdf");
 };
+
 
     </script>
 </body>
