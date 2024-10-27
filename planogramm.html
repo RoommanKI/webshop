@@ -507,23 +507,19 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
 
     const gridItems = document.querySelectorAll(".grid-item");
 
-    // Organize images by column to respect their separate row counts
+    // Organize images by columns, maintaining the row structure within each column
     const columns = Array.from({ length: pdfColumns }, () => []);
     gridItems.forEach((gridItem, index) => {
         const img = gridItem.querySelector("img");
-        const columnIndex = index % pdfColumns; // Assign each item to its column
-        if (img) {
-            columns[columnIndex].push({
-                src: img.src,
-                width: img.naturalWidth,
-                height: img.naturalHeight
-            });
-        } else {
-            columns[columnIndex].push(null); // Add a null entry if no image
-        }
+        const columnIndex = index % pdfColumns;
+        columns[columnIndex].push(img ? {
+            src: img.src,
+            width: img.naturalWidth,
+            height: img.naturalHeight
+        } : null);
     });
 
-    // Process each page, maintaining rows and columns independently
+    // Add images to the PDF page by page, respecting the column and row structure
     for (let page = 0; page < Math.ceil(Math.max(...columns.map(col => col.length)) / pdfRows); page++) {
         if (page > 0) pdf.addPage();
 
