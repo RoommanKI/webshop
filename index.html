@@ -97,6 +97,11 @@
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
     <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
 </div>
+    <!-- Lightbox for Popup -->
+<div class="lightbox hidden" id="lightbox">
+    <span class="lightbox-close" id="lightbox-close">&times;</span>
+    <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
+</div>
 
 
 <script>
@@ -485,31 +490,28 @@ function finalizeOrder() {
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
-// JavaScript to handle the lightbox popup
 document.addEventListener('DOMContentLoaded', function () {
     const lightbox = document.getElementById('lightbox');
     const lightboxImage = document.getElementById('lightbox-image');
     const lightboxClose = document.getElementById('lightbox-close');
 
-    // Only proceed if elements are found
     if (lightbox && lightboxImage && lightboxClose) {
         // Open lightbox when an image is clicked
         document.querySelectorAll('.product img').forEach(img => {
             img.addEventListener('click', function () {
                 lightboxImage.src = img.src;
-                lightbox.classList.remove('hidden');
-                lightbox.style.display = 'flex'; // Make sure it uses flex to center
+                lightbox.classList.add('show'); // Add the 'show' class to display
             });
         });
 
         // Close lightbox when clicking on the close button or outside the image
         lightboxClose.addEventListener('click', () => closeLightbox());
         lightbox.addEventListener('click', (event) => {
-            if (event.target === lightbox) closeLightbox(); // Only close if clicking outside the image
+            if (event.target === lightbox) closeLightbox();
         });
 
         function closeLightbox() {
-            lightbox.style.display = 'none';
+            lightbox.classList.remove('show');
             lightboxImage.src = ''; // Clear image source when closing
         }
     } else {
@@ -517,13 +519,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
         
 </script>
-    <!-- Lightbox for Popup -->
-<div class="lightbox hidden" id="lightbox">
-    <span class="lightbox-close" id="lightbox-close">&times;</span>
-    <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
-</div>
 
 </body>
 </html>
