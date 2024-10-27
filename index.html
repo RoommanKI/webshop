@@ -67,7 +67,12 @@
     <a href="#" data-category="weihnachten">Weihnachtskarten</a>
     <a href="#" data-category="events">Eventkarten</a>
 </nav>
-
+<label for="orientation-filter">Ausrichtung:</label>
+<select id="orientation-filter">
+    <option value="">Alle</option>
+    <option value="portrait">Hochkant</option>
+    <option value="landscape">Quer</option>
+</select>
 <div id="products-container" class="product-list"></div>
 
 <!-- Startseite Abschnitt -->
@@ -92,12 +97,7 @@
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
     <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
 </div>
-<label for="orientation-filter">Ausrichtung:</label>
-<select id="orientation-filter">
-    <option value="">Alle</option>
-    <option value="portrait">Hochkant</option>
-    <option value="landscape">Quer</option>
-</select>
+
 
 <script>
     function clearCart() {
@@ -195,6 +195,10 @@ window.supabase = createClient(supabaseUrl, supabaseKey);
 </script>
 
 <script>
+    // Define global variables for selected filters
+let selectedCategory = '';
+let selectedOrientation = '';
+
 document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
@@ -310,18 +314,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const orientationFilter = document.getElementById('orientation-filter');
 
     orientationFilter.addEventListener('change', async () => {
-        const selectedOrientation = orientationFilter.value;
+        selectedOrientation = orientationFilter.value;
         const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-        const products = await fetchProductsByOrientation(selectedOrientation, isLoggedIn);
+        const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
         displayProducts(products, isLoggedIn);
     });
 });
 
-async function fetchProductsByOrientation(orientation, isLoggedIn) {
-    let query = supabase.from('products').select('id, name, description, image_url, orientation');
+
+async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
+    let query = supabase.from('products').select('id, name, description, image_url, orientation').eq('category', category);
 
     if (isLoggedIn) {
-        query = query.select('id, name, description, price, image_url, orientation');
+        query = query.select('id, name, description, price, image_url, orientation').eq('category', category);
     }
 
     if (orientation) {
@@ -336,6 +341,7 @@ async function fetchProductsByOrientation(orientation, isLoggedIn) {
 
     return data;
 }
+
 <!-- Handling Product Categories and Fetching from Supabase -->
 
 // Event listeners for category buttons
@@ -346,17 +352,16 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', async (event) => {
             event.preventDefault(); // Prevent default link behavior
 
-            const category = link.getAttribute('data-category'); // Get the category from data-category attribute
-            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';  // Check if logged in
+            selectedCategory = link.getAttribute('data-category'); // Update selectedCategory
+            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
-            // Fetch products for the selected category
-            const products = await fetchProductsByCategory(category, isLoggedIn);
-
-            // Display the fetched products
+            // Fetch products based on both selected category and orientation
+            const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
             displayProducts(products, isLoggedIn);
         });
     });
 });
+
 
 // Fetch products by category from Supabase, including prices only if logged in
 async function fetchProductsByCategory(category, isLoggedIn) {
