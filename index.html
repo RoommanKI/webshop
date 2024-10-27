@@ -485,6 +485,32 @@ function finalizeOrder() {
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
+// JavaScript to handle the lightbox popup
+document.addEventListener('DOMContentLoaded', function () {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxClose = document.getElementById('lightbox-close');
+
+    // Open lightbox when an image is clicked
+    document.querySelectorAll('.product img').forEach(img => {
+        img.addEventListener('click', function () {
+            lightboxImage.src = img.src;
+            lightbox.classList.remove('hidden');
+            lightbox.style.display = 'flex'; // Make sure it uses flex to center
+        });
+    });
+
+    // Close lightbox when clicking on the close button or outside the image
+    lightboxClose.addEventListener('click', () => closeLightbox());
+    lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) closeLightbox(); // Only close if clicking outside the image
+    });
+
+    function closeLightbox() {
+        lightbox.style.display = 'none';
+        lightboxImage.src = ''; // Clear image source when closing
+    }
+});
 
         
 </script>
