@@ -460,60 +460,64 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 5; // Reduce margin to make more space for images
+    const margin = 10; // A bit of margin around each image
 
-    // Calculate cell dimensions with a larger size to fill space better
+    // Calculate cell dimensions based on the number of rows and columns
     const cellWidth = (pageWidth - (pdfColumns + 1) * margin) / pdfColumns;
     const cellHeight = (pageHeight - (pdfRows + 1) * margin) / pdfRows;
 
     const gridItems = document.querySelectorAll(".grid-item");
+    const images = [];
 
-    let rowIndex = 0;
-    let columnIndex = 0;
-
-    for (let i = 0; i < gridItems.length; i++) {
-        const gridItem = gridItems[i];
+    // Collect images in the grid order
+    gridItems.forEach(gridItem => {
         const img = gridItem.querySelector("img");
-
         if (img) {
-            const imgData = img.src;
-            const imgAspectRatio = img.naturalWidth / img.naturalHeight;
+            images.push({
+                src: img.src,
+                width: img.naturalWidth,
+                height: img.naturalHeight
+            });
+        } else {
+            images.push(null); // Placeholder for empty cells
+        }
+    });
 
-            let displayWidth, displayHeight;
-            
-            // Scale the image to fit within the cell while maintaining aspect ratio
-            if (imgAspectRatio >= 1) {
-                // Landscape or square
-                displayWidth = Math.min(cellWidth, cellHeight * imgAspectRatio);
-                displayHeight = displayWidth / imgAspectRatio;
-            } else {
-                // Portrait
-                displayHeight = Math.min(cellHeight, cellWidth / imgAspectRatio);
-                displayWidth = displayHeight * imgAspectRatio;
-            }
+    let imageIndex = 0;
 
-            // Center image within cell
-            const xPos = margin + columnIndex * (cellWidth + margin) + (cellWidth - displayWidth) / 2;
-            const yPos = margin + rowIndex * (cellHeight + margin) + (cellHeight - displayHeight) / 2;
+    for (let page = 0; page < Math.ceil(images.length / (pdfRows * pdfColumns)); page++) {
+        if (page > 0) pdf.addPage();
 
-            pdf.addImage(imgData, "JPEG", xPos, yPos, displayWidth, displayHeight);
+        for (let row = 0; row < pdfRows; row++) {
+            for (let column = 0; column < pdfColumns; column++) {
+                const image = images[imageIndex++];
+                if (image) {
+                    const aspectRatio = image.width / image.height;
+                    let displayWidth, displayHeight;
 
-            rowIndex++;
-            if (rowIndex >= pdfRows) {
-                rowIndex = 0;
-                columnIndex++;
-            }
+                    if (aspectRatio >= 1) {
+                        // Landscape or square
+                        displayWidth = Math.min(cellWidth, cellHeight * aspectRatio);
+                        displayHeight = displayWidth / aspectRatio;
+                    } else {
+                        // Portrait
+                        displayHeight = Math.min(cellHeight, cellWidth / aspectRatio);
+                        displayWidth = displayHeight * aspectRatio;
+                    }
 
-            // Add a new page if we’ve filled the specified columns
-            if (columnIndex >= pdfColumns) {
-                pdf.addPage();
-                columnIndex = 0;
+                    // Center image in the cell
+                    const xPos = margin + column * (cellWidth + margin) + (cellWidth - displayWidth) / 2;
+                    const yPos = margin + row * (cellHeight + margin) + (cellHeight - displayHeight) / 2;
+
+                    pdf.addImage(image.src, "JPEG", xPos, yPos, displayWidth, displayHeight);
+                }
             }
         }
     }
 
     pdf.save("planogram.pdf");
 };
+
 
 
     </script>
