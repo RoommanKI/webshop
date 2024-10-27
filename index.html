@@ -404,12 +404,13 @@ function displayProducts(products, isLoggedIn) {
         productElement.className = 'product';
         const productId = product.id;
 
-        let productHTML = `
-            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-                <h2>${product.name}</h2>
-                <img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; max-height: 300px;">
-                <p><strong>Beschreibung:</strong> ${product.description}</p>
-        `;
+let productHTML = `
+    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+        <h2>${product.name}</h2>
+        <img src="${product.image_url}" alt="${product.name}" class="lightbox-trigger" style="max-width: 100%; max-height: 300px;">
+        <p><strong>Beschreibung:</strong> ${product.description}</p>
+`;
+
 
         // Preis anzeigen, wenn der Nutzer eingeloggt ist
         if (isLoggedIn && product.price) {
@@ -498,32 +499,31 @@ function finalizeOrder() {
         initializeLightbox();
     
 
-    function initializeLightbox() {
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImage = document.getElementById('lightbox-image');
-        const lightboxClose = document.getElementById('lightbox-close');
-        const triggers = document.querySelectorAll('.lightbox-trigger');
+function initializeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const triggers = document.querySelectorAll('.lightbox-trigger');
 
-        triggers.forEach(trigger => {
-            trigger.addEventListener('click', function() {
-                lightboxImage.src = this.src;
-                lightbox.classList.remove('hidden');
-            });
-        });
+    // Remove any previously attached listeners (optional, good for cleanup)
+    triggers.forEach(trigger => {
+        trigger.removeEventListener('click', openLightbox);
+        trigger.addEventListener('click', openLightbox);
+    });
 
-        if (lightboxClose) {
-            lightboxClose.addEventListener('click', function() {
-                lightbox.classList.add('hidden');
-            });
-        }
-
-        // Close lightbox when clicking outside the image
-        lightbox.addEventListener('click', function(event) {
-            if (event.target === lightbox) {
-                lightbox.classList.add('hidden');
-            }
-        });
+    function openLightbox(event) {
+        lightboxImage.src = event.target.src;
+        lightbox.classList.add('show'); // Assuming 'show' makes the lightbox visible
     }
+
+    // Close button
+    lightboxClose.addEventListener('click', () => lightbox.classList.remove('show'));
+
+    // Close when clicking outside the image
+    lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) lightbox.classList.remove('show');
+    });
+}
 
     // Call displayProducts after fetching products
     document.addEventListener('DOMContentLoaded', async function() {
