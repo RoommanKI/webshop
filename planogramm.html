@@ -507,7 +507,7 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
 
     const gridItems = document.querySelectorAll(".grid-item");
 
-    // Organize images by columns, maintaining the row structure within each column
+    // Organize images by column with independent row counts
     const columns = Array.from({ length: pdfColumns }, () => []);
     gridItems.forEach((gridItem, index) => {
         const img = gridItem.querySelector("img");
@@ -519,14 +519,14 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
         } : null);
     });
 
-    // Add images to the PDF page by page, respecting the column and row structure
+    // Render each column separately on the PDF
     for (let page = 0; page < Math.ceil(Math.max(...columns.map(col => col.length)) / pdfRows); page++) {
         if (page > 0) pdf.addPage();
 
-        for (let row = 0; row < pdfRows; row++) {
-            for (let column = 0; column < pdfColumns; column++) {
+        columns.forEach((column, columnIndex) => {
+            for (let row = 0; row < pdfRows; row++) {
                 const imageIndex = page * pdfRows + row;
-                const image = columns[column][imageIndex];
+                const image = column[imageIndex];
 
                 if (image) {
                     const aspectRatio = image.width / image.height;
@@ -540,17 +540,18 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
                         displayWidth = displayHeight * aspectRatio;
                     }
 
-                    const xPos = margin + column * (cellWidth + spacing);
+                    const xPos = margin + columnIndex * (cellWidth + spacing);
                     const yPos = margin + row * (cellHeight + spacing);
 
                     pdf.addImage(image.src, "JPEG", xPos, yPos, displayWidth, displayHeight);
                 }
             }
-        }
+        });
     }
 
     pdf.save("planogram.pdf");
 };
+
 
 
     </script>
