@@ -21,11 +21,13 @@
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
-    <!-- Lightbox for Popup -->
+   
+<!-- Lightbox for Popup -->
 <div class="lightbox hidden" id="lightbox">
     <span class="lightbox-close" id="lightbox-close">&times;</span>
     <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
 </div>
+
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeRegister">&times;</span>
@@ -430,6 +432,8 @@ function displayProducts(products, isLoggedIn) {
         productElement.innerHTML = productHTML;
         container.appendChild(productElement);  // Produkt in den Container einfügen
     });
+    // Initialize lightbox functionality for the newly added images
+    initializeLightbox();
 }
 
 
@@ -490,31 +494,44 @@ function finalizeOrder() {
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const lightbox = document.getElementById('lightbox');
-    const registerBtn = document.getElementById('registerBtn');
-    const loginBtn = document.getElementById('loginBtn');
+        // Initialize lightbox functionality for the newly added images
+        initializeLightbox();
+    }
 
-    if (registerBtn) {
-        registerBtn.addEventListener('click', function() {
-            lightbox.classList.toggle('hidden');
+    function initializeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const triggers = document.querySelectorAll('.lightbox-trigger');
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                lightboxImage.src = this.src;
+                lightbox.classList.remove('hidden');
+            });
+        });
+
+        if (lightboxClose) {
+            lightboxClose.addEventListener('click', function() {
+                lightbox.classList.add('hidden');
+            });
+        }
+
+        // Close lightbox when clicking outside the image
+        lightbox.addEventListener('click', function(event) {
+            if (event.target === lightbox) {
+                lightbox.classList.add('hidden');
+            }
         });
     }
 
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function() {
-            lightbox.classList.toggle('hidden');
-        });
-    }
-
-    // Add a close button inside the lightbox
-    const closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
-    closeButton.addEventListener('click', function() {
-        lightbox.classList.add('hidden');
+    // Call displayProducts after fetching products
+    document.addEventListener('DOMContentLoaded', async function() {
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+        const products = await fetchProducts(isLoggedIn);
+        displayProducts(products, isLoggedIn);
     });
-    lightbox.appendChild(closeButton);
-});
+</script>
 
         
 </script>
