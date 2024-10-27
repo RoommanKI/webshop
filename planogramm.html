@@ -207,11 +207,18 @@
     <!-- Grid where images can be dropped -->
     <h2>Planogramm</h2>
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
-    <label for="pdf-rows">PDF Reihen pro Seite:</label>
-<input type="number" id="pdf-rows" min="1" value="1" style="width: 50px;">
-
-<label for="pdf-columns">PDF Spalten pro Seite:</label>
-<input type="number" id="pdf-columns" min="1" value="4" style="width: 50px;">
+<form id="pdf-form">
+    <label for="pdf-rows">PDF Reihen:</label>
+    <input type="number" id="pdf-rows" min="1" value="4" required>
+    <label for="pdf-columns">PDF Spalten:</label>
+    <input type="number" id="pdf-columns" min="1" value="3" required>
+    
+    <!-- Orientation Selector -->
+    <label for="pdf-orientation">Ausrichtung:</label>
+    <select id="pdf-orientation">
+        <option value="portrait">Hochformat</option>
+        <option value="landscape">Querformat</option>
+    </select>
 
 <button onclick="generatePlanogramPDF()">Planogramm als PDF speichern</button>
 
@@ -454,23 +461,24 @@ window.finalizeOrder = function finalizeOrder() {
 window.generatePlanogramPDF = async function generatePlanogramPDF() {
     const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 4;
     const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 3;
+    const orientation = document.getElementById("pdf-orientation").value; // Get orientation
 
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
+    const pdf = new jsPDF({
+        orientation: orientation === "landscape" ? "landscape" : "portrait" // Use orientation
+    });
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 10; // Outer margin for the page
-    const spacing = 5; // Space between images
+    const margin = 10;
+    const spacing = 5;
 
-    // Calculate the cell dimensions, including spacing
     const cellWidth = (pageWidth - margin * 2 - spacing * (pdfColumns - 1)) / pdfColumns;
     const cellHeight = (pageHeight - margin * 2 - spacing * (pdfRows - 1)) / pdfRows;
 
     const gridItems = document.querySelectorAll(".grid-item");
     const images = [];
 
-    // Collect images in grid order
     gridItems.forEach(gridItem => {
         const img = gridItem.querySelector("img");
         if (img) {
@@ -480,7 +488,7 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
                 height: img.naturalHeight
             });
         } else {
-            images.push(null); // Placeholder for empty cells
+            images.push(null);
         }
     });
 
@@ -497,16 +505,13 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
                     let displayWidth, displayHeight;
 
                     if (aspectRatio >= 1) {
-                        // Landscape or square
                         displayWidth = Math.min(cellWidth, cellHeight * aspectRatio);
                         displayHeight = displayWidth / aspectRatio;
                     } else {
-                        // Portrait
                         displayHeight = Math.min(cellHeight, cellWidth / aspectRatio);
                         displayWidth = displayHeight * aspectRatio;
                     }
 
-                    // Calculate the position, adding spacing between cells
                     const xPos = margin + column * (cellWidth + spacing);
                     const yPos = margin + row * (cellHeight + spacing);
 
@@ -518,7 +523,6 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
 
     pdf.save("planogram.pdf");
 };
-
 
     </script>
 </body>
