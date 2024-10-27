@@ -351,8 +351,9 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
 
 <!-- Handling Product Categories and Fetching from Supabase -->
 
-// Event listeners for category buttons
 document.addEventListener('DOMContentLoaded', function() {
+    // Do not load any products initially; just set up event listeners.
+
     const categoryLinks = document.querySelectorAll('nav a'); // Select all category links
 
     categoryLinks.forEach(link => {
@@ -362,24 +363,33 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedCategory = link.getAttribute('data-category'); // Update selectedCategory
             const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
-            // Fetch products based on both selected category and orientation
+            // Fetch products based on selected category and orientation
             const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
             displayProducts(products, isLoggedIn);
         });
     });
+
+    // Clear products container on initial page load
+    document.getElementById('products-container').innerHTML = '<p>Wählen Sie eine Kategorie, um Produkte zu sehen.</p>';
 });
 
-
 // Fetch products by category from Supabase, including prices only if logged in
-async function fetchProductsByCategory(category, isLoggedIn) {
-    let query = supabase.from('products').select('id, name, description, image_url').eq('category', category);
+async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
+    let query = supabase.from('products').select('id, name, description, image_url, orientation');
+
+    if (category) {
+        query = query.eq('category', category); // Only filter by category if specified
+    }
+
+    if (orientation) {
+        query = query.eq('orientation', orientation); // Only filter by orientation if specified
+    }
 
     if (isLoggedIn) {
-        query = query.select('id, name, description, price, image_url').eq('category', category); // Include price if logged in
+        query = query.select('id, name, description, price, image_url, orientation');
     }
 
     const { data, error } = await query;
-
     if (error) {
         console.error('Error fetching products:', error);
         return [];
