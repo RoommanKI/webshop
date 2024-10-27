@@ -184,6 +184,7 @@ nav a:hover {
     display: flex; /* Show the lightbox when the class 'show' is added */
 }
 
+
 .lightbox-content {
     max-width: 80%;
     max-height: 80%;
