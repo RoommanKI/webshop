@@ -202,6 +202,13 @@
     <select id="category-filter">
         <option value="">Alle Kategorien</option>
     </select>
+<!-- Orientation Filter Dropdown -->
+<label for="orientation-filter">Ausrichtung:</label>
+<select id="orientation-filter">
+    <option value="">Alle</option>
+    <option value="portrait">Hochformat</option>
+    <option value="landscape">Querformat</option>
+</select>
 
     <!-- Product image selection area -->
     <h2>Produkte</h2>
@@ -285,13 +292,17 @@ function allowDrop(event) {
     event.preventDefault();
 }
 
-async function loadProductImages(category = '') {
+async function loadProductImages(category = '', orientation = '') {
     productImages.innerHTML = '';
 
-    let query = supabase.from('products').select('name, image_url, price'); // Include price
+    // Fetch products from Supabase with optional category and orientation filters
+    let query = supabase.from('products').select('name, image_url, price, orientation');
 
     if (category) {
         query = query.eq('category', category);
+    }
+    if (orientation) {
+        query = query.eq('orientation', orientation);
     }
 
     const { data, error } = await query;
@@ -301,17 +312,19 @@ async function loadProductImages(category = '') {
         return;
     }
 
+    // Display products
     data.forEach(product => {
         const img = document.createElement('img');
         img.src = product.image_url;
         img.alt = product.name;
         img.title = product.name;
         img.draggable = true;
-        img.dataset.price = product.price; // Store price in data attribute
+        img.dataset.price = product.price;  // Store price in data attribute
         img.addEventListener('dragstart', drag);
         productImages.appendChild(img);
     });
 }
+
 
 
         loadCategories();
@@ -321,6 +334,14 @@ async function loadProductImages(category = '') {
             const selectedCategory = e.target.value;
             loadProductImages(selectedCategory);
         });
+// Orientation Filter
+const orientationFilter = document.getElementById('orientation-filter');
+
+orientationFilter.addEventListener('change', async (e) => {
+    const selectedOrientation = e.target.value;
+    const selectedCategory = categoryFilter.value;  // Get currently selected category
+    await loadProductImages(selectedCategory, selectedOrientation);
+});
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
