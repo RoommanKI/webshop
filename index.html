@@ -491,28 +491,39 @@ document.addEventListener('DOMContentLoaded', function () {
     const lightboxImage = document.getElementById('lightbox-image');
     const lightboxClose = document.getElementById('lightbox-close');
 
-    // Open lightbox when an image is clicked
-    document.querySelectorAll('.product img').forEach(img => {
-        img.addEventListener('click', function () {
-            lightboxImage.src = img.src;
-            lightbox.classList.remove('hidden');
-            lightbox.style.display = 'flex'; // Make sure it uses flex to center
+    // Only proceed if elements are found
+    if (lightbox && lightboxImage && lightboxClose) {
+        // Open lightbox when an image is clicked
+        document.querySelectorAll('.product img').forEach(img => {
+            img.addEventListener('click', function () {
+                lightboxImage.src = img.src;
+                lightbox.classList.remove('hidden');
+                lightbox.style.display = 'flex'; // Make sure it uses flex to center
+            });
         });
-    });
 
-    // Close lightbox when clicking on the close button or outside the image
-    lightboxClose.addEventListener('click', () => closeLightbox());
-    lightbox.addEventListener('click', (event) => {
-        if (event.target === lightbox) closeLightbox(); // Only close if clicking outside the image
-    });
+        // Close lightbox when clicking on the close button or outside the image
+        lightboxClose.addEventListener('click', () => closeLightbox());
+        lightbox.addEventListener('click', (event) => {
+            if (event.target === lightbox) closeLightbox(); // Only close if clicking outside the image
+        });
 
-    function closeLightbox() {
-        lightbox.style.display = 'none';
-        lightboxImage.src = ''; // Clear image source when closing
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            lightboxImage.src = ''; // Clear image source when closing
+        }
+    } else {
+        console.error("Lightbox elements not found in the DOM.");
     }
 });
 
         
 </script>
+    <!-- Lightbox for Popup -->
+<div class="lightbox hidden" id="lightbox">
+    <span class="lightbox-close" id="lightbox-close">&times;</span>
+    <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
+</div>
+
 </body>
 </html>
