@@ -486,7 +486,7 @@ window.finalizeOrder = function finalizeOrder() {
 
 // Define the function globally
 window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
-    if (event) event.preventDefault(); // Prevent default form submission
+    if (event) event.preventDefault();
 
     const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 4;
     const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 3;
@@ -506,29 +506,31 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
     const cellHeight = (pageHeight - margin * 2 - spacing * (pdfRows - 1)) / pdfRows;
 
     const gridItems = document.querySelectorAll(".grid-item");
-    const images = [];
 
-    gridItems.forEach(gridItem => {
+    // Organisiere die Bilder in Spalten für das Planogramm
+    const columns = Array.from({ length: pdfColumns }, () => []);
+    gridItems.forEach((gridItem, index) => {
         const img = gridItem.querySelector("img");
+        const columnIndex = index % pdfColumns; // Welcher Spalte das Bild angehört
         if (img) {
-            images.push({
+            columns[columnIndex].push({
                 src: img.src,
                 width: img.naturalWidth,
                 height: img.naturalHeight
             });
         } else {
-            images.push(null);
+            columns[columnIndex].push(null);
         }
     });
 
-    let imageIndex = 0;
-
-    for (let page = 0; page < Math.ceil(images.length / (pdfRows * pdfColumns)); page++) {
+    // Render-Sequenz pro Seite
+    let currentRow = 0;
+    for (let page = 0; page < Math.ceil(Math.max(...columns.map(col => col.length)) / pdfRows); page++) {
         if (page > 0) pdf.addPage();
 
         for (let row = 0; row < pdfRows; row++) {
             for (let column = 0; column < pdfColumns; column++) {
-                const image = images[imageIndex++];
+                const image = columns[column][currentRow];
                 if (image) {
                     const aspectRatio = image.width / image.height;
                     let displayWidth, displayHeight;
@@ -547,6 +549,7 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
                     pdf.addImage(image.src, "JPEG", xPos, yPos, displayWidth, displayHeight);
                 }
             }
+            currentRow++;
         }
     }
 
