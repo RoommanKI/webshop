@@ -495,13 +495,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const registerBtn = document.getElementById('registerBtn');
     const loginBtn = document.getElementById('loginBtn');
 
-    registerBtn.addEventListener('click', function() {
-        lightbox.classList.toggle('hidden');
-    });
+    if (registerBtn) {
+        registerBtn.addEventListener('click', function() {
+            lightbox.classList.toggle('hidden');
+        });
+    }
 
-    loginBtn.addEventListener('click', function() {
-        lightbox.classList.toggle('hidden');
-    });
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function() {
+            lightbox.classList.toggle('hidden');
+        });
+    }
 
     // Add a close button inside the lightbox
     const closeButton = document.createElement('button');
@@ -511,7 +515,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     lightbox.appendChild(closeButton);
 });
-
 
         
 </script>
