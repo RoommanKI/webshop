@@ -450,9 +450,10 @@ window.finalizeOrder = function finalizeOrder() {
             cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
         });
 
+// Define the function globally
 window.generatePlanogramPDF = async function generatePlanogramPDF() {
     const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 4;
-    const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 1;
+    const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 3;
 
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
@@ -461,8 +462,9 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 10;
 
-    const cellHeight = (pageHeight - (pdfRows + 1) * margin) / pdfRows;
+    // Calculate cell dimensions based on page layout and margin
     const cellWidth = (pageWidth - (pdfColumns + 1) * margin) / pdfColumns;
+    const cellHeight = (pageHeight - (pdfRows + 1) * margin) / pdfRows;
 
     const gridItems = document.querySelectorAll(".grid-item");
 
@@ -476,23 +478,21 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
         if (img) {
             const imgData = img.src;
 
-            // Calculate aspect ratio
+            // Calculate aspect ratio and scale within cell dimensions
             const imgAspectRatio = img.naturalWidth / img.naturalHeight;
-
             let displayWidth, displayHeight;
 
-            // Determine display width and height based on aspect ratio
             if (imgAspectRatio > 1) {
-                // Wide image: set width to cellWidth and adjust height
+                // Landscape orientation: fit width to cell and scale height
                 displayWidth = cellWidth;
                 displayHeight = cellWidth / imgAspectRatio;
             } else {
-                // Tall image: set height to cellHeight and adjust width
+                // Portrait orientation: fit height to cell and scale width
                 displayHeight = cellHeight;
                 displayWidth = cellHeight * imgAspectRatio;
             }
 
-            // Positioning for each image in the cell, centering within each cell
+            // Center image within cell
             const xPos = margin + columnIndex * (cellWidth + margin) + (cellWidth - displayWidth) / 2;
             const yPos = margin + rowIndex * (cellHeight + margin) + (cellHeight - displayHeight) / 2;
 
@@ -504,6 +504,7 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
                 rowIndex++;
             }
 
+            // Add a new page if we've filled the specified rows
             if (rowIndex >= pdfRows) {
                 pdf.addPage();
                 rowIndex = 0;
@@ -512,7 +513,8 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
     }
 
     pdf.save("planogram.pdf");
-}
+};
+
 
 
 
