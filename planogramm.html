@@ -460,9 +460,9 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 10;
+    const margin = 5; // Reduce margin to make more space for images
 
-    // Calculate cell dimensions based on page layout and margin
+    // Calculate cell dimensions with a larger size to fill space better
     const cellWidth = (pageWidth - (pdfColumns + 1) * margin) / pdfColumns;
     const cellHeight = (pageHeight - (pdfRows + 1) * margin) / pdfRows;
 
@@ -477,19 +477,17 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
 
         if (img) {
             const imgData = img.src;
-
-            // Determine the natural width and height of the image
             const imgAspectRatio = img.naturalWidth / img.naturalHeight;
-            
+
             let displayWidth, displayHeight;
             
             // Scale the image to fit within the cell while maintaining aspect ratio
             if (imgAspectRatio >= 1) {
-                // Landscape or square orientation
+                // Landscape or square
                 displayWidth = Math.min(cellWidth, cellHeight * imgAspectRatio);
                 displayHeight = displayWidth / imgAspectRatio;
             } else {
-                // Portrait orientation
+                // Portrait
                 displayHeight = Math.min(cellHeight, cellWidth / imgAspectRatio);
                 displayWidth = displayHeight * imgAspectRatio;
             }
@@ -500,22 +498,23 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
 
             pdf.addImage(imgData, "JPEG", xPos, yPos, displayWidth, displayHeight);
 
-            columnIndex++;
-            if (columnIndex >= pdfColumns) {
-                columnIndex = 0;
-                rowIndex++;
+            rowIndex++;
+            if (rowIndex >= pdfRows) {
+                rowIndex = 0;
+                columnIndex++;
             }
 
-            // Add a new page if we've filled the specified rows
-            if (rowIndex >= pdfRows) {
+            // Add a new page if we’ve filled the specified columns
+            if (columnIndex >= pdfColumns) {
                 pdf.addPage();
-                rowIndex = 0;
+                columnIndex = 0;
             }
         }
     }
 
     pdf.save("planogram.pdf");
 };
+
 
     </script>
 </body>
