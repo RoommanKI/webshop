@@ -217,7 +217,6 @@
 
 <!-- Add to Cart Button -->
 <button id="add-all-to-cart" onclick="addAllToCart()">Zum Warenkorb hinzufügen</button>
-<button id="generate-pdf" onclick="generatePlanogramPDF()">Planogramm als PDF speichern</button>
 
 
     <!-- Warenkorb Icon -->
@@ -451,7 +450,7 @@ window.finalizeOrder = function finalizeOrder() {
             cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
         });
 
-async function generatePlanogramPDF() {
+window.generatePlanogramPDF = async function generatePlanogramPDF() {
     const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 4;
     const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 1;
 
