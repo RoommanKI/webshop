@@ -79,8 +79,7 @@
     <option value="portrait">Hochkant</option>
     <option value="landscape">Quer</option>
 </select>
-<div id="products-container" class="product-list" style="display: none;"></div>
-
+<div id="products-container" class="product-list"></div>
 
 <!-- Startseite Abschnitt -->
 <section id="startseite" style="padding: 20px; text-align: center;">
@@ -399,11 +398,10 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
     return data;
 }
 
+// Funktion zur dynamischen Anzeige von Produkten je nach Login-Status
 function displayProducts(products, isLoggedIn) {
-    document.getElementById('products-container').style.display = 'block'; // Zeigt den Container an
     const container = document.getElementById('products-container');
     container.innerHTML = ''; // Vorherige Produkte löschen
-
 
     if (products.length === 0) {
         container.innerHTML = '<p>Keine Produkte gefunden.</p>';
@@ -537,14 +535,12 @@ function initializeLightbox() {
     });
 }
 
-/*
-document.addEventListener('DOMContentLoaded', async function() {
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    const products = await fetchProducts(isLoggedIn);
-    displayProducts(products, isLoggedIn);
-});
-*/
-
+    // Call displayProducts after fetching products
+    document.addEventListener('DOMContentLoaded', async function() {
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+        const products = await fetchProducts(isLoggedIn);
+        displayProducts(products, isLoggedIn);
+    });
 </script>
 
         
