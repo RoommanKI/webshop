@@ -460,16 +460,16 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 10; // A bit of margin around each image
+    const margin = 10; // Adjust margin to use more of the page
 
-    // Calculate cell dimensions based on the number of rows and columns
-    const cellWidth = (pageWidth - (pdfColumns + 1) * margin) / pdfColumns;
-    const cellHeight = (pageHeight - (pdfRows + 1) * margin) / pdfRows;
+    // Calculate cell dimensions with a smaller horizontal gap for less white space
+    const cellWidth = (pageWidth - margin * 2) / pdfColumns;
+    const cellHeight = (pageHeight - margin * 2) / pdfRows;
 
     const gridItems = document.querySelectorAll(".grid-item");
     const images = [];
 
-    // Collect images in the grid order
+    // Collect images in grid order
     gridItems.forEach(gridItem => {
         const img = gridItem.querySelector("img");
         if (img) {
@@ -505,9 +505,9 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
                         displayWidth = displayHeight * aspectRatio;
                     }
 
-                    // Center image in the cell
-                    const xPos = margin + column * (cellWidth + margin) + (cellWidth - displayWidth) / 2;
-                    const yPos = margin + row * (cellHeight + margin) + (cellHeight - displayHeight) / 2;
+                    // Left-align images in the cell
+                    const xPos = margin + column * cellWidth;
+                    const yPos = margin + row * cellHeight;
 
                     pdf.addImage(image.src, "JPEG", xPos, yPos, displayWidth, displayHeight);
                 }
@@ -517,7 +517,6 @@ window.generatePlanogramPDF = async function generatePlanogramPDF() {
 
     pdf.save("planogram.pdf");
 };
-
 
 
     </script>
