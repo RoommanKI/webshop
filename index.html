@@ -21,7 +21,11 @@
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
-
+    <!-- Lightbox for Popup -->
+<div class="lightbox hidden" id="lightbox">
+    <span class="lightbox-close" id="lightbox-close">&times;</span>
+    <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
+</div>
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeRegister">&times;</span>
@@ -97,11 +101,7 @@
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
     <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
 </div>
-    <!-- Lightbox for Popup -->
-<div class="lightbox hidden" id="lightbox">
-    <span class="lightbox-close" id="lightbox-close">&times;</span>
-    <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
-</div>
+
 
 
 <script>
@@ -496,15 +496,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const lightboxClose = document.getElementById('lightbox-close');
 
     if (lightbox && lightboxImage && lightboxClose) {
-        // Open lightbox when an image is clicked
         document.querySelectorAll('.product img').forEach(img => {
             img.addEventListener('click', function () {
                 lightboxImage.src = img.src;
-                lightbox.classList.add('show'); // Add the 'show' class to display
+                lightbox.classList.add('show'); // Display the lightbox
             });
         });
 
-        // Close lightbox when clicking on the close button or outside the image
         lightboxClose.addEventListener('click', () => closeLightbox());
         lightbox.addEventListener('click', (event) => {
             if (event.target === lightbox) closeLightbox();
@@ -512,13 +510,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function closeLightbox() {
             lightbox.classList.remove('show');
-            lightboxImage.src = ''; // Clear image source when closing
+            lightboxImage.src = ''; // Clear image when closing
         }
     } else {
         console.error("Lightbox elements not found in the DOM.");
     }
 });
-
 
         
 </script>
