@@ -490,32 +490,28 @@ function finalizeOrder() {
     toggleCart();  // Close the cart popup
     window.location.href = 'order-summary.html'; // Redirect to order summary page
 }
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightbox-image');
-    const lightboxClose = document.getElementById('lightbox-close');
+    const registerBtn = document.getElementById('registerBtn');
+    const loginBtn = document.getElementById('loginBtn');
 
-    if (lightbox && lightboxImage && lightboxClose) {
-        document.querySelectorAll('.product img').forEach(img => {
-            img.addEventListener('click', function () {
-                lightboxImage.src = img.src;
-                lightbox.classList.add('show'); // Display the lightbox
-            });
-        });
+    registerBtn.addEventListener('click', function() {
+        lightbox.classList.toggle('hidden');
+    });
 
-        lightboxClose.addEventListener('click', () => closeLightbox());
-        lightbox.addEventListener('click', (event) => {
-            if (event.target === lightbox) closeLightbox();
-        });
+    loginBtn.addEventListener('click', function() {
+        lightbox.classList.toggle('hidden');
+    });
 
-        function closeLightbox() {
-            lightbox.classList.remove('show');
-            lightboxImage.src = ''; // Clear image when closing
-        }
-    } else {
-        console.error("Lightbox elements not found in the DOM.");
-    }
+    // Add a close button inside the lightbox
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.addEventListener('click', function() {
+        lightbox.classList.add('hidden');
+    });
+    lightbox.appendChild(closeButton);
 });
+
 
         
 </script>
