@@ -305,10 +305,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Produktliste laden
 document.addEventListener('DOMContentLoaded', async function() {
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    const products = await fetchProducts(isLoggedIn);
+    const selectedCategory = ''; // Set this to the chosen category as needed
+    const selectedOrientation = ''; // Set this to the chosen orientation as needed
+
+    // Fetch products based on category and orientation
+    const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation);
+
+    // Display the products
     displayProducts(products, isLoggedIn);
 });
+
 
 // Produkte holen und anzeigen
 async function fetchProducts(isLoggedIn) {
@@ -337,25 +343,40 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
-    let query = supabase.from('products').select('id, name, description, image_url, orientation').eq('category', category);
+async function fetchProductsByCategoryAndOrientation(category, orientation) {
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true'; // Check if user is logged in
 
-    if (isLoggedIn) {
-        query = query.select('id, name, description, price, image_url, orientation').eq('category', category);
+    // Start building the query with the common fields
+    let query = supabase.from('products').select('id, name, description, image_url, orientation');
+
+    // Add the category filter if provided
+    if (category) {
+        query = query.eq('category', category);
     }
 
+    // Add the orientation filter if provided
     if (orientation) {
         query = query.eq('orientation', orientation);
     }
 
+    // If logged in, include additional fields like price
+    if (isLoggedIn) {
+        query = query.select('id, name, description, price, image_url, orientation');
+    }
+
+    // Execute the query
     const { data, error } = await query;
+
+    // Handle any errors in the query
     if (error) {
         console.error('Error fetching products:', error);
         return [];
     }
 
+    // Return the fetched data
     return data;
 }
+
 
 <!-- Handling Product Categories and Fetching from Supabase -->
 
@@ -381,30 +402,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('products-container').innerHTML = '<p>Wählen Sie eine Kategorie, um Produkte zu sehen.</p>';
 });
 
-// Fetch products by category from Supabase, including prices only if logged in
-async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
-    let query = supabase.from('products').select('id, name, description, image_url, orientation');
-
-    if (category) {
-        query = query.eq('category', category); // Only filter by category if specified
-    }
-
-    if (orientation) {
-        query = query.eq('orientation', orientation); // Only filter by orientation if specified
-    }
-
-    if (isLoggedIn) {
-        query = query.select('id, name, description, price, image_url, orientation');
-    }
-
-    const { data, error } = await query;
-    if (error) {
-        console.error('Error fetching products:', error);
-        return [];
-    }
-
-    return data;
-}
 
 // Funktion zur dynamischen Anzeige von Produkten je nach Login-Status
 function displayProducts(products, isLoggedIn) {
