@@ -150,34 +150,6 @@
         saveCartToLocalStorage(); // Save the cart to localStorage each time it's updated
     }
 
-    function saveCartToLocalStorage() {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
-
-    console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
-
-    // Finalize the order and clear the cart
-    function finalizeOrder() {
-        if (cart.length === 0) {
-            alert('Ihr Warenkorb ist leer.');
-            return;
-        }
-        // Add logic to finalize the order
-        cart.length = 0; // Clear the cart
-        updateCart();
-        alert('Ihre Bestellung wurde erfolgreich abgeschlossen!');
-    }
-</script>
-
-<script>
-    function clearCart() {
-    // Clear the cart from localStorage and reset in-memory cart
-    localStorage.removeItem('cart');
-    cart = [];
-    updateCart();
-    alert("Warenkorb wurde geleert."); // Confirmation message
-}
-
 function saveCartToLocalStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
@@ -212,50 +184,7 @@ function addToCart(productName, quantityId, price) {
 console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
 
 
-// Update the cart display and counter
-function updateCart() {
-    const cartContent = document.getElementById('cart-content');
-    const cartCount = document.getElementById('cart-count');
-    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-    if (cart.length === 0) {
-        cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-        return;
-    }
-
-    let cartHTML = '<ul>';
-    cart.forEach(item => {
-        cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-    });
-    cartHTML += '</ul>';
-    cartContent.innerHTML = cartHTML;
-    saveCartToLocalStorage();
-}
-
-
-function finalizeOrder() {
-    if (cart.length === 0) {
-        alert('Ihr Warenkorb ist leer.');
-        return;
-    }
-
-    let orderSummary = 'Bestellung:\n';
-    cart.forEach(item => {
-        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-    });
-    alert(`Ihre Bestellung:\n${orderSummary}`);
-
-    cart = []; // Clear the cart in memory
-    saveCartToLocalStorage(); // Clear the cart in localStorage
-    updateCart(); // Update the cart display
-    toggleCart();  // Close the cart popup
-    window.location.href = 'order-summary.html'; // Redirect to order summary page
-}
-
-console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
-
-
-</script>
 <!-- Supabase SDK Import -->
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -639,6 +568,15 @@ function initializeLightbox() {
         cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
     }
 
+    // Add the clearCart function
+    function clearCart() {
+        // Clear the cart from localStorage and reset in-memory cart
+        localStorage.removeItem('cart');
+        cart = [];
+        updateCart();
+        alert("Warenkorb wurde geleert."); // Confirmation message
+    }
+
     // Ensure other cart-related functions are updated accordingly
     function addToCart(productName, quantityId, price) {
         const quantity = parseInt(document.getElementById(quantityId).value);
@@ -699,5 +637,6 @@ function initializeLightbox() {
 
     document.getElementById('cart-icon').addEventListener('click', toggleCart);
 </script>
+
 </body>
 </html>
