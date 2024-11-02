@@ -283,7 +283,6 @@ function finalizeOrder() {
 }
 </script>
 
-<!-- Product Fetching and Display Handling -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const categoryLinks = document.querySelectorAll("nav a");
@@ -310,33 +309,6 @@ document.addEventListener("DOMContentLoaded", function() {
         displayProducts(products, isLoggedIn);
     });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImage = document.getElementById("lightbox-image");
-    const closeLightbox = document.getElementById("lightbox-close");
-
-    function openLightbox(imageSrc) {
-        lightboxImage.src = imageSrc;
-        lightbox.style.display = "block";
-    }
-
-    function closeLightboxFunc() {
-        lightbox.style.display = "none";
-        lightboxImage.src = "";
-    }
-
-    closeLightbox.addEventListener("click", closeLightboxFunc);
-    lightbox.addEventListener("click", function(event) {
-        if (event.target === lightbox) {
-            closeLightboxFunc();
-        }
-    });
-
-    window.openLightbox = openLightbox;
-});
-
-// Fetch and display products with lightbox setup
-document.addEventListener("DOMContentLoaded", function() {
     async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
         let query = supabase.from('products').select('id, name, description, image_url, orientation');
         if (category) query = query.eq('category', category);
@@ -399,35 +371,30 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <script>
-    const productElement = document.createElement("div");
-    productElement.className = "product";
+document.addEventListener("DOMContentLoaded", function() {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const closeLightbox = document.getElementById("lightbox-close");
 
-    let productHTML = `
-        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-            <h2>${product.name}</h2>
-            <img src="${product.image_url}" alt="${product.name}" onclick="openLightbox('${product.image_url}')" style="cursor: pointer; max-width: 100%; max-height: 300px;">
-            <p><strong>Beschreibung:</strong> ${product.description}</p>
-    `;
-
-    if (isLoggedIn && product.price) {
-        productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
-        productHTML += `
-            <label for="quantity-${product.id}" class="quantity-label">Menge:</label>
-            <input type="number" class="quantity" id="quantity-${product.id}" value="1" min="1" style="width: 50px;">
-            <button class="btn" onclick="addToCart('${product.name}', 'quantity-${product.id}', ${product.price || 0})">In den Warenkorb</button>
-        `;
-    } else {
-        productHTML += `<p style="color: blue;">Bitte melde dich an um die Preise zu sehen</p>`;
+    function openLightbox(imageSrc) {
+        lightboxImage.src = imageSrc;
+        lightbox.style.display = "block";
     }
 
-    productHTML += "</div>";
-    productElement.innerHTML = productHTML;
-    container.appendChild(productElement);
+    function closeLightboxFunc() {
+        lightbox.style.display = "none";
+        lightboxImage.src = "";
+    }
+
+    closeLightbox.addEventListener("click", closeLightboxFunc);
+    lightbox.addEventListener("click", function(event) {
+        if (event.target === lightbox) {
+            closeLightboxFunc();
+        }
+    });
+
+    window.openLightbox = openLightbox;
 });
-
-loadProducts();
 </script>
-
 </body>
 </html>
-
