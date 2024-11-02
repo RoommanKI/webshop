@@ -108,89 +108,6 @@
 <!-- Product Container -->
 <div id="products-container" class="product-list"></div>
 
-<!-- Category Sections -->
-<section id="trauer" class="product-list category" style="display: none;"></section>
-<section id="hochzeit" class="product-list category" style="display: none;"><h3>Hochzeitskarten</h3></section>
-<section id="glueckwunsch" class="product-list category" style="display: none;"><h3>Glückwunschkarten</h3></section>
-<section id="weihnachten" class="product-list category" style="display: none;"><h3>Weihnachtskarten</h3></section>
-<section id="events" class="product-list category" style="display: none;"><h3>Diverse Karten</h3></section>
-
-<!-- Cart Functions -->
-<script>
-    function clearCart() {
-        localStorage.removeItem('cart');
-        cart = [];
-        updateCart();
-        alert("Warenkorb wurde geleert.");
-    }
-
-    function saveCartToLocalStorage() {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
-
-    function toggleCart() {
-        const cartPopup = document.getElementById('cart-popup');
-        cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
-    }
-
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    function addToCart(productName, quantityId, price) {
-        const quantity = parseInt(document.getElementById(quantityId).value);
-        if (quantity > 0) {
-            const item = cart.find(item => item.product === productName);
-            if (item) {
-                item.quantity += quantity;
-            } else {
-                cart.push({ product: productName, quantity, price });
-            }
-            updateCart();
-            saveCartToLocalStorage();
-            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
-        } else {
-            alert("Bitte eine gültige Anzahl eingeben.");
-        }
-    }
-
-    function updateCart() {
-        const cartContent = document.getElementById('cart-content');
-        const cartCount = document.getElementById('cart-count');
-        cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-        if (cart.length === 0) {
-            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-            return;
-        }
-
-        let cartHTML = '<ul>';
-        cart.forEach(item => {
-            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-        });
-        cartHTML += '</ul>';
-        cartContent.innerHTML = cartHTML;
-        saveCartToLocalStorage();
-    }
-
-    function finalizeOrder() {
-        if (cart.length === 0) {
-            alert('Ihr Warenkorb ist leer.');
-            return;
-        }
-
-        let orderSummary = 'Bestellung:\n';
-        cart.forEach(item => {
-            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-        });
-        alert(`Ihre Bestellung:\n${orderSummary}`);
-
-        cart = [];
-        saveCartToLocalStorage();
-        updateCart();
-        toggleCart();
-        window.location.href = 'order-summary.html';
-    }
-</script>
-
 <!-- Supabase SDK Import -->
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -199,12 +116,10 @@
     window.supabase = createClient(supabaseUrl, supabaseKey);
 </script>
 
-<!-- Register/Login/Display Profile Handling -->
+<!-- Register/Login Handling -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-    const privacyCheckbox = document.getElementById("privacy-policy");
-    const submitButton = document.getElementById("register-submit");
 
     function toggleProfileIcon() {
         const headerButtons = document.querySelector('.header-buttons');
@@ -244,7 +159,9 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('loginModal').style.display = 'none';
     });
 
-    // Checkbox and submit button enabling
+    const privacyCheckbox = document.getElementById("privacy-policy");
+    const submitButton = document.getElementById("register-submit");
+
     if (privacyCheckbox && submitButton) {
         privacyCheckbox.addEventListener("change", function() {
             submitButton.disabled = !privacyCheckbox.checked;
@@ -253,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("Checkbox or submit button not found!");
     }
 
-    // Register form handling
     document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const email = document.getElementById('register-email').value;
@@ -269,7 +185,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Login form handling
     document.getElementById('login-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const email = document.getElementById('login-email').value;
@@ -293,68 +208,150 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 
-<!-- Product Fetching and Display Handling -->
+<!-- Cart Management Functions -->
 <script>
-async function fetchProductsByCategoryAndOrientation(category, orientation) {
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-
-    let query = supabase.from('products').select('id, name, description, image_url, orientation');
-    if (category) query = query.eq('category', category);
-    if (orientation) query = query.eq('orientation', orientation);
-    if (isLoggedIn) query = query.select('id, name, description, price, image_url, orientation');
-
-    const { data, error } = await query;
-    if (error) {
-        console.error('Error fetching products:', error);
-        return [];
-    }
-    return data;
+function clearCart() {
+    localStorage.removeItem('cart');
+    cart = [];
+    updateCart();
+    alert("Warenkorb wurde geleert.");
 }
 
-// Product fetching and display
-document.addEventListener('DOMContentLoaded', async function() {
-    const products = await fetchProductsByCategoryAndOrientation('', '');
-    displayProducts(products, localStorage.getItem('loggedIn') === 'true');
-});
+function saveCartToLocalStorage() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
 
-// Function to display products
-function displayProducts(products, isLoggedIn) {
-    const container = document.getElementById('products-container');
-    container.innerHTML = '';
-    if (products.length === 0) {
-        container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+function toggleCart() {
+    const cartPopup = document.getElementById('cart-popup');
+    cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
+}
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function addToCart(productName, quantityId, price) {
+    const quantity = parseInt(document.getElementById(quantityId).value);
+    if (quantity > 0) {
+        const item = cart.find(item => item.product === productName);
+        if (item) {
+            item.quantity += quantity;
+        } else {
+            cart.push({ product: productName, quantity, price });
+        }
+        updateCart();
+        saveCartToLocalStorage();
+        alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+    } else {
+        alert("Bitte eine gültige Anzahl eingeben.");
+    }
+}
+
+function updateCart() {
+    const cartContent = document.getElementById('cart-content');
+    const cartCount = document.getElementById('cart-count');
+    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    if (cart.length === 0) {
+        cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
         return;
     }
 
-    products.forEach(product => {
-        const productElement = document.createElement('div');
-        productElement.className = 'product';
-        const productId = product.id;
+    let cartHTML = '<ul>';
+    cart.forEach(item => {
+        cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+    });
+    cartHTML += '</ul>';
+    cartContent.innerHTML = cartHTML;
+    saveCartToLocalStorage();
+}
 
-        let productHTML = `
-            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-                <h2>${product.name}</h2>
-                <img src="${product.image_url}" alt="${product.name}" class="lightbox-trigger" style="max-width: 100%; max-height: 300px;">
-                <p><strong>Beschreibung:</strong> ${product.description}</p>
-        `;
+function finalizeOrder() {
+    if (cart.length === 0) {
+        alert('Ihr Warenkorb ist leer.');
+        return;
+    }
 
-        if (isLoggedIn && product.price) {
-            productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
-            productHTML += `
-                <label for="quantity-${productId}" class="quantity-label">Menge:</label>
-                <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
-            `;
-        } else {
-            productHTML += `<p style="color: blue;">Bitte melde dich an um die Preise zu sehen</p>`;
+    let orderSummary = 'Bestellung:\n';
+    cart.forEach(item => {
+        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+    });
+    alert(`Ihre Bestellung:\n${orderSummary}`);
+
+    cart = [];
+    updateCart();
+    toggleCart();
+    window.location.href = 'order-summary.html';
+}
+</script>
+
+<!-- Product Fetching and Display Handling -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const categoryLinks = document.querySelectorAll("nav a");
+
+    categoryLinks.forEach(link => {
+        link.addEventListener("click", async function(event) {
+            event.preventDefault();
+            const category = link.getAttribute("data-category");
+            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+            const products = await fetchProductsByCategoryAndOrientation(category, '', isLoggedIn);
+            displayProducts(products, isLoggedIn);
+        });
+    });
+
+    async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
+        let query = supabase.from('products').select('id, name, description, image_url, orientation');
+        if (category) query = query.eq('category', category);
+        if (orientation) query = query.eq('orientation', orientation);
+        if (isLoggedIn) query = query.select('id, name, description, price, image_url, orientation');
+
+        const { data, error } = await query;
+        if (error) {
+            console.error('Error fetching products:', error);
+            return [];
+        }
+        return data;
+    }
+
+    async function displayProducts(products, isLoggedIn) {
+        const container = document.getElementById('products-container');
+        container.innerHTML = '';
+
+        if (products.length === 0) {
+            container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+            return;
         }
 
-        productHTML += '</div>';
-        productElement.innerHTML = productHTML;
-        container.appendChild(productElement);
-    });
-}
+        products.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.className = 'product';
+            const productId = product.id;
+
+            let productHTML = `
+                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                    <h2>${product.name}</h2>
+                    <img src="${product.image_url}" alt="${product.name}" class="lightbox-trigger" style="max-width: 100%; max-height: 300px;">
+                    <p><strong>Beschreibung:</strong> ${product.description}</p>
+            `;
+
+            if (isLoggedIn && product.price) {
+                productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
+                productHTML += `
+                    <label for="quantity-${productId}" class="quantity-label">Menge:</label>
+                    <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
+                    <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
+                `;
+            } else {
+                productHTML += `<p style="color: blue;">Bitte melde dich an um die Preise zu sehen</p>`;
+            }
+
+            productHTML += '</div>';
+            productElement.innerHTML = productHTML;
+            container.appendChild(productElement);
+        });
+    }
+});
 </script>
 
 </body>
 </html>
+
