@@ -285,19 +285,33 @@ function finalizeOrder() {
 
 <!-- Product Fetching and Display Handling -->
 <script>
+<script>
 document.addEventListener("DOMContentLoaded", function() {
     const categoryLinks = document.querySelectorAll("nav a");
+    const orientationFilter = document.getElementById("orientation-filter");
+    let selectedCategory = "";
+    let selectedOrientation = "";
 
+    // Event listener for category links
     categoryLinks.forEach(link => {
         link.addEventListener("click", async function(event) {
             event.preventDefault();
-            const category = link.getAttribute("data-category");
+            selectedCategory = link.getAttribute("data-category");
             const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-            const products = await fetchProductsByCategoryAndOrientation(category, '', isLoggedIn);
+            const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
             displayProducts(products, isLoggedIn);
         });
     });
 
+    // Event listener for orientation filter dropdown
+    orientationFilter.addEventListener("change", async function() {
+        selectedOrientation = orientationFilter.value;
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+        const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
+        displayProducts(products, isLoggedIn);
+    });
+
+    // Function to fetch products by category and orientation
     async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
         let query = supabase.from('products').select('id, name, description, image_url, orientation');
         if (category) query = query.eq('category', category);
@@ -312,7 +326,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return data;
     }
 
-    async function displayProducts(products, isLoggedIn) {
+    // Function to display products
+    function displayProducts(products, isLoggedIn) {
         const container = document.getElementById('products-container');
         container.innerHTML = '';
 
@@ -349,8 +364,16 @@ document.addEventListener("DOMContentLoaded", function() {
             container.appendChild(productElement);
         });
     }
+
+    // Initial load without any category or orientation
+    (async function loadInitialProducts() {
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+        const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
+        displayProducts(products, isLoggedIn);
+    })();
 });
 </script>
+
 
 </body>
 </html>
