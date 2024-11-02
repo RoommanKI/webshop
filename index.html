@@ -631,21 +631,73 @@ function initializeLightbox() {
 </script>
 <script>
     // Ensure cart is declared only once
-    let cart = cart || [];
-
-    // Initialize cart properly
-    if (!cart) {
-        cart = [];
-    }
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     // Define the toggleCart function
     function toggleCart() {
-        const cartElement = document.querySelector('.cart');
-        cartElement.classList.toggle('show');
+        const cartPopup = document.getElementById('cart-popup');
+        cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
     }
 
-    // Example usage of toggleCart
-    document.querySelector('.cart-toggle').addEventListener('click', toggleCart);
+    // Ensure other cart-related functions are updated accordingly
+    function addToCart(productName, quantityId, price) {
+        const quantity = parseInt(document.getElementById(quantityId).value);
+        if (quantity > 0) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += quantity;
+            } else {
+                cart.push({ product: productName, quantity, price });
+            }
+            updateCart();
+            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+        } else {
+            alert("Bitte eine gültige Anzahl eingeben.");
+        }
+    }
+
+    function updateCart() {
+        const cartContent = document.getElementById('cart-content');
+        const cartCount = document.getElementById('cart-count');
+        cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+        if (cart.length === 0) {
+            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+            return;
+        }
+
+        let cartHTML = '<ul>';
+        cart.forEach(item => {
+            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        });
+        cartHTML += '</ul>';
+        cartContent.innerHTML = cartHTML;
+        saveCartToLocalStorage();
+    }
+
+    function saveCartToLocalStorage() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function finalizeOrder() {
+        if (cart.length === 0) {
+            alert('Ihr Warenkorb ist leer.');
+            return;
+        }
+
+        let orderSummary = 'Bestellung:\n';
+        cart.forEach(item => {
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+        });
+        alert(`Ihre Bestellung:\n${orderSummary}`);
+
+        cart = [];
+        updateCart();
+        toggleCart();
+        window.location.href = 'order-summary.html';
+    }
+
+    document.getElementById('cart-icon').addEventListener('click', toggleCart);
 </script>
 </body>
 </html>
