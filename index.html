@@ -21,26 +21,30 @@
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
-    <!-- Warenkorb-Popup -->
+
+<!-- Warenkorb-Popup -->
 <div id="cart-popup" style="display: none;">
     <h3>Ihr Warenkorb</h3>
     <div id="cart-content">
         <p>Ihr Warenkorb ist leer.</p>
     </div>
     <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
-    <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
+    <button class="btn" onclick="clearCart()">Warenkorb Löschen</button>
 </div>
-   <!-- Startseite Abschnitt -->
+
+<!-- Startseite Abschnitt -->
 <section id="startseite" style="padding: 20px; text-align: center;">
     <h2>Willkommen!</h2>
     <p>Willkommen auf unserem Prima-Shop, die Seite befindet sich im Aufbau und wird stetig verbessert. Bitte geben Sie uns etwas Zeit, um Ihnen das beste Shoppingerlebnis zu ermöglichen</p>
 </section>
+
 <!-- Lightbox for Popup -->
 <div class="lightbox hidden" id="lightbox">
     <span class="lightbox-close" id="lightbox-close">&times;</span>
     <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
 </div>
 
+<!-- Register Modal -->
 <div id="registerModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeRegister">&times;</span>
@@ -64,8 +68,7 @@
     </div>
 </div>
 
-
-
+<!-- Login Modal -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeLogin">&times;</span>
@@ -84,6 +87,7 @@
         </form>
     </div>
 </div>
+
 <!-- Navigation -->
 <nav>
     <a href="#" data-category="trauer">Trauerkarten</a>
@@ -92,129 +96,115 @@
     <a href="#" data-category="weihnachten">Weihnachtskarten</a>
     <a href="#" data-category="events">Diverse Karten</a>
 </nav>
+
+<!-- Filters -->
 <label for="orientation-filter">Ausrichtung:</label>
 <select id="orientation-filter">
     <option value="">Alle</option>
     <option value="portrait">Hochkant</option>
     <option value="landscape">Quer</option>
 </select>
+
+<!-- Product Container -->
 <div id="products-container" class="product-list"></div>
-
-
 
 <!-- Category Sections -->
 <section id="trauer" class="product-list category" style="display: none;"></section>
 <section id="hochzeit" class="product-list category" style="display: none;"><h3>Hochzeitskarten</h3></section>
 <section id="glueckwunsch" class="product-list category" style="display: none;"><h3>Glückwunschkarten</h3></section>
 <section id="weihnachten" class="product-list category" style="display: none;"><h3>Weihnachtskarten</h3></section>
-<section id="events" class="product-list category" style="display: none;"><h3>Diverse Karten/h3></section>
+<section id="events" class="product-list category" style="display: none;"><h3>Diverse Karten</h3></section>
 
-
-
-
-
+<!-- Cart Functions -->
 <script>
     function clearCart() {
-    // Clear the cart from localStorage and reset in-memory cart
-    localStorage.removeItem('cart');
-    cart = [];
-    updateCart();
-    alert("Warenkorb wurde geleert."); // Confirmation message
-}
-
-function saveCartToLocalStorage() {
-    localStorage.setItem('cart', JSON.stringify(cart));
-}
-    console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
-
-    
-// Function to toggle the cart popup visibility
-function toggleCart() {
-    const cartPopup = document.getElementById('cart-popup');
-    cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
-}
-
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-
-function addToCart(productName, quantityId, price) {
-    const quantity = parseInt(document.getElementById(quantityId).value);
-    if (quantity > 0) {
-        const item = cart.find(item => item.product === productName);
-        if (item) {
-            item.quantity += quantity; // Update quantity if item is already in cart
-        } else {
-            cart.push({ product: productName, quantity, price }); // Add new item to cart
-        }
+        localStorage.removeItem('cart');
+        cart = [];
         updateCart();
-        saveCartToLocalStorage(); // Save the updated cart to localStorage
-        alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
-    } else {
-        alert("Bitte eine gültige Anzahl eingeben.");
-    }
-}
-console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
-
-
-// Update the cart display and counter
-function updateCart() {
-    const cartContent = document.getElementById('cart-content');
-    const cartCount = document.getElementById('cart-count');
-    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-    if (cart.length === 0) {
-        cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-        return;
+        alert("Warenkorb wurde geleert.");
     }
 
-    let cartHTML = '<ul>';
-    cart.forEach(item => {
-        cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-    });
-    cartHTML += '</ul>';
-    cartContent.innerHTML = cartHTML;
-    saveCartToLocalStorage();
-}
-
-
-function finalizeOrder() {
-    if (cart.length === 0) {
-        alert('Ihr Warenkorb ist leer.');
-        return;
+    function saveCartToLocalStorage() {
+        localStorage.setItem('cart', JSON.stringify(cart));
     }
 
-    let orderSummary = 'Bestellung:\n';
-    cart.forEach(item => {
-        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-    });
-    alert(`Ihre Bestellung:\n${orderSummary}`);
+    function toggleCart() {
+        const cartPopup = document.getElementById('cart-popup');
+        cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
+    }
 
-    cart = []; // Clear the cart in memory
-    saveCartToLocalStorage(); // Clear the cart in localStorage
-    updateCart(); // Update the cart display
-    toggleCart();  // Close the cart popup
-    window.location.href = 'order-summary.html'; // Redirect to order summary page
-}
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
+    function addToCart(productName, quantityId, price) {
+        const quantity = parseInt(document.getElementById(quantityId).value);
+        if (quantity > 0) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += quantity;
+            } else {
+                cart.push({ product: productName, quantity, price });
+            }
+            updateCart();
+            saveCartToLocalStorage();
+            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+        } else {
+            alert("Bitte eine gültige Anzahl eingeben.");
+        }
+    }
 
+    function updateCart() {
+        const cartContent = document.getElementById('cart-content');
+        const cartCount = document.getElementById('cart-count');
+        cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+        if (cart.length === 0) {
+            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+            return;
+        }
+
+        let cartHTML = '<ul>';
+        cart.forEach(item => {
+            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        });
+        cartHTML += '</ul>';
+        cartContent.innerHTML = cartHTML;
+        saveCartToLocalStorage();
+    }
+
+    function finalizeOrder() {
+        if (cart.length === 0) {
+            alert('Ihr Warenkorb ist leer.');
+            return;
+        }
+
+        let orderSummary = 'Bestellung:\n';
+        cart.forEach(item => {
+            orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
+        });
+        alert(`Ihre Bestellung:\n${orderSummary}`);
+
+        cart = [];
+        saveCartToLocalStorage();
+        updateCart();
+        toggleCart();
+        window.location.href = 'order-summary.html';
+    }
 </script>
+
 <!-- Supabase SDK Import -->
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
-window.supabase = createClient(supabaseUrl, supabaseKey);
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabaseUrl = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
+    const supabaseKey = 'YOUR_SUPABASE_KEY';
+    window.supabase = createClient(supabaseUrl, supabaseKey);
 </script>
 
+<!-- Register/Login/Display Profile Handling -->
 <script>
-    // Define global variables for selected filters
-let selectedCategory = '';
-let selectedOrientation = '';
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function() {
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+    const privacyCheckbox = document.getElementById("privacy-policy");
+    const submitButton = document.getElementById("register-submit");
 
     function toggleProfileIcon() {
         const headerButtons = document.querySelector('.header-buttons');
@@ -227,11 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a href="#" id="logoutLink">Logout</a>
                 </div>
             </div>
-                    </div>
-
-        <!-- New Planogram Button -->
-        <a href="planogramm.html" class="planogram-btn">Planogramm Erstellen</a>
-    </div>
+            <a href="planogramm.html" class="planogram-btn">Planogramm Erstellen</a>
         `;
         document.getElementById('profileIcon').addEventListener('click', () => {
             const profileMenu = document.getElementById('profileMenu');
@@ -243,24 +229,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Anzeigen oder Verbergen der Buttons/Profile-Icons basierend auf Login-Status
-    if (isLoggedIn) {
-        toggleProfileIcon();
+    if (isLoggedIn) toggleProfileIcon();
+
+    document.getElementById('registerBtn').addEventListener('click', () => {
+        document.getElementById('registerModal').style.display = 'block';
+    });
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        document.getElementById('loginModal').style.display = 'block';
+    });
+    document.getElementById('closeRegister').addEventListener('click', () => {
+        document.getElementById('registerModal').style.display = 'none';
+    });
+    document.getElementById('closeLogin').addEventListener('click', () => {
+        document.getElementById('loginModal').style.display = 'none';
+    });
+
+    // Checkbox and submit button enabling
+    if (privacyCheckbox && submitButton) {
+        privacyCheckbox.addEventListener("change", function() {
+            submitButton.disabled = !privacyCheckbox.checked;
+        });
     } else {
-        document.getElementById('registerBtn').addEventListener('click', () => {
-            document.getElementById('registerModal').style.display = 'block';
-        });
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            document.getElementById('loginModal').style.display = 'block';
-        });
-        document.getElementById('closeRegister').addEventListener('click', () => {
-            document.getElementById('registerModal').style.display = 'none';
-        });
-        document.getElementById('closeLogin').addEventListener('click', () => {
-            document.getElementById('loginModal').style.display = 'none';
-        });
+        console.error("Checkbox or submit button not found!");
     }
 
+    // Register form handling
     document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const email = document.getElementById('register-email').value;
@@ -276,6 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Login form handling
     document.getElementById('login-form').addEventListener('submit', async function(event) {
         event.preventDefault();
         const email = document.getElementById('login-email').value;
@@ -295,278 +289,71 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add this line to bind the click event to the cart icon
     document.getElementById('cart-icon').addEventListener('click', toggleCart);
 });
 </script>
 
-    <script>
-
-
-// Produktliste laden
-document.addEventListener('DOMContentLoaded', async function() {
-    const selectedCategory = ''; // Set this to the chosen category as needed
-    const selectedOrientation = ''; // Set this to the chosen orientation as needed
-
-    // Fetch products based on category and orientation
-    const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation);
-
-    // Display the products
-    displayProducts(products, isLoggedIn);
-});
-
-
-// Produkte holen und anzeigen
-async function fetchProducts(isLoggedIn) {
-    let query = supabase.from('products').select('id, name, description, image_url');
-    if (isLoggedIn) query = query.select('id, name, description, price, image_url');
-    
-    const { data, error } = await query;
-    if (error) {
-        console.error('Error fetching products:', error);
-        return [];
-    }
-    return data;
-}
-
-// Add your orientation filter event listener and fetching function here
-
-document.addEventListener('DOMContentLoaded', function() {
-    const orientationFilter = document.getElementById('orientation-filter');
-
-    orientationFilter.addEventListener('change', async () => {
-        selectedOrientation = orientationFilter.value;
-        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-        const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
-        displayProducts(products, isLoggedIn);
-    });
-});
-
-
+<!-- Product Fetching and Display Handling -->
+<script>
 async function fetchProductsByCategoryAndOrientation(category, orientation) {
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true'; // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
-    // Start building the query with the common fields
     let query = supabase.from('products').select('id, name, description, image_url, orientation');
+    if (category) query = query.eq('category', category);
+    if (orientation) query = query.eq('orientation', orientation);
+    if (isLoggedIn) query = query.select('id, name, description, price, image_url, orientation');
 
-    // Add the category filter if provided
-    if (category) {
-        query = query.eq('category', category);
-    }
-
-    // Add the orientation filter if provided
-    if (orientation) {
-        query = query.eq('orientation', orientation);
-    }
-
-    // If logged in, include additional fields like price
-    if (isLoggedIn) {
-        query = query.select('id, name, description, price, image_url, orientation');
-    }
-
-    // Execute the query
     const { data, error } = await query;
-
-    // Handle any errors in the query
     if (error) {
         console.error('Error fetching products:', error);
         return [];
     }
-
-    // Return the fetched data
     return data;
 }
 
-
-<!-- Handling Product Categories and Fetching from Supabase -->
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Do not load any products initially; just set up event listeners.
-
-    const categoryLinks = document.querySelectorAll('nav a'); // Select all category links
-
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', async (event) => {
-            event.preventDefault(); // Prevent default link behavior
-
-            selectedCategory = link.getAttribute('data-category'); // Update selectedCategory
-            const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-
-            // Fetch products based on selected category and orientation
-            const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
-            displayProducts(products, isLoggedIn);
-        });
-    });
-
-    // Clear products container on initial page load
-    document.getElementById('products-container').innerHTML = '<p>Wählen Sie eine Kategorie, um Produkte zu sehen.</p>';
+// Product fetching and display
+document.addEventListener('DOMContentLoaded', async function() {
+    const products = await fetchProductsByCategoryAndOrientation('', '');
+    displayProducts(products, localStorage.getItem('loggedIn') === 'true');
 });
 
-
-// Funktion zur dynamischen Anzeige von Produkten je nach Login-Status
+// Function to display products
 function displayProducts(products, isLoggedIn) {
     const container = document.getElementById('products-container');
-    container.innerHTML = ''; // Vorherige Produkte löschen
-
+    container.innerHTML = '';
     if (products.length === 0) {
         container.innerHTML = '<p>Keine Produkte gefunden.</p>';
         return;
     }
 
-    // Produkte durchlaufen und HTML generieren
     products.forEach(product => {
         const productElement = document.createElement('div');
         productElement.className = 'product';
         const productId = product.id;
 
-let productHTML = `
-    <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-        <h2>${product.name}</h2>
-        <img src="${product.image_url}" alt="${product.name}" class="lightbox-trigger" style="max-width: 100%; max-height: 300px;">
-        <p><strong>Beschreibung:</strong> ${product.description}</p>
-`;
+        let productHTML = `
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                <h2>${product.name}</h2>
+                <img src="${product.image_url}" alt="${product.name}" class="lightbox-trigger" style="max-width: 100%; max-height: 300px;">
+                <p><strong>Beschreibung:</strong> ${product.description}</p>
+        `;
 
-
-        // Preis anzeigen, wenn der Nutzer eingeloggt ist
         if (isLoggedIn && product.price) {
             productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
-        }
-
-        // Nur wenn eingeloggt: Menge-Eingabefeld und Button anzeigen
-        if (isLoggedIn) {
             productHTML += `
                 <label for="quantity-${productId}" class="quantity-label">Menge:</label>
                 <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
                 <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
             `;
         } else {
-            // Meldung anzeigen, wenn nicht eingeloggt
             productHTML += `<p style="color: blue;">Bitte melde dich an um die Preise zu sehen</p>`;
         }
 
         productHTML += '</div>';
         productElement.innerHTML = productHTML;
-        container.appendChild(productElement);  // Produkt in den Container einfügen
-    });
-    // Initialize lightbox functionality for the newly added images
-    initializeLightbox();
-}
-
-
-// Cart logic: add products to the cart and update cart display
-function addToCart(productName, quantityId, price) {
-    const quantity = parseInt(document.getElementById(quantityId).value);
-    if (quantity > 0) {
-        const item = cart.find(item => item.product === productName);
-        if (item) {
-            item.quantity += quantity; // Update quantity if item already in cart
-        } else {
-            cart.push({ product: productName, quantity, price }); // Add new item to cart
-        }
-        updateCart();
-        alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
-    } else {
-        alert("Bitte eine gültige Anzahl eingeben.");
-    }
-}
-
-// Update the cart display and item count
-function updateCart() {
-    const cartContent = document.getElementById('cart-content');
-    const cartCount = document.getElementById('cart-count');
-    cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0); // Update item count
-
-    if (cart.length === 0) {
-        cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
-        return;
-    }
-
-    let cartHTML = '<ul>';
-    cart.forEach(item => {
-        cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
-    });
-    cartHTML += '</ul>';
-    cartContent.innerHTML = cartHTML;
-    saveCartToLocalStorage(); // Save the cart to localStorage each time it's updated
-}
-console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
-
-
-// Finalize the order and clear the cart
-function finalizeOrder() {
-    if (cart.length === 0) {
-        alert('Ihr Warenkorb ist leer.');
-        return;
-    }
-
-    let orderSummary = 'Bestellung:\n';
-    cart.forEach(item => {
-        orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
-    });
-    alert(`Ihre Bestellung:\n${orderSummary}`);
-
-    cart = []; // Clear the cart after the order
-    updateCart();
-    toggleCart();  // Close the cart popup
-    window.location.href = 'order-summary.html'; // Redirect to order summary page
-}
-        // Initialize lightbox functionality for the newly added images
-        initializeLightbox();
-    
-
-function initializeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImage = document.getElementById('lightbox-image');
-    const lightboxClose = document.getElementById('lightbox-close');
-    const triggers = document.querySelectorAll('.lightbox-trigger');
-
-    // Remove any previously attached listeners (optional, good for cleanup)
-    triggers.forEach(trigger => {
-        trigger.removeEventListener('click', openLightbox);
-        trigger.addEventListener('click', openLightbox);
-    });
-
-    function openLightbox(event) {
-        lightboxImage.src = event.target.src;
-        lightbox.classList.add('show'); // Assuming 'show' makes the lightbox visible
-    }
-
-    // Close button
-    lightboxClose.addEventListener('click', () => lightbox.classList.remove('show'));
-
-    // Close when clicking outside the image
-    lightbox.addEventListener('click', (event) => {
-        if (event.target === lightbox) lightbox.classList.remove('show');
+        container.appendChild(productElement);
     });
 }
-
-    // Call displayProducts after fetching products
-    document.addEventListener('DOMContentLoaded', async function() {
-        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-        const products = await fetchProducts(isLoggedIn);
-        displayProducts(products, isLoggedIn);
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Ensure elements are loaded before running this script
-        const privacyCheckbox = document.getElementById("privacy-policy");
-        const submitButton = document.getElementById("register-submit");
-
-        if (privacyCheckbox && submitButton) {
-            // Debug to check if checkbox and button are found
-            console.log("Checkbox and button found:", privacyCheckbox, submitButton);
-
-            privacyCheckbox.addEventListener("change", function() {
-                console.log("Checkbox state changed:", privacyCheckbox.checked); // Debug line
-                submitButton.disabled = !privacyCheckbox.checked;
-            });
-        } else {
-            console.error("Checkbox or submit button not found!");
-        }
-    });
-</script>
-        
 </script>
 
 </body>
