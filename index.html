@@ -629,5 +629,23 @@ function initializeLightbox() {
         });
     });
 </script>
+<script>
+    // Ensure cart is declared only once
+    let cart = cart || [];
+
+    // Initialize cart properly
+    if (!cart) {
+        cart = [];
+    }
+
+    // Define the toggleCart function
+    function toggleCart() {
+        const cartElement = document.querySelector('.cart');
+        cartElement.classList.toggle('show');
+    }
+
+    // Example usage of toggleCart
+    document.querySelector('.cart-toggle').addEventListener('click', toggleCart);
+</script>
 </body>
 </html>
