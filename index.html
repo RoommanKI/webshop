@@ -65,6 +65,7 @@
 </div>
 
 
+
 <div id="loginModal" class="modal">
     <div class="modal-content">
         <span class="close" id="closeLogin">&times;</span>
@@ -298,17 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('cart-icon').addEventListener('click', toggleCart);
 });
 </script
-    <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // JavaScript to enable the submit button when the checkbox is checked
-    const privacyCheckbox = document.getElementById("privacy-policy");
-    const submitButton = document.getElementById("register-submit");
 
-    privacyCheckbox.addEventListener("change", function() {
-        submitButton.disabled = !privacyCheckbox.checked;
-    });
-});
-</script>
     <script>
 
 
@@ -559,7 +550,25 @@ function initializeLightbox() {
         displayProducts(products, isLoggedIn);
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Ensure elements are loaded before running this script
+        const privacyCheckbox = document.getElementById("privacy-policy");
+        const submitButton = document.getElementById("register-submit");
 
+        if (privacyCheckbox && submitButton) {
+            // Debug to check if checkbox and button are found
+            console.log("Checkbox and button found:", privacyCheckbox, submitButton);
+
+            privacyCheckbox.addEventListener("change", function() {
+                console.log("Checkbox state changed:", privacyCheckbox.checked); // Debug line
+                submitButton.disabled = !privacyCheckbox.checked;
+            });
+        } else {
+            console.error("Checkbox or submit button not found!");
+        }
+    });
+</script>
         
 </script>
 
