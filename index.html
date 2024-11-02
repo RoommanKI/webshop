@@ -21,6 +21,15 @@
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
+    <!-- Warenkorb-Popup -->
+<div id="cart-popup" style="display: none;">
+    <h3>Ihr Warenkorb</h3>
+    <div id="cart-content">
+        <p>Ihr Warenkorb ist leer.</p>
+    </div>
+    <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
+    <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
+</div>
    <!-- Startseite Abschnitt -->
 <section id="startseite" style="padding: 20px; text-align: center;">
     <h2>Willkommen!</h2>
@@ -94,15 +103,7 @@
 <section id="weihnachten" class="product-list category" style="display: none;"><h3>Weihnachtskarten</h3></section>
 <section id="events" class="product-list category" style="display: none;"><h3>Diverse Karten/h3></section>
 
-<!-- Warenkorb-Popup -->
-<div id="cart-popup" style="display: none;">
-    <h3>Ihr Warenkorb</h3>
-    <div id="cart-content">
-        <p>Ihr Warenkorb ist leer.</p>
-    </div>
-    <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
-    <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
-</div>
+
 
 
 
