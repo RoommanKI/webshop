@@ -11,7 +11,7 @@
 
 <!-- Header -->
 <header>
-    <div id="cart-icon" class="cart">
+    <div id="cart-icon" class="cart" aria-label="Warenkorb">
         <i class="fas fa-shopping-cart"></i>
         <span id="cart-count">0</span>
     </div>
@@ -21,20 +21,28 @@
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
-   <!-- Startseite Abschnitt -->
+
+<!-- Cart Content -->
+<div id="cart-content" class="cart-content hidden" aria-live="polite">
+    <!-- Cart items will be dynamically inserted here -->
+</div>
+
+<!-- Startseite Abschnitt -->
 <section id="startseite" style="padding: 20px; text-align: center;">
     <h2>Willkommen!</h2>
     <p>Willkommen auf unserem Prima-Shop, die Seite befindet sich im Aufbau und wird stetig verbessert. Bitte geben Sie uns etwas Zeit, um Ihnen das beste Shoppingerlebnis zu ermöglichen</p>
 </section>
+
 <!-- Lightbox for Popup -->
 <div class="lightbox hidden" id="lightbox">
-    <span class="lightbox-close" id="lightbox-close">&times;</span>
+    <span class="lightbox-close" id="lightbox-close" role="button" aria-label="Schließen">&times;</span>
     <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
 </div>
 
+<!-- Register Modal -->
 <div id="registerModal" class="modal">
     <div class="modal-content">
-        <span class="close" id="closeRegister">&times;</span>
+        <span class="close" id="closeRegister" role="button" aria-label="Schließen">&times;</span>
         <h2>Registrieren</h2>
         <form id="register-form">
             <div class="form-group">
@@ -51,9 +59,10 @@
     </div>
 </div>
 
+<!-- Login Modal -->
 <div id="loginModal" class="modal">
     <div class="modal-content">
-        <span class="close" id="closeLogin">&times;</span>
+        <span class="close" id="closeLogin" role="button" aria-label="Schließen">&times;</span>
         <h2>Anmelden</h2>
         <form id="login-form">
             <div class="form-group">
@@ -69,6 +78,7 @@
         </form>
     </div>
 </div>
+
 <!-- Navigation -->
 <nav>
     <a href="#" data-category="trauer">Trauerkarten</a>
@@ -84,8 +94,6 @@
     <option value="landscape">Quer</option>
 </select>
 <div id="products-container" class="product-list"></div>
-
-
 
 <!-- Category Sections -->
 <section id="trauer" class="product-list category" style="display: none;"></section>
@@ -104,7 +112,62 @@
     <button class="btn" onclick="clearCart()">Warenkorb Löschen</button> <!-- New button -->
 </div>
 
+<script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
+    function addToCart(productName, quantity, price) {
+        if (quantity > 0) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += quantity; // Update quantity if item already in cart
+            } else {
+                cart.push({ product: productName, quantity, price }); // Add new item to cart
+            }
+            updateCart();
+            alert(`${quantity}x ${productName} wurde dem Warenkorb hinzugefügt!`);
+        } else {
+            alert("Bitte eine gültige Anzahl eingeben.");
+        }
+    }
+
+    // Update the cart display and item count
+    function updateCart() {
+        const cartContent = document.getElementById('cart-content');
+        const cartCount = document.getElementById('cart-count');
+        cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0); // Update item count
+
+        if (cart.length === 0) {
+            cartContent.innerHTML = '<p>Ihr Warenkorb ist leer.</p>';
+            return;
+        }
+
+        let cartHTML = '<ul>';
+        cart.forEach(item => {
+            cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
+        });
+        cartHTML += '</ul>';
+        cartContent.innerHTML = cartHTML;
+        saveCartToLocalStorage(); // Save the cart to localStorage each time it's updated
+    }
+
+    function saveCartToLocalStorage() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    console.log('Cart:', JSON.parse(localStorage.getItem('cart')));
+
+    // Finalize the order and clear the cart
+    function finalizeOrder() {
+        if (cart.length === 0) {
+            alert('Ihr Warenkorb ist leer.');
+            return;
+        }
+        // Add logic to finalize the order
+        cart.length = 0; // Clear the cart
+        updateCart();
+        alert('Ihre Bestellung wurde erfolgreich abgeschlossen!');
+    }
+</script>
 
 <script>
     function clearCart() {
@@ -540,11 +603,31 @@ function initializeLightbox() {
         const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
         const products = await fetchProducts(isLoggedIn);
         displayProducts(products, isLoggedIn);
+
+        const triggers = document.querySelectorAll('.lightbox-trigger');
+        const lightbox = document.querySelector('.lightbox');
+        const lightboxImage = document.querySelector('.lightbox-image');
+        const lightboxClose = document.querySelector('.lightbox-close');
+
+        // Remove any previously attached listeners (optional, good for cleanup)
+        triggers.forEach(trigger => {
+            trigger.removeEventListener('click', openLightbox);
+            trigger.addEventListener('click', openLightbox);
+        });
+
+        function openLightbox(event) {
+            lightboxImage.src = event.target.src;
+            lightbox.classList.add('show'); // Assuming 'show' makes the lightbox visible
+        }
+
+        // Close button
+        lightboxClose.addEventListener('click', () => lightbox.classList.remove('show'));
+
+        // Close when clicking outside the image
+        lightbox.addEventListener('click', (event) => {
+            if (event.target === lightbox) lightbox.classList.remove('show');
+        });
     });
 </script>
-
-        
-</script>
-
 </body>
 </html>
