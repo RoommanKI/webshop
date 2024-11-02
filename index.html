@@ -23,7 +23,7 @@
 </header>
 
 <!-- Warenkorb-Popup -->
-<div id="cart-popup" style="display: none;">
+<div id="cart-popup" style="display: none; position: absolute; top: 60px; right: 10px; background-color: white; border: 1px solid #ddd; padding: 20px; width: 300px;">
     <h3>Ihr Warenkorb</h3>
     <div id="cart-content">
         <p>Ihr Warenkorb ist leer.</p>
@@ -221,10 +221,23 @@ function saveCartToLocalStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-function toggleCart() {
-    const cartPopup = document.getElementById('cart-popup');
-    cartPopup.style.display = (cartPopup.style.display === 'none') ? 'block' : 'none';
-}
+    // Ensure cart popup is toggled when the cart icon is clicked
+    document.addEventListener("DOMContentLoaded", function() {
+        const cartIcon = document.getElementById("cart-icon");
+        const cartPopup = document.getElementById("cart-popup");
+
+        // Toggle the visibility of the cart popup
+        function toggleCart() {
+            if (cartPopup.style.display === "none" || cartPopup.style.display === "") {
+                cartPopup.style.display = "block";
+            } else {
+                cartPopup.style.display = "none";
+            }
+        }
+
+        // Attach toggleCart function to the cart icon click event
+        cartIcon.addEventListener("click", toggleCart);
+    });
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
