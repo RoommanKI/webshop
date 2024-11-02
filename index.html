@@ -39,7 +39,7 @@
 </section>
 
 <!-- Lightbox for Popup -->
-<div class="lightbox hidden" id="lightbox">
+<div class="lightbox hidden" id="lightbox" style="display: none;">
     <span class="lightbox-close" id="lightbox-close">&times;</span>
     <img src="" alt="Product Image" class="lightbox-content" id="lightbox-image">
 </div>
@@ -310,7 +310,33 @@ document.addEventListener("DOMContentLoaded", function() {
         displayProducts(products, isLoggedIn);
     });
 
-    // Function to fetch products by category and orientation
+document.addEventListener("DOMContentLoaded", function() {
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const closeLightbox = document.getElementById("lightbox-close");
+
+    function openLightbox(imageSrc) {
+        lightboxImage.src = imageSrc;
+        lightbox.style.display = "block";
+    }
+
+    function closeLightboxFunc() {
+        lightbox.style.display = "none";
+        lightboxImage.src = "";
+    }
+
+    closeLightbox.addEventListener("click", closeLightboxFunc);
+    lightbox.addEventListener("click", function(event) {
+        if (event.target === lightbox) {
+            closeLightboxFunc();
+        }
+    });
+
+    window.openLightbox = openLightbox;
+});
+
+// Fetch and display products with lightbox setup
+document.addEventListener("DOMContentLoaded", function() {
     async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
         let query = supabase.from('products').select('id, name, description, image_url, orientation');
         if (category) query = query.eq('category', category);
@@ -325,51 +351,50 @@ document.addEventListener("DOMContentLoaded", function() {
         return data;
     }
 
-    // Function to display products
+    async function loadProducts() {
+        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+        const products = await fetchProductsByCategoryAndOrientation("", "", isLoggedIn);
+        displayProducts(products, isLoggedIn);
+    }
+
     function displayProducts(products, isLoggedIn) {
-        const container = document.getElementById('products-container');
-        container.innerHTML = '';
+        const container = document.getElementById("products-container");
+        container.innerHTML = "";
 
         if (products.length === 0) {
-            container.innerHTML = '<p>Keine Produkte gefunden.</p>';
+            container.innerHTML = "<p>Keine Produkte gefunden.</p>";
             return;
         }
 
         products.forEach(product => {
-            const productElement = document.createElement('div');
-            productElement.className = 'product';
-            const productId = product.id;
+            const productElement = document.createElement("div");
+            productElement.className = "product";
 
             let productHTML = `
                 <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
                     <h2>${product.name}</h2>
-                    <img src="${product.image_url}" alt="${product.name}" class="lightbox-trigger" style="max-width: 100%; max-height: 300px;">
+                    <img src="${product.image_url}" alt="${product.name}" onclick="openLightbox('${product.image_url}')" style="cursor: pointer; max-width: 100%; max-height: 300px;">
                     <p><strong>Beschreibung:</strong> ${product.description}</p>
             `;
 
             if (isLoggedIn && product.price) {
                 productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
                 productHTML += `
-                    <label for="quantity-${productId}" class="quantity-label">Menge:</label>
-                    <input type="number" class="quantity" id="quantity-${productId}" value="1" min="1" style="width: 50px;">
-                    <button class="btn" onclick="addToCart('${product.name}', 'quantity-${productId}', ${product.price || 0})">In den Warenkorb</button>
+                    <label for="quantity-${product.id}" class="quantity-label">Menge:</label>
+                    <input type="number" class="quantity" id="quantity-${product.id}" value="1" min="1" style="width: 50px;">
+                    <button class="btn" onclick="addToCart('${product.name}', 'quantity-${product.id}', ${product.price || 0})">In den Warenkorb</button>
                 `;
             } else {
                 productHTML += `<p style="color: blue;">Bitte melde dich an um die Preise zu sehen</p>`;
             }
 
-            productHTML += '</div>';
+            productHTML += "</div>";
             productElement.innerHTML = productHTML;
             container.appendChild(productElement);
         });
     }
 
-    // Initial load without any category or orientation
-    (async function loadInitialProducts() {
-        const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-        const products = await fetchProductsByCategoryAndOrientation(selectedCategory, selectedOrientation, isLoggedIn);
-        displayProducts(products, isLoggedIn);
-    })();
+    loadProducts();
 });
 </script>
 
