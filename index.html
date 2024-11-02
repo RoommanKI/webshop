@@ -54,7 +54,11 @@
                 <label for="register-password">Passwort:</label>
                 <input type="password" id="register-password" placeholder="Passwort eingeben" autocomplete="new-password" required>
             </div>
-            <button type="submit">Registrieren</button>
+            <div class="form-group">
+                <input type="checkbox" id="privacy-policy" required>
+                <label for="privacy-policy">Ich stimme der <a href="#" target="_blank">Datenschutzerklärung</a> zu</label>
+            </div>
+            <button type="submit" id="register-submit" disabled>Registrieren</button>
             <p id="register-error" class="error-message"></p>
         </form>
     </div>
@@ -292,6 +296,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add this line to bind the click event to the cart icon
     document.getElementById('cart-icon').addEventListener('click', toggleCart);
 });
+</script
+    <script>
+    // JavaScript to enable the submit button when the checkbox is checked
+    const privacyCheckbox = document.getElementById("privacy-policy");
+    const submitButton = document.getElementById("register-submit");
+
+    privacyCheckbox.addEventListener("change", function() {
+        submitButton.disabled = !privacyCheckbox.checked;
+    });
 </script>
     <script>
 
