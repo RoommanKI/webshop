@@ -108,7 +108,19 @@
             background-color: #357ab7;
         }
 
+        #status-message {
+            font-weight: bold;
+            margin-top: 15px;
+            text-align: center;
+        }
     </style>
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("YOUR_USER_ID"); // Replace "YOUR_USER_ID" with your actual EmailJS User ID
+        })();
+    </script>
 </head>
 <body>
     <div class="container">
@@ -167,43 +179,19 @@
                 Wenn Sie uns per Kontaktformular Anfragen zur Datenschutzerklärung zukommen lassen möchten, nutzen Sie bitte das folgende Formular:
             </p>
 
-            <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                // Process form submission
-                $name = htmlspecialchars($_POST['name']);
-                $email = htmlspecialchars($_POST['email']);
-                $message = htmlspecialchars($_POST['message']);
+            <form id="contact-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
 
-                $to = "your-email@example.com"; // Replace with your email
-                $subject = "Anfrage zur Datenschutzerklärung";
-                $body = "Name: $name\nE-Mail: $email\nNachricht:\n$message";
-                $headers = "From: $email";
+                <label for="email">E-Mail:</label>
+                <input type="email" id="email" name="email" required>
 
-                if (mail($to, $subject, $body, $headers)) {
-                    echo "<p>Vielen Dank für Ihre Nachricht. Wir werden uns in Kürze bei Ihnen melden.</p>";
-                } else {
-                    echo "<p>Entschuldigung, es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.</p>";
-                }
-            } else {
-                // Display the form if it's not submitted
-                ?>
+                <label for="message">Nachricht:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
 
-                <form action="" method="post">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required><br><br>
-
-                    <label for="email">E-Mail:</label>
-                    <input type="email" id="email" name="email" required><br><br>
-
-                    <label for="message">Nachricht:</label><br>
-                    <textarea id="message" name="message" rows="4" cols="50" required></textarea><br><br>
-
-                    <input type="submit" value="Absenden">
-                </form>
-
-                <?php
-            }
-            ?>
+                <input type="submit" value="Absenden">
+                <p id="status-message"></p>
+            </form>
         </div>
 
         <div class="section">
@@ -233,5 +221,28 @@
             </p>
         </div>
     </div>
+
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Replace with your actual EmailJS service ID, template ID, and user ID
+            const serviceID = "YOUR_SERVICE_ID";
+            const templateID = "YOUR_TEMPLATE_ID";
+            const statusMessage = document.getElementById('status-message');
+
+            // Send form data with EmailJS
+            emailjs.sendForm(serviceID, templateID, this)
+                .then(() => {
+                    statusMessage.innerText = "Vielen Dank für Ihre Nachricht. Wir werden uns in Kürze bei Ihnen melden.";
+                    statusMessage.style.color = "green";
+                    this.reset(); // Reset the form
+                }, (error) => {
+                    statusMessage.innerText = "Entschuldigung, es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.";
+                    statusMessage.style.color = "red";
+                    console.error("EmailJS Error:", error);
+                });
+        });
+    </script>
 </body>
 </html>
