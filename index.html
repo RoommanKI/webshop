@@ -358,43 +358,43 @@ document.addEventListener("DOMContentLoaded", function() {
         const products = await fetchProductsByCategoryAndOrientation("", "", isLoggedIn);
         displayProducts(products, isLoggedIn);
     }
+function displayProducts(products, isLoggedIn) {
+    const container = document.getElementById("products-container");
+    container.innerHTML = "";
 
-    function displayProducts(products, isLoggedIn) {
-        const container = document.getElementById("products-container");
-        container.innerHTML = "";
+    if (products.length === 0) {
+        container.innerHTML = "<p>Keine Produkte gefunden.</p>";
+        return;
+    }
 
-        if (products.length === 0) {
-            container.innerHTML = "<p>Keine Produkte gefunden.</p>";
-            return;
+    products.forEach(product => {
+        const productElement = document.createElement("div");
+        productElement.className = "product";
+
+        let productHTML = `
+            <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
+                <h2>${product.name}</h2>
+                <img src="${product.image_url}" loading="lazy" alt="${product.name}" onclick="openLightbox('${product.image_url}')" style="cursor: pointer; max-width: 100%; max-height: 300px;">
+                <p><strong>Beschreibung:</strong> ${product.description}</p>
+        `;
+
+        if (isLoggedIn && product.price) {
+            productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
+            productHTML += `
+                <label for="quantity-${product.id}" class="quantity-label">Menge:</label>
+                <input type="number" class="quantity" id="quantity-${product.id}" value="1" min="1" style="width: 50px;">
+                <button class="btn" onclick="addToCart('${product.name}', 'quantity-${product.id}', ${product.price || 0})">In den Warenkorb</button>
+            `;
+        } else {
+            productHTML += `<p style="color: blue;">Bitte melde dich an um die Preise zu sehen</p>`;
         }
 
-        products.forEach(product => {
-            const productElement = document.createElement("div");
-            productElement.className = "product";
+        productHTML += "</div>";
+        productElement.innerHTML = productHTML;
+        container.appendChild(productElement);
+    });
+}
 
-            let productHTML = `
-                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
-                    <h2>${product.name}</h2>
-                    <img src="${product.image_url}" alt="${product.name}" onclick="openLightbox('${product.image_url}')" style="cursor: pointer; max-width: 100%; max-height: 300px;">
-                    <p><strong>Beschreibung:</strong> ${product.description}</p>
-            `;
-
-            if (isLoggedIn && product.price) {
-                productHTML += `<p class="price"><strong>Preis:</strong> ${product.price.toFixed(2)}€</p>`;
-                productHTML += `
-                    <label for="quantity-${product.id}" class="quantity-label">Menge:</label>
-                    <input type="number" class="quantity" id="quantity-${product.id}" value="1" min="1" style="width: 50px;">
-                    <button class="btn" onclick="addToCart('${product.name}', 'quantity-${product.id}', ${product.price || 0})">In den Warenkorb</button>
-                `;
-            } else {
-                productHTML += `<p style="color: blue;">Bitte melde dich an um die Preise zu sehen</p>`;
-            }
-
-            productHTML += "</div>";
-            productElement.innerHTML = productHTML;
-            container.appendChild(productElement);
-        });
-    }
 
     loadProducts();
 });
