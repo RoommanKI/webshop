@@ -112,10 +112,11 @@
 
         <button type="submit">Speichern</button>
         <p id="profile-error" class="error-message"></p>
+         </form>
         <!-- Emergency delete button -->
 <button id="emergency-delete" style="margin-top: 20px; padding: 5px 10px; background-color: #dc3545; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; width: auto;">
     DatenFalsch? - Profil löschen
-    </form>
+   
 </button>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -198,15 +199,22 @@ document.getElementById('profile-form').addEventListener('submit', async functio
 });
 
 
-        document.getElementById('emergency-delete').addEventListener('click', async function() {
+document.getElementById('emergency-delete').addEventListener('click', async function() {
     const confirmDelete = confirm("Sind Sie sicher, dass Sie Ihr Daten neu eingeben möchten?");
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+        document.getElementById('profile-error').textContent = 'User not authenticated.';
+        return;
+    }
+    const userId = user.id;
 
     if (confirmDelete) {
         try {
             const { data, error } = await supabase
                 .from('profile')
                 .delete()
-                .eq('Email', userEmail);  // Delete by email
+                .eq('user_id', userId);  // Delete by user_id
 
             if (error) {
                 document.getElementById('profile-error').textContent = `Fehler beim Löschen des Profils: ${error.message}`;
@@ -235,6 +243,7 @@ document.getElementById('profile-form').addEventListener('submit', async functio
         }
     }
 });
+
 
     </script>
 </body>
