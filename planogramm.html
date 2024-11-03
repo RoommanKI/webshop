@@ -188,8 +188,8 @@
             height: 100vh;
             z-index: 1000;
             background-color: #f9fafb;
-            padding: 0;
-            margin: 0;
+            padding: 0; /* Remove padding in fullscreen */
+            margin: 0;  /* Remove margin in fullscreen */
             overflow: auto;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -250,7 +250,7 @@
     <div class="product-images" id="product-images"></div>
 
     <!-- Grid where images can be dropped -->
-    <h2>Planogramm</h2>
+    <h2 id="grid-title">Planogramm</h2>
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
 
     <!-- Add to Cart Button -->
@@ -460,13 +460,13 @@
             window.location.href = 'order-summary.html';
         };
 
-         document.getElementById('cart-icon').addEventListener('click', () => {
+        document.getElementById('cart-icon').addEventListener('click', () => {
             const cartPopup = document.getElementById('cart-popup');
             cartPopup.style.display = cartPopup.style.display === 'none' || cartPopup.style.display === '' ? 'block' : 'none';
         });
 
         // Fullscreen mode toggle function
-        function toggleFullscreenGrid() {
+        window.toggleFullscreenGrid = function toggleFullscreenGrid() {
             document.body.classList.toggle('fullscreen-grid');
             const fullscreenBtn = document.getElementById('fullscreen-btn');
             fullscreenBtn.textContent = document.body.classList.contains('fullscreen-grid')
