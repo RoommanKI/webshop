@@ -355,11 +355,18 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
         return [];
     }
 
-    // Ensure `image_url` is correctly formed by using Supabase's `getPublicUrl`
+    // Generate public URLs for each product's image
     const productsWithPublicUrls = data.map(product => {
-        if (product.image_url) { // Check if image_url is present
-            const { publicURL } = supabase.storage.from('your-bucket').getPublicUrl(product.image_url);
-            console.log(`Generated public URL for ${product.image_url}: ${publicURL}`);
+        if (product.image_url) { 
+            // Extract the relative path from the full URL
+            const relativePath = product.image_url.replace(
+                'https://vaugbzzhenbkmcuuoeai.supabase.co/storage/v1/object/public/',
+                ''
+            );
+
+            // Use the relative path with getPublicUrl
+            const { publicURL } = supabase.storage.from('your-bucket').getPublicUrl(relativePath);
+            console.log(`Generated public URL for ${relativePath}: ${publicURL}`);
             return { ...product, image_url: publicURL };
         } else {
             console.warn(`No image URL found for product ${product.id}`);
