@@ -21,7 +21,11 @@
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
-
+<!-- Cookie Consent Popup -->
+<div id="cookieConsent" style="display: none; position: fixed; bottom: 0; width: 100%; background-color: #f1f1f1; padding: 20px; text-align: center; border-top: 1px solid #ccc;">
+  <p>We use cookies to ensure you get the best experience on our website. <a href="privacy-policy.html" target="_blank">Learn more</a></p>
+  <button id="acceptCookies" style="padding: 10px 20px;">Accept</button>
+</div>
 <!-- Warenkorb-Popup -->
 <div id="cart-popup" style="display: none; position: absolute; top: 60px; left: 10px; background-color: white; border: 1px solid #ddd; padding: 20px; width: 300px;">
     <h3>Ihr Warenkorb</h3>
@@ -415,6 +419,19 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     window.openLightbox = openLightbox;
+});
+    document.addEventListener("DOMContentLoaded", function() {
+    const cookieConsent = document.getElementById('cookieConsent');
+    const acceptCookies = document.getElementById('acceptCookies');
+
+    if (!localStorage.getItem('cookiesAccepted')) {
+        cookieConsent.style.display = 'block';
+    }
+
+    acceptCookies.addEventListener('click', () => {
+        localStorage.setItem('cookiesAccepted', 'true');
+        cookieConsent.style.display = 'none';
+    });
 });
 </script>
 </body>
