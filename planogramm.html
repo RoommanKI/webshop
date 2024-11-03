@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planogramm Ersteller</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -123,25 +121,24 @@
             text-align: center;
         }
 
-     /* Warenkorb Styling */
-#cart-icon {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    cursor: pointer;
-    font-size: 24px;
-    color: white;               /* Cart icon color */
-    background-color: #3498db;   /* Background color to make it stand out */
-    padding: 10px;               /* Space around the icon */
-    border-radius: 50%;          /* Rounded to make it a circular button */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    transition: background-color 0.3s ease; /* Smooth transition on hover */
-}
+        /* Warenkorb Styling */
+        #cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+            background-color: #3498db;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
 
-#cart-icon:hover {
-    background-color: #2980b9;   /* Slightly darker on hover */
-}
-
+        #cart-icon:hover {
+            background-color: #2980b9;
+        }
 
         #cart-popup {
             position: fixed;
@@ -180,35 +177,6 @@
         .btn:hover {
             background-color: #2980b9;
         }
-        #fullscreen-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1000;
-}
-
-/* Fullscreen styles */
-.fullscreen #grid-container .quantity-input,
-.fullscreen #category-filter,
-.fullscreen #orientation-filter,
-.fullscreen #pdf-form,
-.fullscreen #cart-icon,
-.fullscreen #add-all-to-cart {
-    display: none;
-}
-
-.fullscreen #grid-container {
-    max-width: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Dynamically adjust */
-    padding: 20px;
-}
-
     </style>
 </head>
 <body>
@@ -217,7 +185,6 @@
     <div class="header-buttons">
         <button onclick="location.href='index.html'" style="padding: 10px 20px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Webshop</button>
     </div>
-    <button id="fullscreen-btn" onclick="toggleFullscreen()">Vollbildmodus</button>
 
     <!-- Form to input rows and columns -->
     <form id="grid-form">
@@ -233,13 +200,14 @@
     <select id="category-filter">
         <option value="">Alle Kategorien</option>
     </select>
-<!-- Orientation Filter Dropdown -->
-<label for="orientation-filter">Ausrichtung:</label>
-<select id="orientation-filter">
-    <option value="">Alle</option>
-    <option value="portrait">Hochformat</option>
-    <option value="landscape">Querformat</option>
-</select>
+
+    <!-- Orientation Filter Dropdown -->
+    <label for="orientation-filter">Ausrichtung:</label>
+    <select id="orientation-filter">
+        <option value="">Alle</option>
+        <option value="portrait">Hochformat</option>
+        <option value="landscape">Querformat</option>
+    </select>
 
     <!-- Product image selection area -->
     <h2>Produkte</h2>
@@ -248,33 +216,15 @@
     <!-- Grid where images can be dropped -->
     <h2>Planogramm</h2>
     <div id="grid-container" class="grid" style="grid-template-columns: repeat(3, 100px);"></div>
-<!-- Form to pick rows, columns, and orientation for PDF -->
-<form id="pdf-form" onsubmit="return false;">
-    <label for="pdf-rows">PDF Reihen:</label>
-    <input type="number" id="pdf-rows" min="1" value="4" required>
-    <label for="pdf-columns">PDF Spalten:</label>
-    <input type="number" id="pdf-columns" min="1" value="3" required>
-    
-    <!-- Orientation Selector -->
-    <label for="pdf-orientation">Ausrichtung:</label>
-    <select id="pdf-orientation">
-        <option value="portrait">Hochformat</option>
-        <option value="landscape">Querformat</option>
-    </select>
-    
-    <button type="button" onclick="generatePlanogramPDF()">PDF Erstellen</button>
-</form>
 
-<!-- Add to Cart Button -->
-<button id="add-all-to-cart" onclick="addAllToCart()">Zum Warenkorb hinzufügen</button>
-
+    <!-- Add to Cart Button -->
+    <button id="add-all-to-cart" onclick="addAllToCart()">Zum Warenkorb hinzufügen</button>
 
     <!-- Warenkorb Icon -->
     <div id="cart-icon">
         <i class="fas fa-shopping-cart"></i>
         <span id="cart-count">0</span>
     </div>
-    <!-- Webshop Button -->
 
     <!-- Warenkorb Popup -->
     <div id="cart-popup">
@@ -292,7 +242,7 @@
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
         const SUPABASE_URL = 'https://vaugbzzhenbkmcuuoeai.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhdWdienpoZW5ia21jdXVvZWFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTgwODcsImV4cCI6MjA0NDQ5NDA4N30.BAKeLpt5GTm4eu9yQYCoNHL3pDVjk3q5aibIP5bkVIE';
+        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY_HERE';
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const form = document.getElementById('grid-form');
@@ -319,44 +269,41 @@
                 categoryFilter.appendChild(option);
             });
         }
-function allowDrop(event) {
-    event.preventDefault();
-}
 
-async function loadProductImages(category = '', orientation = '') {
-    productImages.innerHTML = '';
+        function allowDrop(event) {
+            event.preventDefault();
+        }
 
-    // Fetch products from Supabase with optional category and orientation filters
-    let query = supabase.from('products').select('name, image_url, price, orientation');
+        async function loadProductImages(category = '', orientation = '') {
+            productImages.innerHTML = '';
 
-    if (category) {
-        query = query.eq('category', category);
-    }
-    if (orientation) {
-        query = query.eq('orientation', orientation);
-    }
+            let query = supabase.from('products').select('name, image_url, price, orientation');
 
-    const { data, error } = await query;
+            if (category) {
+                query = query.eq('category', category);
+            }
+            if (orientation) {
+                query = query.eq('orientation', orientation);
+            }
 
-    if (error) {
-        console.error("Error fetching product images:", error);
-        return;
-    }
+            const { data, error } = await query;
 
-    // Display products
-    data.forEach(product => {
-        const img = document.createElement('img');
-        img.src = product.image_url;
-        img.alt = product.name;
-        img.title = product.name;
-        img.draggable = true;
-        img.dataset.price = product.price;  // Store price in data attribute
-        img.addEventListener('dragstart', drag);
-        productImages.appendChild(img);
-    });
-}
+            if (error) {
+                console.error("Error fetching product images:", error);
+                return;
+            }
 
-
+            data.forEach(product => {
+                const img = document.createElement('img');
+                img.src = product.image_url;
+                img.alt = product.name;
+                img.title = product.name;
+                img.draggable = true;
+                img.dataset.price = product.price;
+                img.addEventListener('dragstart', drag);
+                productImages.appendChild(img);
+            });
+        }
 
         loadCategories();
         loadProductImages();
@@ -366,17 +313,13 @@ async function loadProductImages(category = '', orientation = '') {
             loadProductImages(selectedCategory);
         });
 
+        const orientationFilter = document.getElementById('orientation-filter');
 
-
-        
-// Orientation Filter
-const orientationFilter = document.getElementById('orientation-filter');
-
-orientationFilter.addEventListener('change', async (e) => {
-    const selectedOrientation = e.target.value;
-    const selectedCategory = categoryFilter.value;  // Get currently selected category
-    await loadProductImages(selectedCategory, selectedOrientation);
-});
+        orientationFilter.addEventListener('change', async (e) => {
+            const selectedOrientation = e.target.value;
+            const selectedCategory = categoryFilter.value;
+            await loadProductImages(selectedCategory, selectedOrientation);
+        });
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -399,88 +342,57 @@ orientationFilter.addEventListener('change', async (e) => {
             }
         }
 
-
-function drag(event) {
-    // Set the `product`, `html`, and `price` data on the data transfer object
-    event.dataTransfer.setData('text/html', event.target.outerHTML);
-    event.dataTransfer.setData('product', event.target.alt);
-    event.dataTransfer.setData('price', event.target.dataset.price || '0'); // Include price in the drag data
-}
-
-function drop(event) {
-    event.preventDefault();
-    const productName = event.dataTransfer.getData('product');
-    const imageHTML = event.dataTransfer.getData('text/html');
-    const price = parseFloat(event.dataTransfer.getData('price')) || 0; // Parse price from drag data
-
-    // Add the product image, a quantity input, and store the product's price
-    event.target.innerHTML = `
-        ${imageHTML}
-        <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
-    `;
-    event.target.setAttribute('data-product-name', productName);
-    event.target.setAttribute('data-price', price); // Store price as a data attribute on the grid item
-}
-
-
-
-// Assuming this is inside your drop function or wherever you have access to the drop target
-
-// Create the "Zum Warenkorb hinzufügen" button
-const addToCartButton = document.createElement('button');
-addToCartButton.textContent = "Zum Warenkorb hinzufügen";
-addToCartButton.style.position = "absolute";
-addToCartButton.style.bottom = "10px";
-addToCartButton.style.right = "10px";
-
-// Add an event listener to the button
-addToCartButton.addEventListener('click', () => {
-    const quantityInput = addToCartButton.parentNode.querySelector('.quantity-input');
-    const quantity = parseInt(quantityInput.value);
-
-    if (quantity > 0) {
-        addToCart(productName, quantity);
-    } else {
-        alert("Bitte geben Sie eine gültige Menge ein.");
-    }
-});
-
-// Define addAllToCart in the global scope
-window.addAllToCart = function addAllToCart() {
-    const gridItems = document.querySelectorAll('.grid-item');
-
-    gridItems.forEach(gridItem => {
-        const productName = gridItem.getAttribute('data-product-name');
-        const quantityInput = gridItem.querySelector('.quantity-input');
-        const price = parseFloat(gridItem.getAttribute('data-price')) || 0; // Retrieve stored price
-
-        if (productName && quantityInput) {
-            const quantity = parseInt(quantityInput.value);
-            if (quantity > 0) {
-                addToCart(productName, quantity, price); // Pass price here
-            }
+        function drag(event) {
+            event.dataTransfer.setData('text/html', event.target.outerHTML);
+            event.dataTransfer.setData('product', event.target.alt);
+            event.dataTransfer.setData('price', event.target.dataset.price || '0');
         }
-    });
 
-    alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
-    updateCart();
-}
+        function drop(event) {
+            event.preventDefault();
+            const productName = event.dataTransfer.getData('product');
+            const imageHTML = event.dataTransfer.getData('text/html');
+            const price = parseFloat(event.dataTransfer.getData('price')) || 0;
 
-        // Warenkorb Management
+            event.target.innerHTML = `
+                ${imageHTML}
+                <input type="number" min="1" value="1" class="quantity-input" placeholder="Anzahl" style="position: absolute; bottom: 10px; left: 10px; width: 50px;">
+            `;
+            event.target.setAttribute('data-product-name', productName);
+            event.target.setAttribute('data-price', price);
+        }
+
+        window.addAllToCart = function addAllToCart() {
+            const gridItems = document.querySelectorAll('.grid-item');
+
+            gridItems.forEach(gridItem => {
+                const productName = gridItem.getAttribute('data-product-name');
+                const quantityInput = gridItem.querySelector('.quantity-input');
+                const price = parseFloat(gridItem.getAttribute('data-price')) || 0;
+
+                if (productName && quantityInput) {
+                    const quantity = parseInt(quantityInput.value);
+                    if (quantity > 0) {
+                        addToCart(productName, quantity, price);
+                    }
+                }
+            });
+
+            alert("Alle ausgewählten Produkte wurden dem Warenkorb hinzugefügt.");
+            updateCart();
+        }
+
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-function addToCart(productName, quantity, price) {
-    const item = cart.find(item => item.product === productName);
-    if (item) {
-        item.quantity += quantity;
-    } else {
-        cart.push({ product: productName, quantity, price }); // Store price with each item
-    }
-    updateCart();
-}
-
-
-
+        function addToCart(productName, quantity, price) {
+            const item = cart.find(item => item.product === productName);
+            if (item) {
+                item.quantity += quantity;
+            } else {
+                cart.push({ product: productName, quantity, price });
+            }
+            updateCart();
+        }
 
         function updateCart() {
             const cartContent = document.getElementById('cart-list');
@@ -498,79 +410,28 @@ function addToCart(productName, quantity, price) {
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
-// Define clearCart in the global scope
-window.clearCart = function clearCart() {
-    cart = [];
-    updateCart();
-    localStorage.removeItem('cart');
-};
+        window.clearCart = function clearCart() {
+            cart = [];
+            updateCart();
+            localStorage.removeItem('cart');
+        };
 
-// Define finalizeOrder in the global scope
-window.finalizeOrder = function finalizeOrder() {
-    if (cart.length === 0) {
-        alert("Der Warenkorb ist leer.");
-        return;
-    }
-    window.location.href = 'order-summary.html';
-};
+        window.finalizeOrder = function finalizeOrder() {
+            if (cart.length === 0) {
+                alert("Der Warenkorb ist leer.");
+                return;
+            }
+            window.location.href = 'order-summary.html';
+        };
 
-
-document.getElementById('cart-icon').addEventListener('click', () => {
-    const cartPopup = document.getElementById('cart-popup');
-    // Check if the popup is currently displayed or not
-    if (cartPopup.style.display === 'none' || cartPopup.style.display === '') {
-        cartPopup.style.display = 'block';
-    } else {
-        cartPopup.style.display = 'none';
-    }
-});
-
-
-// Make sure the function is in the global scope
-window.toggleFullscreen = function() {
-    document.body.classList.toggle('fullscreen');
-
-    const isFullscreen = document.body.classList.contains('fullscreen');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-
-    fullscreenBtn.textContent = isFullscreen ? 'Vollbild beenden' : 'Vollbildmodus';
-
-    if (isFullscreen) {
-        fullscreenBtn.onclick = exitFullscreen;
-    } else {
-        fullscreenBtn.onclick = toggleFullscreen;
-    }
-}
-
-window.exitFullscreen = function() {
-    generateScreenshotPDF();
-    toggleFullscreen();
-}
-
-window.generateScreenshotPDF = async function() {
-    const gridContainer = document.getElementById('grid-container');
-
-    window.scrollTo(0, 0);
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    html2canvas(gridContainer, { scale: 2 }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('landscape', 'mm', 'a4');
-
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save('planogram-fullscreen.pdf');
-    });
-}
-
-
-
-
+        document.getElementById('cart-icon').addEventListener('click', () => {
+            const cartPopup = document.getElementById('cart-popup');
+            if (cartPopup.style.display === 'none' || cartPopup.style.display === '') {
+                cartPopup.style.display = 'block';
+            } else {
+                cartPopup.style.display = 'none';
+            }
+        });
     </script>
-    <!-- Place the script here, just before </body> -->
-<script src="path/to/your/script.js"></script>
 </body>
 </html>
