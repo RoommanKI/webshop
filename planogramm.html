@@ -479,10 +479,16 @@ window.finalizeOrder = function finalizeOrder() {
 };
 
 
-        document.getElementById('cart-icon').addEventListener('click', () => {
-            const cartPopup = document.getElementById('cart-popup');
-            cartPopup.style.display = cartPopup.style.display === 'none' ? 'block' : 'none';
-        });
+document.getElementById('cart-icon').addEventListener('click', () => {
+    const cartPopup = document.getElementById('cart-popup');
+    // Check if the popup is currently displayed or not
+    if (cartPopup.style.display === 'none' || cartPopup.style.display === '') {
+        cartPopup.style.display = 'block';
+    } else {
+        cartPopup.style.display = 'none';
+    }
+});
+
 
 // Define the function globally
 window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
