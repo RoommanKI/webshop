@@ -398,20 +398,7 @@ orientationFilter.addEventListener('change', async (e) => {
                 gridContainer.appendChild(gridItem);
             }
         }
-function toggleFullscreen() {
-    document.body.classList.toggle('fullscreen');
 
-    const isFullscreen = document.body.classList.contains('fullscreen');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-
-    fullscreenBtn.textContent = isFullscreen ? 'Vollbild beenden' : 'Vollbildmodus';
-
-    if (isFullscreen) {
-        fullscreenBtn.onclick = generateScreenshotPDF;
-    } else {
-        fullscreenBtn.onclick = toggleFullscreen;
-    }
-}
 
 function drag(event) {
     // Set the `product`, `html`, and `price` data on the data transfer object
@@ -608,7 +595,20 @@ window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
 
     pdf.save("planogram.pdf");
 };
+function toggleFullscreen() {
+    document.body.classList.toggle('fullscreen');
 
+    const isFullscreen = document.body.classList.contains('fullscreen');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+    fullscreenBtn.textContent = isFullscreen ? 'Vollbild beenden' : 'Vollbildmodus';
+
+    if (isFullscreen) {
+        fullscreenBtn.onclick = generateScreenshotPDF;
+    } else {
+        fullscreenBtn.onclick = toggleFullscreen;
+    }
+}
 
 
     </script>
