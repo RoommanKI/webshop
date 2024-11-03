@@ -340,8 +340,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
-    // Replace 'your-bucket' with your actual bucket name (e.g., 'product-images')
-    const bucketName = 'product-images';
+    const bucketName = 'product-images';  // Your bucket name
 
     let query = supabase.from('products').select(isLoggedIn 
         ? 'id, name, description, price, image_url, orientation' 
@@ -358,17 +357,14 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
 
     const productsWithPublicUrls = data.map(product => {
         if (product.image_url) {
-            // Get only the file path from the URL (e.g., 'product-images/Parkbank.png')
-            const relativePath = product.image_url.replace(
-                'https://vaugbzzhenbkmcuuoeai.supabase.co/storage/v1/object/public/',
-                ''
-            );
+            // Since each image is directly in the product-images bucket, use just the file name
+            const fileName = product.image_url.split('/').pop();  // Extract file name if it's a full URL
 
-            // Generate the public URL using getPublicUrl with the correct bucket name and relative path
-            const { publicURL, error } = supabase.storage.from(product-images).getPublicUrl(relativePath);
+            // Generate the public URL using the bucket and file name
+            const { publicURL, error } = supabase.storage.from(bucketName).getPublicUrl(fileName);
             
             if (error) {
-                console.error(`Error generating public URL for ${relativePath}:`, error.message);
+                console.error(`Error generating public URL for ${fileName}:`, error.message);
                 return product; // Return product without image if URL generation fails
             }
             
@@ -381,6 +377,7 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
 
     return productsWithPublicUrls;
 }
+
 
 
     async function loadProducts() {
