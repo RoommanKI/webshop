@@ -186,8 +186,6 @@
             padding: 0;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 </head>
 <body>
     <h1>Planogramm Ersteller</h1>
@@ -247,8 +245,6 @@
         <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
         <button class="btn" onclick="clearCart()">Warenkorb löschen</button>
     </div>
-
-    <button id="capture-btn" onclick="captureGrid()">Capture Grid as PDF</button>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -440,31 +436,6 @@
             const cartPopup = document.getElementById('cart-popup');
             cartPopup.style.display = cartPopup.style.display === 'none' || cartPopup.style.display === '' ? 'block' : 'none';
         });
-
-        window.captureGrid = function captureGrid() {
-            const gridContainer = document.getElementById('grid-container');
-            html2canvas(gridContainer).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgWidth = 210; // A4 width in mm
-                const pageHeight = 295; // A4 height in mm
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-                let position = 0;
-
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-
-                pdf.save('grid.pdf');
-            });
-        }
     </script>
 </body>
 </html>
