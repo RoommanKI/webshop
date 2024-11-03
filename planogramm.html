@@ -180,6 +180,35 @@
         .btn:hover {
             background-color: #2980b9;
         }
+        #fullscreen-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Fullscreen styles */
+.fullscreen #grid-container .quantity-input,
+.fullscreen #category-filter,
+.fullscreen #orientation-filter,
+.fullscreen #pdf-form,
+.fullscreen #cart-icon,
+.fullscreen #add-all-to-cart {
+    display: none;
+}
+
+.fullscreen #grid-container {
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Dynamically adjust */
+    padding: 20px;
+}
+
     </style>
 </head>
 <body>
@@ -188,6 +217,8 @@
     <div class="header-buttons">
         <button onclick="location.href='index.html'" style="padding: 10px 20px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Webshop</button>
     </div>
+    <button id="fullscreen-btn" onclick="toggleFullscreen()">Vollbildmodus</button>
+
     <!-- Form to input rows and columns -->
     <form id="grid-form">
         <label for="rows">Reihen:</label>
@@ -334,6 +365,10 @@ async function loadProductImages(category = '', orientation = '') {
             const selectedCategory = e.target.value;
             loadProductImages(selectedCategory);
         });
+
+
+
+        
 // Orientation Filter
 const orientationFilter = document.getElementById('orientation-filter');
 
@@ -363,6 +398,20 @@ orientationFilter.addEventListener('change', async (e) => {
                 gridContainer.appendChild(gridItem);
             }
         }
+function toggleFullscreen() {
+    document.body.classList.toggle('fullscreen');
+
+    const isFullscreen = document.body.classList.contains('fullscreen');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+    fullscreenBtn.textContent = isFullscreen ? 'Vollbild beenden' : 'Vollbildmodus';
+
+    if (isFullscreen) {
+        fullscreenBtn.onclick = generateScreenshotPDF;
+    } else {
+        fullscreenBtn.onclick = toggleFullscreen;
+    }
+}
 
 function drag(event) {
     // Set the `product`, `html`, and `price` data on the data transfer object
