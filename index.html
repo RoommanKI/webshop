@@ -339,46 +339,19 @@ document.addEventListener("DOMContentLoaded", function() {
         displayProducts(products, isLoggedIn);
     });
 
-async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
-    const bucketName = 'product-images';  // Your bucket name
+    async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
+        let query = supabase.from('products').select('id, name, description, image_url, orientation');
+        if (category) query = query.eq('category', category);
+        if (orientation) query = query.eq('orientation', orientation);
+        if (isLoggedIn) query = query.select('id, name, description, price, image_url, orientation');
 
-    let query = supabase.from('products').select(isLoggedIn 
-        ? 'id, name, description, price, image_url, orientation' 
-        : 'id, name, description, image_url, orientation');
-    
-    if (category) query = query.eq('category', category);
-    if (orientation) query = query.eq('orientation', orientation);
-
-    const { data, error } = await query;
-    if (error) {
-        console.error('Error fetching products:', error);
-        return [];
-    }
-
-    const productsWithPublicUrls = data.map(product => {
-        if (product.image_url) {
-            // Since each image is directly in the product-images bucket, use just the file name
-            const fileName = product.image_url.split('/').pop();  // Extract file name if it's a full URL
-
-            // Generate the public URL using the bucket and file name
-            const { publicURL, error } = supabase.storage.from(bucketName).getPublicUrl(fileName);
-            
-            if (error) {
-                console.error(`Error generating public URL for ${fileName}:`, error.message);
-                return product; // Return product without image if URL generation fails
-            }
-            
-            return { ...product, image_url: publicURL };
-        } else {
-            console.warn(`No image URL found for product ${product.id}`);
-            return product; // Return product without modification if no image URL
+        const { data, error } = await query;
+        if (error) {
+            console.error('Error fetching products:', error);
+            return [];
         }
-    });
-
-    return productsWithPublicUrls;
-}
-
-
+        return data;
+    }
 
     async function loadProducts() {
         const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
