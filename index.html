@@ -340,12 +340,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 async function fetchProductsByCategoryAndOrientation(category, orientation, isLoggedIn) {
-    // Start building the query with the base fields
+    // Replace 'your-bucket' with your actual bucket name (e.g., 'product-images')
+    const bucketName = 'product-images';
+
     let query = supabase.from('products').select(isLoggedIn 
         ? 'id, name, description, price, image_url, orientation' 
         : 'id, name, description, image_url, orientation');
     
-    // Apply filters for category and orientation if provided
     if (category) query = query.eq('category', category);
     if (orientation) query = query.eq('orientation', orientation);
 
@@ -355,27 +356,32 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
         return [];
     }
 
-    // Generate public URLs for each product's image
     const productsWithPublicUrls = data.map(product => {
-        if (product.image_url) { 
-            // Extract the relative path from the full URL
+        if (product.image_url) {
+            // Get only the file path from the URL (e.g., 'product-images/Parkbank.png')
             const relativePath = product.image_url.replace(
                 'https://vaugbzzhenbkmcuuoeai.supabase.co/storage/v1/object/public/',
                 ''
             );
 
-            // Use the relative path with getPublicUrl
-            const { publicURL } = supabase.storage.from('product-images').getPublicUrl(relativePath);
-            console.log(`Generated public URL for ${relativePath}: ${publicURL}`);
+            // Generate the public URL using getPublicUrl with the correct bucket name and relative path
+            const { publicURL, error } = supabase.storage.from(bucketName).getPublicUrl(relativePath);
+            
+            if (error) {
+                console.error(`Error generating public URL for ${relativePath}:`, error.message);
+                return product; // Return product without image if URL generation fails
+            }
+            
             return { ...product, image_url: publicURL };
         } else {
             console.warn(`No image URL found for product ${product.id}`);
-            return product;
+            return product; // Return product without modification if no image URL
         }
     });
 
     return productsWithPublicUrls;
 }
+
 
     async function loadProducts() {
         const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
