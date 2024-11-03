@@ -40,11 +40,13 @@ header {
 }
 
 .categories-container {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap; /* Optional */
-    text-align: center; /* Optional */
+}
+.categories-container > * {
+    margin: auto;
 }
 
 /* Cart content styles */
