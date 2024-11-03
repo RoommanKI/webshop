@@ -526,75 +526,6 @@ document.getElementById('cart-icon').addEventListener('click', () => {
 });
 
 
-// Define the function globally
-window.generatePlanogramPDF = async function generatePlanogramPDF(event) {
-    if (event) event.preventDefault();
-
-    const pdfRows = parseInt(document.getElementById("pdf-rows").value) || 4;
-    const pdfColumns = parseInt(document.getElementById("pdf-columns").value) || 3;
-    const orientation = document.getElementById("pdf-orientation").value;
-
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({
-        orientation: orientation === "landscape" ? "landscape" : "portrait"
-    });
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 10;
-    const spacing = 5;
-
-    const cellWidth = (pageWidth - margin * 2 - spacing * (pdfColumns - 1)) / pdfColumns;
-    const cellHeight = (pageHeight - margin * 2 - spacing * (pdfRows - 1)) / pdfRows;
-
-    const gridItems = document.querySelectorAll(".grid-item");
-
-    // Organize images by columns
-    const columns = Array.from({ length: pdfColumns }, () => []);
-    gridItems.forEach((gridItem, index) => {
-        const img = gridItem.querySelector("img");
-        const columnIndex = index % pdfColumns;
-        columns[columnIndex].push(img ? {
-            src: img.src,
-            width: img.naturalWidth,
-            height: img.naturalHeight
-        } : null);
-    });
-
-    // Render each column on separate pages, keeping row isolation
-    for (let columnIndex = 0; columnIndex < pdfColumns; columnIndex++) {
-        const images = columns[columnIndex];
-
-        for (let page = 0; page < Math.ceil(images.length / pdfRows); page++) {
-            if (page > 0 || columnIndex > 0) pdf.addPage();  // New page for each new column after the first
-
-            for (let row = 0; row < pdfRows; row++) {
-                const imageIndex = page * pdfRows + row;
-                const image = images[imageIndex];
-
-                if (image) {
-                    const aspectRatio = image.width / image.height;
-                    let displayWidth, displayHeight;
-
-                    if (aspectRatio >= 1) {
-                        displayWidth = Math.min(cellWidth, cellHeight * aspectRatio);
-                        displayHeight = displayWidth / aspectRatio;
-                    } else {
-                        displayHeight = Math.min(cellHeight, cellWidth / aspectRatio);
-                        displayWidth = displayHeight * aspectRatio;
-                    }
-
-                    const xPos = margin + columnIndex * (cellWidth + spacing);
-                    const yPos = margin + row * (cellHeight + spacing);
-
-                    pdf.addImage(image.src, "JPEG", xPos, yPos, displayWidth, displayHeight);
-                }
-            }
-        }
-    }
-
-    pdf.save("planogram.pdf");
-};
 function toggleFullscreen() {
     document.body.classList.toggle('fullscreen');
 
@@ -602,12 +533,45 @@ function toggleFullscreen() {
     const fullscreenBtn = document.getElementById('fullscreen-btn');
 
     fullscreenBtn.textContent = isFullscreen ? 'Vollbild beenden' : 'Vollbildmodus';
-
+    
+    // Update the button action based on the fullscreen state
     if (isFullscreen) {
-        fullscreenBtn.onclick = generateScreenshotPDF;
+        fullscreenBtn.onclick = exitFullscreen;
     } else {
         fullscreenBtn.onclick = toggleFullscreen;
     }
+}
+
+function exitFullscreen() {
+    // Generate the PDF only when we exit fullscreen
+    generateScreenshotPDF();
+
+    // Toggle back to normal screen mode
+    toggleFullscreen();
+}
+
+async function generateScreenshotPDF() {
+    const gridContainer = document.getElementById('grid-container');
+
+    // Scroll to the top to capture the entire grid in view
+    window.scrollTo(0, 0);
+
+    // Wait briefly for layout changes to settle
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Capture the screenshot with html2canvas
+    html2canvas(gridContainer, { scale: 2 }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('landscape', 'mm', 'a4');
+
+        // Set the PDF dimensions based on the canvas size
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('planogram-fullscreen.pdf');
+    });
 }
 
 
