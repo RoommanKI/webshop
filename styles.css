@@ -235,3 +235,122 @@ nav a:hover {
         grid-template-columns: 1fr; /* 1 product per row on very small screens */
     }
 }
+/* Responsive Welcome Popup */
+#welcomePopup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 10px;
+}
+
+#welcomePopup > div {
+    max-width: 90%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    margin: auto;
+    text-align: center;
+}
+
+@media (min-width: 600px) {
+    #welcomePopup > div {
+        max-width: 50%;
+    }
+}
+
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Header */
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+@media (min-width: 600px) {
+    header {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .header-buttons {
+        margin-top: 0;
+    }
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f1f1f1;
+}
+
+nav a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+@media (min-width: 600px) {
+    nav {
+        justify-content: flex-start;
+    }
+}
+
+/* Product list */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.product {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 300px;
+}
+
+.product img {
+    max-width: 100%;
+    height: auto;
+    cursor: pointer;
+}
+
+/* Popup */
+#welcomePopup > div {
+    max-width: 90%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    margin: auto;
+    text-align: center;
+}
+
+@media (min-width: 600px) {
+    #welcomePopup > div {
+        max-width: 50%;
+    }
+}
