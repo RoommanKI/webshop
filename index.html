@@ -21,6 +21,14 @@
         <button id="loginBtn">Anmelden</button>
     </div>
 </header>
+    <!-- Welcome Popup -->
+<div id="welcomePopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); text-align: center; justify-content: center; align-items: center;">
+  <div style="background-color: white; padding: 20px; border-radius: 10px; display: inline-block; margin-top: 20%;">
+    <h2>Willkommen!</h2>
+    <p>Vielen Dank für Ihren Besuch auf unserer Website. Die Seite befindet sich noch im Aufbau und wird stetig verbessert.</p>
+    <button id="closePopup" style="padding: 10px 20px;">Schließen</button>
+  </div>
+</div>
 <!-- Cookie Consent Popup -->
 <div id="cookieConsent" style="display: none; position: fixed; bottom: 0; width: 100%; background-color: #f1f1f1; padding: 20px; text-align: center; border-top: 1px solid #ccc;">
   <p>Wir benutzen Cookies um Ihnen das beste Websiten erlebnis zu bieten <a href="privacy-policy.html" target="_blank">Learn more</a></p>
@@ -431,6 +439,19 @@ document.addEventListener("DOMContentLoaded", function() {
     acceptCookies.addEventListener('click', () => {
         localStorage.setItem('cookiesAccepted', 'true');
         cookieConsent.style.display = 'none';
+    });
+});
+    document.addEventListener("DOMContentLoaded", function() {
+    const welcomePopup = document.getElementById('welcomePopup');
+    const closePopup = document.getElementById('closePopup');
+
+    if (!sessionStorage.getItem('welcomeShown')) {
+        welcomePopup.style.display = 'flex';
+        sessionStorage.setItem('welcomeShown', 'true');
+    }
+
+    closePopup.addEventListener('click', () => {
+        welcomePopup.style.display = 'none';
     });
 });
 </script>
