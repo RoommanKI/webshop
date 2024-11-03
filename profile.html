@@ -165,30 +165,37 @@ async function loadProfile() {
         // Call the loadProfile function when the page is loaded
         loadProfile();
 
-        // Save the profile data when the form is submitted
-        document.getElementById('profile-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
+document.getElementById('profile-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
 
-            const name = document.getElementById('name').value;
-            const vorname = document.getElementById('vorname').value;
-            const straße = document.getElementById('straße').value;
-            const stadt = document.getElementById('stadt').value;
-            const plz = document.getElementById('plz').value;
+    const user = supabase.auth.user();
+    if (!user) {
+        document.getElementById('profile-error').textContent = 'User not authenticated.';
+        return;
+    }
 
-            try {
-                const { data, error } = await supabase
-                    .from('profile')
-                    .upsert({ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail });
+    const userId = user.id; // Store user ID from auth
+    const name = document.getElementById('name').value;
+    const vorname = document.getElementById('vorname').value;
+    const straße = document.getElementById('straße').value;
+    const stadt = document.getElementById('stadt').value;
+    const plz = document.getElementById('plz').value;
 
-                if (error) {
-                    document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
-                } else {
-                    alert('Profil gespeichert!');
-                }
-            } catch (err) {
-                document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
-            }
-        });
+    try {
+        const { data, error } = await supabase
+            .from('profile')
+            .upsert({ user_id: userId, Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz });
+
+        if (error) {
+            document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
+        } else {
+            alert('Profil gespeichert!');
+        }
+    } catch (err) {
+        document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
+    }
+});
+
         document.getElementById('emergency-delete').addEventListener('click', async function() {
     const confirmDelete = confirm("Sind Sie sicher, dass Sie Ihr Daten neu eingeben möchten?");
 
