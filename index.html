@@ -367,12 +367,12 @@ function displayProducts(products, isLoggedIn) {
         return;
     }
 
+    // Use a small 1x1 pixel placeholder or a local low-res placeholder image.
+    const placeholderImage = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+
     products.forEach(product => {
         const productElement = document.createElement("div");
         productElement.className = "product";
-
-        // Set a low-resolution placeholder (could be a 1x1 pixel image or a base64 tiny placeholder)
-        const placeholderImage = "path/to/low-res-placeholder.jpg";
 
         let productHTML = `
             <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
@@ -397,9 +397,10 @@ function displayProducts(products, isLoggedIn) {
         container.appendChild(productElement);
     });
 
-    // Call the function to initiate lazy loading with IntersectionObserver
+    // Initialize lazy loading
     lazyLoadImages();
 }
+
 
 function lazyLoadImages() {
     const images = document.querySelectorAll('img[data-src]'); // Select all images with a data-src attribute
