@@ -526,15 +526,15 @@ document.getElementById('cart-icon').addEventListener('click', () => {
 });
 
 
-function toggleFullscreen() {
+// Make sure the function is in the global scope
+window.toggleFullscreen = function() {
     document.body.classList.toggle('fullscreen');
 
     const isFullscreen = document.body.classList.contains('fullscreen');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
 
     fullscreenBtn.textContent = isFullscreen ? 'Vollbild beenden' : 'Vollbildmodus';
-    
-    // Update the button action based on the fullscreen state
+
     if (isFullscreen) {
         fullscreenBtn.onclick = exitFullscreen;
     } else {
@@ -542,30 +542,22 @@ function toggleFullscreen() {
     }
 }
 
-function exitFullscreen() {
-    // Generate the PDF only when we exit fullscreen
+window.exitFullscreen = function() {
     generateScreenshotPDF();
-
-    // Toggle back to normal screen mode
     toggleFullscreen();
 }
 
-async function generateScreenshotPDF() {
+window.generateScreenshotPDF = async function() {
     const gridContainer = document.getElementById('grid-container');
 
-    // Scroll to the top to capture the entire grid in view
     window.scrollTo(0, 0);
-
-    // Wait briefly for layout changes to settle
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Capture the screenshot with html2canvas
     html2canvas(gridContainer, { scale: 2 }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('landscape', 'mm', 'a4');
 
-        // Set the PDF dimensions based on the canvas size
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
@@ -575,6 +567,10 @@ async function generateScreenshotPDF() {
 }
 
 
+
+
     </script>
+    <!-- Place the script here, just before </body> -->
+<script src="path/to/your/script.js"></script>
 </body>
 </html>
