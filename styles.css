@@ -3,24 +3,22 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;
-    padding: 0;
+    padding: 20px;
     color: #333;
 }
 
-/* Header */
 header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     background-color: #ff4081;
     color: white;
-    padding: 15px;
-    text-align: center;
+    padding: 20px;
 }
 
 header h1 {
     margin: 0;
-    font-size: 1.8em;
+    font-size: 2em;
     font-weight: bold;
 }
 
@@ -48,7 +46,6 @@ header h1 {
 .header-buttons {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
 }
 
 .planogram-btn {
@@ -62,16 +59,6 @@ header h1 {
     cursor: pointer;
 }
 
-@media (min-width: 600px) {
-    header {
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    .header-buttons {
-        margin-top: 0;
-    }
-}
-
 /* Profile dropdown menu */
 .profile-container {
     position: relative;
@@ -81,35 +68,22 @@ header h1 {
 
 /* Navigation styles */
 nav {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px;
-    background-color: #f1f1f1;
-    width: 100%;
+    margin-top: 50px;
+    text-align: center;
 }
 
 nav a {
-    padding: 10px 15px;
-    color: black;
-    background-color: white;
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #ff4081;
+    color: white;
     text-decoration: none;
-    border: 1px solid #ddd;
     border-radius: 5px;
-    text-align: center;
     transition: background-color 0.3s;
 }
 
 nav a:hover {
-    background-color: #ff4081;
-    color: white;
-}
-
-@media (min-width: 600px) {
-    nav a {
-        width: auto;
-    }
+    background-color: #e73370;
 }
 
 /* Categories container */
@@ -128,11 +102,11 @@ nav a:hover {
 /* Cart popup */
 .cart-content {
     position: absolute;
-    top: 60px;
+    top: 100px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 400px;
+    width: 80%;
+    max-width: 600px;
     background-color: white;
     border: 1px solid #ccc;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -142,14 +116,6 @@ nav a:hover {
 
 .cart-content.hidden {
     display: none;
-}
-
-/* Cart icon and notification styling */
-.cart {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
 }
 
 /* Modal styling */
@@ -169,8 +135,7 @@ nav a:hover {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    width: 90%;
-    max-width: 300px;
+    width: 300px;
 }
 
 .close {
@@ -182,34 +147,22 @@ nav a:hover {
 /* Product list styling */
 .product-list {
     display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 products per row */
     gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
     padding: 10px;
-    max-width: 100%;
 }
 
-@media (min-width: 600px) {
-    .product-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 900px) {
-    .product-list {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* Styling for individual product cards */
 .product {
     background-color: white;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
     cursor: pointer;
-    max-width: 100%;
 }
 
 .product:hover {
@@ -253,9 +206,10 @@ nav a:hover {
 }
 
 .lightbox-content {
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 80%;
+    max-height: 80%;
     margin: auto;
+    display: block;
     border-radius: 8px;
 }
 
@@ -273,7 +227,8 @@ nav a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    text-align: center;
+    padding: 0 10px;
 }
 
 #welcomePopup > div {
@@ -281,6 +236,8 @@ nav a:hover {
     padding: 20px;
     background-color: white;
     border-radius: 10px;
+    margin: auto;
+    text-align: center;
 }
 
 @media (min-width: 600px) {
@@ -294,39 +251,53 @@ nav a:hover {
     display: none;
 }
 
-/* Responsive adjustments */
+/* ----------- MOBILE-SPECIFIC STYLES BELOW ----------- */
+
 @media (max-width: 768px) {
-    .header-buttons, .cart {
+    /* Stack header items vertically */
+    header {
         flex-direction: column;
-        align-items: center;
+        padding: 15px;
+    }
+
+    .header-buttons {
+        margin-top: 10px;
+        flex-direction: column;
+        gap: 5px;
         width: 100%;
     }
 
-    .header-buttons button {
+    .header-buttons button, .planogram-btn {
         width: 100%;
     }
 
-    .product-list {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 500px) {
-    .product-list {
-        grid-template-columns: 1fr;
+    /* Navigation adjustments */
+    nav {
+        flex-direction: column;
+        padding: 10px;
+        gap: 5px;
     }
 
-    .modal-content {
+    nav a {
+        width: 100%;
+        padding: 10px;
+    }
+
+    /* Product list adjustments for mobile */
+    .product-list {
+        grid-template-columns: 1fr; /* 1 product per row on mobile */
+    }
+
+    /* Modal and Cart popup adjustments */
+    .cart-content, .modal-content {
         width: 90%;
+        max-width: 350px;
+        padding: 15px;
     }
-}
 
-/* Popup */
-#welcomePopup > div {
-    max-width: 90%;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    margin: auto;
-    text-align: center;
+    /* Lightbox adjustments */
+    .lightbox-content {
+        max-width: 90%;
+        max-height: 90%;
+    }
 }
