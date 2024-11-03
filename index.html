@@ -355,15 +355,20 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
         return [];
     }
 
-    // Map over data to generate CDN-backed public URLs for each product image
+    // Ensure `image_url` is correctly formed by using Supabase's `getPublicUrl`
     const productsWithPublicUrls = data.map(product => {
-        const { publicURL } = supabase.storage.from('your-bucket').getPublicUrl(product.image_url);
-        return { ...product, image_url: publicURL };
+        if (product.image_url) { // Check if image_url is present
+            const { publicURL } = supabase.storage.from('your-bucket').getPublicUrl(product.image_url);
+            console.log(`Generated public URL for ${product.image_url}: ${publicURL}`);
+            return { ...product, image_url: publicURL };
+        } else {
+            console.warn(`No image URL found for product ${product.id}`);
+            return product;
+        }
     });
 
     return productsWithPublicUrls;
 }
-
 
     async function loadProducts() {
         const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
