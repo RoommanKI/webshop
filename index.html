@@ -210,8 +210,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 <!-- Cart Management Functions -->
 <script>
+// Clear cart function to reset the cart items
 function clearCart() {
-    localStorage.removeItem('cart');
+    localStorage.removeItem("cart");
     cart = [];
     updateCart();
     alert("Warenkorb wurde geleert.");
@@ -221,23 +222,24 @@ function saveCartToLocalStorage() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-    // Ensure cart popup is toggled when the cart icon is clicked
-    document.addEventListener("DOMContentLoaded", function() {
-        const cartIcon = document.getElementById("cart-icon");
-        const cartPopup = document.getElementById("cart-popup");
+// Toggle the visibility of the cart popup globally
+function toggleCart() {
+    const cartPopup = document.getElementById("cart-popup");
+    if (cartPopup.style.display === "none" || cartPopup.style.display === "") {
+        cartPopup.style.display = "block";
+    } else {
+        cartPopup.style.display = "none";
+    }
+}
 
-        // Toggle the visibility of the cart popup
-        function toggleCart() {
-            if (cartPopup.style.display === "none" || cartPopup.style.display === "") {
-                cartPopup.style.display = "block";
-            } else {
-                cartPopup.style.display = "none";
-            }
-        }
+// Ensure cart popup is toggled when the cart icon is clicked
+document.addEventListener("DOMContentLoaded", function() {
+    const cartIcon = document.getElementById("cart-icon");
 
-        // Attach toggleCart function to the cart icon click event
-        cartIcon.addEventListener("click", toggleCart);
-    });
+    // Attach toggleCart function to the cart icon click event
+    cartIcon.addEventListener("click", toggleCart);
+});
+
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -279,27 +281,25 @@ function updateCart() {
 
 function finalizeOrder() {
     if (cart.length === 0) {
-        alert('Ihr Warenkorb ist leer.');
+        alert("Ihr Warenkorb ist leer.");
         return;
     }
 
-    let orderSummary = 'Bestellung:\n';
+    let orderSummary = "Bestellung:\n";
     cart.forEach(item => {
         orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
     });
     alert(`Ihre Bestellung:\n${orderSummary}`);
 
-    // Clear cart and update display
+    // Clear cart, update display, and toggle cart popup visibility
     cart = [];
     updateCart();
-    toggleCart();
+    toggleCart();  // Ensure toggleCart is available in this scope
 
-    // Debugging log before redirection
-    console.log('Redirecting to order-summary.html...');
-    alert('Bestellung abgeschlossen! Sie werden weitergeleitet.');
-
-    // Perform redirection
-    window.location.href = 'order-summary.html';
+    // Redirect to the order summary page
+    console.log("Redirecting to order-summary.html...");
+    alert("Bestellung abgeschlossen! Sie werden weitergeleitet.");
+    window.location.href = "order-summary.html";
 }
 
 </script>
