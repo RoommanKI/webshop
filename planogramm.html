@@ -450,30 +450,24 @@
             }
         });
 
-        async function captureGridSnapshot() {
-    // Enter snapshot mode by adding a CSS class
-    document.body.classList.add('snapshot-mode');
+      // Define captureGridSnapshot in the global scope
+    window.captureGridSnapshot = async function captureGridSnapshot() {
+        document.body.classList.add('snapshot-mode');
 
-    const gridContainer = document.getElementById('grid-container');
+        const gridContainer = document.getElementById('grid-container');
 
-    // Scroll to the top to make sure the entire grid is visible
-    window.scrollTo(0, 0);
+        window.scrollTo(0, 0);
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Wait briefly to let the layout settle
-    await new Promise(resolve => setTimeout(resolve, 500));
+        html2canvas(gridContainer, { scale: 3 }).then(canvas => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.download = 'planogram-high-quality.png';
+            link.click();
 
-    // Capture the screenshot with html2canvas at a high resolution
-    html2canvas(gridContainer, { scale: 3 }).then(canvas => {
-        // Save the canvas image as a high-quality PNG
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png', 1.0); // Maximum quality
-        link.download = 'planogram-high-quality.png';
-        link.click();
-        
-        // Exit snapshot mode
-        document.body.classList.remove('snapshot-mode');
-    });
-}
+            document.body.classList.remove('snapshot-mode');
+        });
+    }
 
     </script>
 </body>
