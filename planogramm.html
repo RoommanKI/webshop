@@ -451,17 +451,29 @@
             }
         });
 
-   window.captureGridSnapshot = async function captureGridSnapshot() {
-    // Enter snapshot mode
-    document.body.classList.add('snapshot-mode');
-
+ window.captureGridSnapshot = async function captureGridSnapshot() {
     const gridContainer = document.getElementById('grid-container');
 
-    // Scroll to the top to ensure full grid is in view
-    window.scrollTo(0, 0);
+    // Clone the grid for snapshot purposes
+    const snapshotContainer = gridContainer.cloneNode(true);
+    snapshotContainer.id = 'snapshot-container';
+    snapshotContainer.style.position = 'fixed';
+    snapshotContainer.style.top = '0';
+    snapshotContainer.style.left = '0';
+    snapshotContainer.style.width = '100vw';
+    snapshotContainer.style.height = '100vh';
+    snapshotContainer.style.backgroundColor = '#f9fafb';
+    snapshotContainer.style.zIndex = '1000';
+    snapshotContainer.style.overflow = 'hidden';
 
-    // Wait for all images in the grid to load
-    const images = gridContainer.querySelectorAll('img');
+    // Hide input fields and other dynamic elements in the cloned grid
+    snapshotContainer.querySelectorAll('.quantity-input').forEach(input => input.remove());
+
+    // Append the snapshot container to the body
+    document.body.appendChild(snapshotContainer);
+
+    // Wait for all images in the cloned container to load
+    const images = snapshotContainer.querySelectorAll('img');
     await Promise.all(Array.from(images).map(img => {
         return new Promise(resolve => {
             if (img.complete) {
@@ -473,19 +485,17 @@
         });
     }));
 
-    // Small delay to ensure layout is stable
-    await new Promise(resolve => setTimeout(resolve, 300));
-
     // Capture the screenshot with html2canvas at a high resolution
-    html2canvas(gridContainer, { scale: 3 }).then(canvas => {
+    await new Promise(resolve => setTimeout(resolve, 300)); // Small delay for layout stability
+    html2canvas(snapshotContainer, { scale: 3 }).then(canvas => {
         // Create a download link for the high-quality image
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png', 1.0); // Maximum quality
         link.download = 'planogram-high-quality.png';
         link.click();
-
-        // Exit snapshot mode
-        document.body.classList.remove('snapshot-mode');
+        
+        // Remove the temporary snapshot container
+        document.body.removeChild(snapshotContainer);
     });
 }
 
