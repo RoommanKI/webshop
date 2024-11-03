@@ -180,7 +180,7 @@
         }
 
         /* Fullscreen grid mode */
-        .fullscreen-grid #grid-container {
+        .fullscreen-grid {
             position: fixed;
             top: 0;
             left: 0;
@@ -293,10 +293,6 @@
         </div>
         <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
         <button class="btn" onclick="clearCart()">Warenkorb löschen</button>
-    </div>
-
-    <div class="fullscreen-grid">
-        <!-- Grid content here -->
     </div>
 
     <script type="module">
@@ -492,9 +488,10 @@
 
         // Fullscreen mode toggle function
         window.toggleFullscreenGrid = function toggleFullscreenGrid() {
-            document.body.classList.toggle('fullscreen-grid');
+            const gridContainer = document.getElementById('grid-container');
+            gridContainer.classList.toggle('fullscreen-grid');
             const fullscreenBtn = document.getElementById('fullscreen-btn');
-            fullscreenBtn.textContent = document.body.classList.contains('fullscreen-grid')
+            fullscreenBtn.textContent = gridContainer.classList.contains('fullscreen-grid')
                 ? 'Vollbild beenden'
                 : 'Vollbildmodus für das Gitter';
         }
