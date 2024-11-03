@@ -365,7 +365,7 @@ async function fetchProductsByCategoryAndOrientation(category, orientation, isLo
             );
 
             // Generate the public URL using getPublicUrl with the correct bucket name and relative path
-            const { publicURL, error } = supabase.storage.from(bucketName).getPublicUrl(relativePath);
+            const { publicURL, error } = supabase.storage.from(product-images).getPublicUrl(relativePath);
             
             if (error) {
                 console.error(`Error generating public URL for ${relativePath}:`, error.message);
