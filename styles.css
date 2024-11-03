@@ -37,13 +37,14 @@ header {
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
-    font-size: 1rem;
-    transition: background-color 0.3s, color 0.3s;
 }
 
-.planogram-btn:hover {
-    background-color: #ff4081;
-    color: white;
+.categories-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Optional */
+    text-align: center; /* Optional */
 }
 
 /* Cart content styles */
@@ -201,7 +202,6 @@ nav a:hover {
     display: flex; /* Show the lightbox when the class 'show' is added */
 }
 
-
 .lightbox-content {
     max-width: 80%;
     max-height: 80%;
@@ -221,8 +221,6 @@ nav a:hover {
     cursor: pointer;
 }
 
-
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .product-list {
@@ -235,6 +233,7 @@ nav a:hover {
         grid-template-columns: 1fr; /* 1 product per row on very small screens */
     }
 }
+
 /* Responsive Welcome Popup */
 #welcomePopup {
     display: flex;
