@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS with your Public Key
+        (function(){
+            emailjs.init("XM0F9TmvuK3-NruDz"); // Replace with your EmailJS Public Key
+        })();
+    </script>
+</head>
+<body>
+
+<header>
+    <h1>Kontakt</h1>
+</header>
+
+<main>
+    <section class="contact-section">
+        <h2>Wir freuen uns auf Ihre Nachricht</h2>
+        <p>Füllen Sie das Formular aus, um uns zu kontaktieren. Wir melden uns so schnell wie möglich bei Ihnen.</p>
+        
+        <form id="contactForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">E-Mail:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="message">Nachricht:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+            
+            <button type="submit">Nachricht Senden</button>
+        </form>
+        
+        <p id="successMessage" style="color: green; display: none;">Ihre Nachricht wurde erfolgreich gesendet!</p>
+        <p id="errorMessage" style="color: red; display: none;">Es gab ein Problem beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.</p>
+    </section>
+</main>
+
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevents default form submission
+
+        // Define your service and template ID
+        const serviceID = "service_0ertyvq"; // Replace with your EmailJS Service ID
+        const templateID = "template_ezixl12"; // Replace with the Template ID for this existing template
+
+        emailjs.sendForm(serviceID, templateID, this)
+            .then(() => {
+                // Show success message and reset form
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('contactForm').reset();
+            }, (error) => {
+                // Show error message
+                document.getElementById('errorMessage').style.display = 'block';
+                console.error("Error:", error);
+            });
+    });
+</script>
+
+</body>
+</html>
