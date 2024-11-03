@@ -30,7 +30,32 @@
             font-size: 2em;
             font-weight: bold;
         }
+  header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: bold;
+        }
 
+        .back-button {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            background-color: white;
+            color: #ff4081;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: 2px solid #ff4081;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #ff4081;
+            color: white;
+        }
         .contact-section {
             background-color: #fff;
             padding: 30px;
@@ -117,6 +142,7 @@
 <body>
 
 <header>
+     <a href="Index.html" class="back-button">Webshop</a>
     <h1>Kontakt</h1>
 </header>
 
