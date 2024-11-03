@@ -5,200 +5,211 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planogramm Ersteller</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f9fafb;
-            color: #333;
-        }
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f9fafb;
+    color: #333;
+}
 
-        h1 {
-            color: #2c3e50;
-            font-size: 2em;
-            margin: 20px;
-            text-transform: uppercase;
-        }
+h1 {
+    color: #2c3e50;
+    font-size: 2em;
+    margin: 20px;
+    text-transform: uppercase;
+}
 
-        form {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            margin: 20px;
-        }
+form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
 
-        form label {
-            font-weight: bold;
-            font-size: 1rem;
-            color: #555;
-        }
+form label {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #555;
+}
 
-        form input[type="number"], select {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            text-align: center;
-        }
+form input[type="number"], select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+}
 
-        form button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            background-color: #3498db;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+form button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-        form button:hover {
-            background-color: #2980b9;
-        }
+form button:hover {
+    background-color: #2980b9;
+}
 
-        .product-images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
+.product-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
 
-        .product-images img {
-            width: 80px;
-            height: 80px;
-            cursor: grab;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
+.product-images img {
+    width: 80px;
+    height: 80px;
+    cursor: grab;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
 
-        .product-images img:hover {
-            transform: scale(1.1);
-            border-color: #3498db;
-        }
+.product-images img:hover {
+    transform: scale(1.1);
+    border-color: #3498db;
+}
 
-        #grid-container {
-            margin: 30px auto;
-            display: grid;
-            gap: 8px;
-            max-width: 90%;
-            background-color: #ecf0f1;
-            border-radius: 10px;
-            padding: 20px;
-        }
+#grid-container {
+    margin: 30px auto;
+    display: grid;
+    gap: 8px;
+    max-width: 90%;
+    background-color: #ecf0f1;
+    border-radius: 10px;
+    padding: 20px;
+}
 
-        .grid-item {
-            background-color: #fff;
-            border: 2px dashed #bdc3c7;
-            border-radius: 8px;
-            width: 100px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease;
-            position: relative;
-        }
+.grid-item {
+    background-color: #fff;
+    border: 2px dashed #bdc3c7;
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
 
-        .grid-item img {
-            max-width: 90%;
-            max-height: 90%;
-        }
+.grid-item img {
+    max-width: 90%;
+    max-height: 90%;
+}
 
-        .grid-item:hover {
-            background-color: #f0f8ff;
-        }
+.grid-item:hover {
+    background-color: #f0f8ff;
+}
 
-        .quantity-input {
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            width: 60px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 5px;
-            text-align: center;
-        }
+.quantity-input {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    width: 60px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    text-align: center;
+}
 
-        /* Warenkorb Styling */
-        #cart-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            cursor: pointer;
-            font-size: 24px;
-            color: white;
-            background-color: #3498db;
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease;
-        }
+/* Warenkorb Styling */
+#cart-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    background-color: #3498db;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
 
-        #cart-icon:hover {
-            background-color: #2980b9;
-        }
+#cart-icon:hover {
+    background-color: #2980b9;
+}
 
-        #cart-popup {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            width: 250px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            border-radius: 8px;
-            display: none;
-        }
+#cart-popup {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    width: 250px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 8px;
+    display: none;
+}
 
-        #cart-content ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+#cart-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-        #cart-content li {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
+#cart-content li {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
 
-        .btn {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+.btn {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-        .btn:hover {
-            background-color: #2980b9;
-        }
+.btn:hover {
+    background-color: #2980b9;
+}
 
-        /* Fullscreen grid mode */
-        .fullscreen-grid #grid-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1000;
-            background-color: #f9fafb;
-            padding: 20px;
-            overflow: auto;
-        }
+/* Fullscreen grid mode */
+.fullscreen-grid #grid-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background-color: #f9fafb;
+    padding: 0; /* Remove padding in fullscreen */
+    margin: 0;  /* Remove margin in fullscreen */
+    overflow: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+}
 
-        .fullscreen-grid .quantity-input,
-        .fullscreen-grid #category-filter,
-        .fullscreen-grid #orientation-filter,
-        .fullscreen-grid #cart-icon,
-        .fullscreen-grid #add-all-to-cart,
-        .fullscreen-grid #fullscreen-btn {
-            display: none;
-        }
+.fullscreen-grid .quantity-input,
+.fullscreen-grid #category-filter,
+.fullscreen-grid #orientation-filter,
+.fullscreen-grid #cart-icon,
+.fullscreen-grid #add-all-to-cart,
+.fullscreen-grid #fullscreen-btn,
+.fullscreen-grid h1,
+.fullscreen-grid .header-buttons,
+.fullscreen-grid form,
+.fullscreen-grid h2:not(#grid-title) {
+    display: none;
+}
+
     </style>
 </head>
 <body>
