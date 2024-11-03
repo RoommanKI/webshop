@@ -12,6 +12,107 @@
             emailjs.init("XM0F9TmvuK3-NruDz"); // Replace with your EmailJS Public Key
         })();
     </script>
+        <style>
+        /* Styling for the Contact Form */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #ff4081;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .contact-section {
+            background-color: #fff;
+            padding: 30px;
+            max-width: 600px;
+            margin: 40px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-section h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .contact-section p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        #contactForm {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #contactForm label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        #contactForm input[type="text"],
+        #contactForm input[type="email"],
+        #contactForm textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #333;
+        }
+
+        #contactForm textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        #contactForm button {
+            padding: 12px;
+            font-size: 1em;
+            color: white;
+            background-color: #ff4081;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #contactForm button:hover {
+            background-color: #e73370;
+        }
+
+        /* Success and Error Message Styling */
+        #successMessage, #errorMessage {
+            font-size: 0.9em;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #successMessage {
+            color: #4CAF50;
+            background-color: #e7f4e7;
+        }
+
+        #errorMessage {
+            color: #F44336;
+            background-color: #fbeaea;
+        }
+    </style>
 </head>
 <body>
 
