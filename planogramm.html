@@ -177,6 +177,22 @@
         .btn:hover {
             background-color: #2980b9;
         }
+        /* Snapshot mode styles */
+.snapshot-mode #grid-container .quantity-input,
+.snapshot-mode #category-filter,
+.snapshot-mode #orientation-filter,
+.snapshot-mode #cart-icon,
+.snapshot-mode #add-all-to-cart,
+.snapshot-mode #snapshot-btn {
+    display: none;
+}
+
+.snapshot-mode #grid-container {
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    padding: 20px;
+}
+
     </style>
 </head>
 <body>
@@ -185,6 +201,7 @@
     <div class="header-buttons">
         <button onclick="location.href='index.html'" style="padding: 10px 20px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Webshop</button>
     </div>
+<button id="snapshot-btn" onclick="captureGridSnapshot()">Hochwertiges Bild aufnehmen</button>
 
     <!-- Form to input rows and columns -->
     <form id="grid-form">
@@ -432,6 +449,32 @@
                 cartPopup.style.display = 'none';
             }
         });
+
+        async function captureGridSnapshot() {
+    // Enter snapshot mode by adding a CSS class
+    document.body.classList.add('snapshot-mode');
+
+    const gridContainer = document.getElementById('grid-container');
+
+    // Scroll to the top to make sure the entire grid is visible
+    window.scrollTo(0, 0);
+
+    // Wait briefly to let the layout settle
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Capture the screenshot with html2canvas at a high resolution
+    html2canvas(gridContainer, { scale: 3 }).then(canvas => {
+        // Save the canvas image as a high-quality PNG
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png', 1.0); // Maximum quality
+        link.download = 'planogram-high-quality.png';
+        link.click();
+        
+        // Exit snapshot mode
+        document.body.classList.remove('snapshot-mode');
+    });
+}
+
     </script>
 </body>
 </html>
