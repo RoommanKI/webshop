@@ -168,8 +168,9 @@ async function loadProfile() {
 document.getElementById('profile-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    const user = supabase.auth.user();
-    if (!user) {
+    // Retrieve the authenticated user asynchronously
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error) {
         document.getElementById('profile-error').textContent = 'User not authenticated.';
         return;
     }
@@ -195,6 +196,7 @@ document.getElementById('profile-form').addEventListener('submit', async functio
         document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
     }
 });
+
 
         document.getElementById('emergency-delete').addEventListener('click', async function() {
     const confirmDelete = confirm("Sind Sie sicher, dass Sie Ihr Daten neu eingeben möchten?");
