@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <title>Planogramm Ersteller</title>
     <style>
         body {
@@ -178,22 +177,28 @@
         .btn:hover {
             background-color: #2980b9;
         }
-      .snapshot-mode .quantity-input,
-.snapshot-mode #category-filter,
-.snapshot-mode #orientation-filter,
-.snapshot-mode #cart-icon,
-.snapshot-mode #add-all-to-cart,
-.snapshot-mode #snapshot-btn {
-    display: none;
-}
 
+        /* Fullscreen grid mode */
+        .fullscreen-grid #grid-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            background-color: #f9fafb;
+            padding: 20px;
+            overflow: auto;
+        }
 
-.snapshot-mode #grid-container {
-    max-width: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    padding: 20px;
-}
-
+        .fullscreen-grid .quantity-input,
+        .fullscreen-grid #category-filter,
+        .fullscreen-grid #orientation-filter,
+        .fullscreen-grid #cart-icon,
+        .fullscreen-grid #add-all-to-cart,
+        .fullscreen-grid #fullscreen-btn {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -202,7 +207,8 @@
     <div class="header-buttons">
         <button onclick="location.href='index.html'" style="padding: 10px 20px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Webshop</button>
     </div>
-<button id="snapshot-btn" onclick="captureGridSnapshot()">Hochwertiges Bild aufnehmen</button>
+
+    <button id="fullscreen-btn" onclick="toggleFullscreenGrid()">Vollbildmodus für das Gitter</button>
 
     <!-- Form to input rows and columns -->
     <form id="grid-form">
@@ -451,55 +457,14 @@
             }
         });
 
- window.captureGridSnapshot = async function captureGridSnapshot() {
-    const gridContainer = document.getElementById('grid-container');
-
-    // Clone the grid for snapshot purposes
-    const snapshotContainer = gridContainer.cloneNode(true);
-    snapshotContainer.id = 'snapshot-container';
-    snapshotContainer.style.position = 'fixed';
-    snapshotContainer.style.top = '0';
-    snapshotContainer.style.left = '0';
-    snapshotContainer.style.width = '100vw';
-    snapshotContainer.style.height = '100vh';
-    snapshotContainer.style.backgroundColor = '#f9fafb';
-    snapshotContainer.style.zIndex = '1000';
-    snapshotContainer.style.overflow = 'hidden';
-
-    // Hide input fields and other dynamic elements in the cloned grid
-    snapshotContainer.querySelectorAll('.quantity-input').forEach(input => input.remove());
-
-    // Append the snapshot container to the body
-    document.body.appendChild(snapshotContainer);
-
-    // Wait for all images in the cloned container to load
-    const images = snapshotContainer.querySelectorAll('img');
-    await Promise.all(Array.from(images).map(img => {
-        return new Promise(resolve => {
-            if (img.complete) {
-                resolve();
-            } else {
-                img.onload = resolve;
-                img.onerror = resolve;
-            }
-        });
-    }));
-
-    // Capture the screenshot with html2canvas at a high resolution
-    await new Promise(resolve => setTimeout(resolve, 300)); // Small delay for layout stability
-    html2canvas(snapshotContainer, { scale: 3 }).then(canvas => {
-        // Create a download link for the high-quality image
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png', 1.0); // Maximum quality
-        link.download = 'planogram-high-quality.png';
-        link.click();
-        
-        // Remove the temporary snapshot container
-        document.body.removeChild(snapshotContainer);
-    });
-}
-
-
+        // Fullscreen mode toggle function
+        window.toggleFullscreenGrid = function toggleFullscreenGrid() {
+            document.body.classList.toggle('fullscreen-grid');
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            fullscreenBtn.textContent = document.body.classList.contains('fullscreen-grid')
+                ? 'Vollbild beenden'
+                : 'Vollbildmodus für das Gitter';
+        }
     </script>
 </body>
 </html>
