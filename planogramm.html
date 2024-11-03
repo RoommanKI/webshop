@@ -179,60 +179,15 @@
             background-color: #2980b9;
         }
 
-        /* Fullscreen grid mode */
-        .fullscreen-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1000;
-            background-color: #f9fafb;
-            padding: 0; /* Remove padding in fullscreen */
-            margin: 0;  /* Remove margin in fullscreen */
-            overflow: auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-            justify-items: center;
-            align-items: center;
-        }
-
-        /* Hide elements in fullscreen mode */
-        .fullscreen-grid .quantity-input,
-        .fullscreen-grid #category-filter,
-        .fullscreen-grid #orientation-filter,
-        .fullscreen-grid #cart-icon,
-        .fullscreen-grid #add-all-to-cart,
-        .fullscreen-grid #fullscreen-btn,
-        .fullscreen-grid h1,
-        .fullscreen-grid .header-buttons,
-        .fullscreen-grid form,
-        .fullscreen-grid h2:not(#grid-title) {
-            display: none;
-        }
-
         /* Ensure the body and html take full height */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
-
-        /* Fullscreen grid container */
-        .fullscreen-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            grid-template-rows: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            background-color: #f9fafb;
-        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
 </head>
 <body>
     <h1>Planogramm Ersteller</h1>
@@ -240,8 +195,6 @@
     <div class="header-buttons">
         <button onclick="location.href='index.html'" style="padding: 10px 20px; background-color: #3498db; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Webshop</button>
     </div>
-
-    <button id="fullscreen-btn" onclick="toggleFullscreenGrid()">Vollbildmodus für das Gitter</button>
 
     <!-- Form to input rows and columns -->
     <form id="grid-form">
@@ -294,6 +247,8 @@
         <button class="btn" onclick="finalizeOrder()">Bestellung abschließen</button>
         <button class="btn" onclick="clearCart()">Warenkorb löschen</button>
     </div>
+
+    <button id="capture-btn" onclick="captureGrid()">Capture Grid as PDF</button>
 
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -486,14 +441,29 @@
             cartPopup.style.display = cartPopup.style.display === 'none' || cartPopup.style.display === '' ? 'block' : 'none';
         });
 
-        // Fullscreen mode toggle function
-        window.toggleFullscreenGrid = function toggleFullscreenGrid() {
+        window.captureGrid = function captureGrid() {
             const gridContainer = document.getElementById('grid-container');
-            gridContainer.classList.toggle('fullscreen-grid');
-            const fullscreenBtn = document.getElementById('fullscreen-btn');
-            fullscreenBtn.textContent = gridContainer.classList.contains('fullscreen-grid')
-                ? 'Vollbild beenden'
-                : 'Vollbildmodus für das Gitter';
+            html2canvas(gridContainer).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 295; // A4 height in mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                pdf.save('grid.pdf');
+            });
         }
     </script>
 </body>
