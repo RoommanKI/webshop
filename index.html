@@ -367,9 +367,6 @@ function displayProducts(products, isLoggedIn) {
         return;
     }
 
-    // Use a small 1x1 pixel placeholder or a local low-res placeholder image.
-    const placeholderImage = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
-
     products.forEach(product => {
         const productElement = document.createElement("div");
         productElement.className = "product";
@@ -377,7 +374,7 @@ function displayProducts(products, isLoggedIn) {
         let productHTML = `
             <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px;">
                 <h2>${product.name}</h2>
-                <img src="${placeholderImage}" data-src="${product.image_url}" loading="lazy" alt="${product.name}" style="cursor: pointer; max-width: 100%; max-height: 300px;">
+                <img src="${product.image_url}" loading="lazy" alt="${product.name}" style="cursor: pointer; max-width: 100%; max-height: 300px;">
                 <p><strong>Beschreibung:</strong> ${product.description}</p>
         `;
 
@@ -396,45 +393,11 @@ function displayProducts(products, isLoggedIn) {
         productElement.innerHTML = productHTML;
         container.appendChild(productElement);
     });
-
-    // Initialize lazy loading
-    lazyLoadImages();
 }
 
-
-function lazyLoadImages() {
-    const images = document.querySelectorAll('img[data-src]'); // Select all images with a data-src attribute
-
-    if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.getAttribute('data-src'); // Replace low-res placeholder with high-res image
-                    img.removeAttribute('data-src'); // Remove data-src to avoid re-loading
-                    observer.unobserve(img); // Stop observing this image
-                }
-            });
-        });
-
-        images.forEach(img => {
-            observer.observe(img); // Start observing each image
-        });
-    } else {
-        // Fallback for browsers that don't support IntersectionObserver
-        images.forEach(img => {
-            img.src = img.getAttribute('data-src');
-            img.removeAttribute('data-src');
-        });
-    }
-}
-
-
-
-    loadProducts();
-});
-</script>
-
+// Initial load of products
+loadProducts();
+                          </script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const lightbox = document.getElementById("lightbox");
