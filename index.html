@@ -289,11 +289,19 @@ function finalizeOrder() {
     });
     alert(`Ihre Bestellung:\n${orderSummary}`);
 
+    // Clear cart and update display
     cart = [];
     updateCart();
     toggleCart();
+
+    // Debugging log before redirection
+    console.log('Redirecting to order-summary.html...');
+    alert('Bestellung abgeschlossen! Sie werden weitergeleitet.');
+
+    // Perform redirection
     window.location.href = 'order-summary.html';
 }
+
 </script>
 
 <script>
