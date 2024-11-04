@@ -126,15 +126,22 @@
 
 <!-- Register/Login Handling -->
 <script>
+// Define `isLoggedIn` globally at the top of your script
+let isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
 document.addEventListener("DOMContentLoaded", function() {
     // Load cart from localStorage and update the cart count on page load
-    cart = JSON.parse(localStorage.getItem('cart')) || [];  // Load cart data from localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];  // Ensure cart is defined locally
     updateCart();  // Call updateCart to show correct count on page load
 
-    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+    // Use `isLoggedIn` as needed
+    if (isLoggedIn) {
+        toggleProfileIcon();
+    }
 
-    // Rest of your existing initialization code...
+    // Rest of your initialization code...
 });
+
 
 
     function toggleProfileIcon() {
