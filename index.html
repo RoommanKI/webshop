@@ -201,29 +201,28 @@ document.addEventListener("DOMContentLoaded", function() {
             errorMessage.textContent = `Fehler: ${err.message}`;
         }
     });
+document.getElementById('login-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const loginErrorMessage = document.getElementById('login-error');
 
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const loginErrorMessage = document.getElementById('login-error');
-
-        try {
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-            else {
-                localStorage.setItem('loggedIn', 'true');
-                alert('Anmeldung erfolgreich!');
-                location.reload();
-            }
-        } catch (err) {
-            loginErrorMessage.textContent = `Fehler: ${err.message}`;
+    try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+        else {
+            localStorage.setItem('loggedIn', 'true');
+            alert('Anmeldung erfolgreich!');
+            location.reload();
         }
-    });
-
-    document.getElementById('cart-icon').addEventListener('click', toggleCart);
+    } catch (err) {
+        loginErrorMessage.textContent = `Fehler: ${err.message}`;
+    }
 });
+
+document.getElementById('cart-icon').addEventListener('click', toggleCart);
 </script>
+
 
 <!-- Cart Management Functions -->
 <script>
