@@ -127,7 +127,15 @@
 <!-- Register/Login Handling -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    // Load cart from localStorage and update the cart count on page load
+    cart = JSON.parse(localStorage.getItem('cart')) || [];  // Load cart data from localStorage
+    updateCart();  // Call updateCart to show correct count on page load
+
     const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+
+    // Rest of your existing initialization code...
+});
+
 
     function toggleProfileIcon() {
         const headerButtons = document.querySelector('.header-buttons');
@@ -250,7 +258,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function addToCart(productName, quantityId, price) {
     const quantity = parseInt(document.getElementById(quantityId).value);
@@ -272,6 +279,8 @@ function addToCart(productName, quantityId, price) {
 function updateCart() {
     const cartContent = document.getElementById('cart-content');
     const cartCount = document.getElementById('cart-count');
+    
+    // Update the cart count to reflect total quantity
     cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     if (cart.length === 0) {
@@ -279,14 +288,18 @@ function updateCart() {
         return;
     }
 
+    // Render the cart items in the popup
     let cartHTML = '<ul>';
     cart.forEach(item => {
         cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
     });
     cartHTML += '</ul>';
     cartContent.innerHTML = cartHTML;
+
+    // Save updated cart to localStorage
     saveCartToLocalStorage();
 }
+
 
 function finalizeOrder() {
     if (cart.length === 0) {
