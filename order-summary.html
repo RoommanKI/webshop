@@ -130,22 +130,14 @@ function renderOrderSummary(cart) {
     
 let imageCache = {};
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
-});
+
 
 function deleteOrder() {
     localStorage.removeItem('cart');
     alert("Ihre Bestellung wurde gelöscht.");
     window.location.href = 'index.html';
 }
-document.addEventListener('DOMContentLoaded', function() {
-    // Other DOMContentLoaded actions
-    const savedEmail = localStorage.getItem('userEmail');
-    if (savedEmail) {
-        document.getElementById('email').value = savedEmail; // Autofill the hidden email field
-    }
-});
+
 
 </script>
 <!-- Supabase SDK Import -->
@@ -233,14 +225,26 @@ function loadCart() {
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
+    // Load cart data from localStorage
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const orderList = document.getElementById('order-list');
-    orderList.innerHTML = '';
-
+    
     if (cart.length === 0) {
-        orderList.innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
-        return;
+        document.getElementById('order-list').innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
+    } else {
+        // Fetch product images once on load
+        await fetchProductImages(cart);
+        updateOrderSummary(); // Render order summary and calculate totals
     }
+
+    // Autofill hidden email field if email exists in localStorage
+    const savedEmail = localStorage.getItem('userEmail');
+    if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+    }
+
+    // Attach deleteOrder function to delete button
+    document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
+});
 
     // Populate image cache on the first load
     await fetchProductImages(cart);
@@ -252,18 +256,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 
-
-    const productImages = await fetchProductImages(cart);
-    cart.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <img src="${productImages[item.product]}" alt="${item.product}" style="width:50px; height:50px; vertical-align:middle; margin-right:10px;">
-            <span>${item.product}</span> - <span>${item.price.toFixed(2)}€</span>
-            <input type="number" min="1" value="${item.quantity}" data-index="${index}" class="quantity-input" style="width: 50px; margin-left: 10px;">
-            <button onclick="deleteProduct(${index})" style="margin-left: 10px; color: red;">Löschen</button>
-        `;
-        orderList.appendChild(li);
-    });
 
     attachQuantityChangeListeners();
 
@@ -392,8 +384,9 @@ function sendEmail(e) {
 function updateOrderSummary() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const orderList = document.getElementById('order-list');
-    orderList.innerHTML = ''; // Clear existing items
+    orderList.innerHTML = ''; // Clear existing items to avoid duplication
 
+    // Render each item in the cart
     cart.forEach((item, index) => {
         const li = document.createElement('li');
         li.innerHTML = `
@@ -411,7 +404,6 @@ function updateOrderSummary() {
     // Reattach quantity change listeners for new DOM elements
     attachQuantityChangeListeners();
 }
-
 
 
     </script>
