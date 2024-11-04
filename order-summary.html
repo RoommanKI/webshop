@@ -246,13 +246,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
 });
 
-    // Populate image cache on the first load
-    await fetchProductImages(cart);
-    renderOrderSummary(cart);
-    attachQuantityChangeListeners();
+document.addEventListener('DOMContentLoaded', async function() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Call calculateTotalPrice to display the price as soon as the page loads
-    calculateTotalPrice(cart);
+    if (cart.length === 0) {
+        document.getElementById('order-list').innerHTML = '<li>Ihr Warenkorb ist leer.</li>';
+    } else {
+        // Populate image cache on the first load
+        await fetchProductImages(cart);
+        updateOrderSummary(); // This function will render and calculate prices
+    }
+
+    // Autofill hidden email field if email exists in localStorage
+    const savedEmail = localStorage.getItem('userEmail');
+    if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+    }
+
+    // Attach deleteOrder function to delete button
+    document.querySelector('.btn[onclick="deleteOrder()"]').addEventListener('click', deleteOrder);
 });
 
 
