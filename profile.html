@@ -112,11 +112,10 @@
 
         <button type="submit">Speichern</button>
         <p id="profile-error" class="error-message"></p>
-         </form>
         <!-- Emergency delete button -->
 <button id="emergency-delete" style="margin-top: 20px; padding: 5px 10px; background-color: #dc3545; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; width: auto;">
     DatenFalsch? - Profil löschen
-   
+    </form>
 </button>
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -129,92 +128,76 @@
         const userEmail = localStorage.getItem('userEmail');  
 
         // Function to load user profile from database
-// Function to load user profile on page load
 async function loadProfile() {
-const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-        document.getElementById('profile-error').textContent = 'User not authenticated.';
-        return;
-    }
-
-    const userId = user.id;
-
     try {
-        // Fetch the profile data for the authenticated user
-        const { data: profileData, error } = await supabase
+        const { data, error } = await supabase
             .from('profile')
             .select('Name, Vorname, Straße, Stadt, PLZ')
-            .eq('user_id', userId)
-            .single();
+            .eq('Email', userEmail);  
 
         if (error) {
             document.getElementById('profile-error').textContent = `Fehler beim Laden des Profils: ${error.message}`;
-        } else if (profileData) {
-            // Populate the form fields with profile data
-            document.getElementById('name').value = profileData.Name || '';
-            document.getElementById('vorname').value = profileData.Vorname || '';
-            document.getElementById('straße').value = profileData.Straße || '';
-            document.getElementById('stadt').value = profileData.Stadt || '';
-            document.getElementById('plz').value = profileData.PLZ || '';
+        } else if (data.length === 0) {
+            document.getElementById('profile-error').textContent = 'Kein Profil gefunden.';
+        } else {
+            const profile = data[0];
+            document.getElementById('name').value = profile.Name || '';
+            document.getElementById('vorname').value = profile.Vorname || '';
+            document.getElementById('straße').value = profile.Straße || '';
+            document.getElementById('stadt').value = profile.Stadt || '';
+            document.getElementById('plz').value = profile.PLZ || '';
+
+            // Disable input fields to prevent further changes
+            document.getElementById('name').disabled = true;
+            document.getElementById('vorname').disabled = true;
+            document.getElementById('straße').disabled = true;
+            document.getElementById('stadt').disabled = true;
+            document.getElementById('plz').disabled = true;
+
+            // Optionally hide the Save button
+            document.querySelector('button[type="submit"]').style.display = 'none';
         }
     } catch (err) {
         document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
     }
 }
 
-
         // Call the loadProfile function when the page is loaded
         loadProfile();
 
-document.getElementById('profile-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
+        // Save the profile data when the form is submitted
+        document.getElementById('profile-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-    // Retrieve the authenticated user asynchronously
-    const { data: { user }, error } = await supabase.auth.getUser();
-    if (error) {
-        document.getElementById('profile-error').textContent = 'User not authenticated.';
-        return;
-    }
+            const name = document.getElementById('name').value;
+            const vorname = document.getElementById('vorname').value;
+            const straße = document.getElementById('straße').value;
+            const stadt = document.getElementById('stadt').value;
+            const plz = document.getElementById('plz').value;
 
-    const userId = user.id; // Store user ID from auth
-    const name = document.getElementById('name').value;
-    const vorname = document.getElementById('vorname').value;
-    const straße = document.getElementById('straße').value;
-    const stadt = document.getElementById('stadt').value;
-    const plz = document.getElementById('plz').value;
+            try {
+                const { data, error } = await supabase
+                    .from('profile')
+                    .upsert({ Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz, Email: userEmail });
 
-    try {
-        const { data, error } = await supabase
-            .from('profile')
-            .upsert({ user_id: userId, Name: name, Vorname: vorname, Straße: straße, Stadt: stadt, PLZ: plz });
-
-        if (error) {
-            document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
-        } else {
-            alert('Profil gespeichert!');
-        }
-    } catch (err) {
-        document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
-    }
-});
-
-
-document.getElementById('emergency-delete').addEventListener('click', async function() {
+                if (error) {
+                    document.getElementById('profile-error').textContent = `Fehler: ${error.message}`;
+                } else {
+                    alert('Profil gespeichert!');
+                }
+            } catch (err) {
+                document.getElementById('profile-error').textContent = `Fehler: ${err.message}`;
+            }
+        });
+        document.getElementById('emergency-delete').addEventListener('click', async function() {
     const confirmDelete = confirm("Sind Sie sicher, dass Sie Ihr Daten neu eingeben möchten?");
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-        document.getElementById('profile-error').textContent = 'User not authenticated.';
-        return;
-    }
-    const userId = user.id;
 
     if (confirmDelete) {
         try {
             const { data, error } = await supabase
                 .from('profile')
                 .delete()
-                .eq('user_id', userId);  // Delete by user_id
+                .eq('Email', userEmail);  // Delete by email
 
             if (error) {
                 document.getElementById('profile-error').textContent = `Fehler beim Löschen des Profils: ${error.message}`;
@@ -243,7 +226,6 @@ document.getElementById('emergency-delete').addEventListener('click', async func
         }
     }
 });
-
 
     </script>
 </body>

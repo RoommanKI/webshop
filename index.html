@@ -126,23 +126,8 @@
 
 <!-- Register/Login Handling -->
 <script>
-// Define `isLoggedIn` globally at the top of your script
-let isLoggedIn = localStorage.getItem('loggedIn') === 'true';
-
 document.addEventListener("DOMContentLoaded", function() {
-    // Load cart from localStorage and update the cart count on page load
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];  // Ensure cart is defined locally
-    updateCart();  // Call updateCart to show correct count on page load
-
-    // Use `isLoggedIn` as needed
-    if (isLoggedIn) {
-        toggleProfileIcon();
-    }
-
-    // Rest of your initialization code...
-});
-
-
+    const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
     function toggleProfileIcon() {
         const headerButtons = document.querySelector('.header-buttons');
@@ -194,20 +179,26 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("Checkbox or submit button not found!");
     }
 
-    document.getElementById('register-form').addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const errorMessage = document.getElementById('register-error');
+document.getElementById('register-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+    const errorMessage = document.getElementById('register-error');
 
-        try {
-            const { error } = await supabase.auth.signUp({ email, password });
-            if (error) errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
-            else alert('Registrierung erfolgreich! Bitte E-Mails überprüfen.');
-        } catch (err) {
-            errorMessage.textContent = `Fehler: ${err.message}`;
+    try {
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) {
+            errorMessage.textContent = `Registrierung fehlgeschlagen: ${error.message}`;
+        } else {
+            alert('Registrierung erfolgreich! Bitte E-Mails überprüfen.');
+            localStorage.setItem('userEmail', email);  // Save email to localStorage
         }
-    });
+    } catch (err) {
+        errorMessage.textContent = `Fehler: ${err.message}`;
+    }
+});
+
+
 document.getElementById('login-form').addEventListener('submit', async function(event) {
     event.preventDefault();
     const email = document.getElementById('login-email').value;
@@ -216,9 +207,11 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
     try {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
-        else {
+        if (error) {
+            loginErrorMessage.textContent = `Anmeldung fehlgeschlagen: ${error.message}`;
+        } else {
             localStorage.setItem('loggedIn', 'true');
+            localStorage.setItem('userEmail', email);  // Save email to localStorage
             alert('Anmeldung erfolgreich!');
             location.reload();
         }
@@ -227,9 +220,10 @@ document.getElementById('login-form').addEventListener('submit', async function(
     }
 });
 
-document.getElementById('cart-icon').addEventListener('click', toggleCart);
-</script>
 
+    document.getElementById('cart-icon').addEventListener('click', toggleCart);
+});
+</script>
 
 <!-- Cart Management Functions -->
 <script>
@@ -264,6 +258,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
 function addToCart(productName, quantityId, price) {
     const quantity = parseInt(document.getElementById(quantityId).value);
@@ -285,8 +280,6 @@ function addToCart(productName, quantityId, price) {
 function updateCart() {
     const cartContent = document.getElementById('cart-content');
     const cartCount = document.getElementById('cart-count');
-    
-    // Update the cart count to reflect total quantity
     cartCount.innerHTML = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     if (cart.length === 0) {
@@ -294,18 +287,14 @@ function updateCart() {
         return;
     }
 
-    // Render the cart items in the popup
     let cartHTML = '<ul>';
     cart.forEach(item => {
         cartHTML += `<li>${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€</li>`;
     });
     cartHTML += '</ul>';
     cartContent.innerHTML = cartHTML;
-
-    // Save updated cart to localStorage
     saveCartToLocalStorage();
 }
-
 
 function finalizeOrder() {
     if (cart.length === 0) {
@@ -313,7 +302,7 @@ function finalizeOrder() {
         return;
     }
 
-    let orderSummary = "Bestellung:\n";
+    let orderSummary = "";
     cart.forEach(item => {
         orderSummary += `${item.quantity}x ${item.product} - ${item.price.toFixed(2)}€\n`;
     });
