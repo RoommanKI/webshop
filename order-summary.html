@@ -385,7 +385,6 @@ function sendEmail(e) {
     emailjs.sendForm('service_0ertyvq', 'template_dq3wxfz', '#order-form')
         .then(response => {
             console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
-            alert('Bestellung erfolgreich gesendet!');
             window.location.href = 'danke.html';  // Redirect to thank you page
         })
         .catch(error => {
